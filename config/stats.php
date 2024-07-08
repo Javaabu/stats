@@ -3,12 +3,23 @@
 return [
     /*
     |--------------------------------------------------------------------------
-    | Some config option
+    | Start day of the week
     |--------------------------------------------------------------------------
     |
-    | Give a description of what each config option is like this
+    | Used to determine the start of week
     |
     */
 
-    // TODO
+    'week_starts_on' => \Carbon\Carbon::SUNDAY,
+
+    /*
+    |--------------------------------------------------------------------------
+    | End day of the week
+    |--------------------------------------------------------------------------
+    |
+    | Used to determine the end of week
+    |
+    */
+
+    'week_ends_on' => \Carbon\Carbon::SATURDAY,
 ];
