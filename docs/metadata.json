@@ -1,5 +1,5 @@
 {
-    "name": "{Your Package}",
-    "description": "{package description}",
+    "name": "Stats",
+    "description": "Simplifies stats generation for Laravel",
     "version": "1"
 }
