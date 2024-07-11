@@ -5,13 +5,15 @@
 
 namespace Javaabu\Stats;
 
-use Javaabu\Stats\Formatters\StatsFormatter;
 use Carbon\Carbon;
-use \InvalidArgumentException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use InvalidArgumentException;
+use Javaabu\Stats\Formatters\StatsFormatter;
+use Javaabu\Stats\Stats\TimeSeries\AdminLoginsRepository;
+use Javaabu\Stats\Stats\TimeSeries\UserSignupsRepository;
 
 abstract class StatsRepository
 {

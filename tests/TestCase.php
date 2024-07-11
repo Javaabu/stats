@@ -2,9 +2,11 @@
 
 namespace Javaabu\Stats\Tests;
 
+use Illuminate\Support\Facades\Artisan;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 use Javaabu\Stats\StatsServiceProvider;
 use Javaabu\Stats\Tests\TestSupport\Providers\TestServiceProvider;
+use Spatie\Activitylog\ActivitylogServiceProvider;
 
 abstract class TestCase extends BaseTestCase
 {
@@ -17,11 +19,21 @@ abstract class TestCase extends BaseTestCase
 
         $this->app['config']->set('session.serialization', 'php');
 
+        if (empty(glob($this->app->databasePath('migrations/*_create_activity_log_table.php')))) {
+            Artisan::call('vendor:publish', [
+                '--provider' => 'Spatie\\Activitylog\\ActivitylogServiceProvider',
+                '--tag' => 'activitylog-migrations',
+            ]);
+
+            Artisan::call('migrate');
+        }
+
     }
 
     protected function getPackageProviders($app)
     {
         return [
+            ActivitylogServiceProvider::class,
             StatsServiceProvider::class,
             TestServiceProvider::class
         ];

@@ -1,9 +1,9 @@
 <?php
-namespace Javaabu\Stats;
+namespace Javaabu\Stats\Repositories\TimeSeries;
 
 
-use Javaabu\Models\User;
 use Illuminate\Database\Eloquent\Builder;
+use Javaabu\Models\User;
 
 class UserSignupsRepository extends CountStatsRepository
 {

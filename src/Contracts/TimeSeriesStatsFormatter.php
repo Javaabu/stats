@@ -2,7 +2,7 @@
 
 namespace Javaabu\Stats\Contracts;
 
-interface StatsFormatter
+interface TimeSeriesStatsFormatter
 {
     public function getStats()
     {
@@ -12,7 +12,7 @@ interface StatsFormatter
     /**
      * Get the comparison data
      *
-     * @return StatsRepository
+     * @return TimeSeriesStatsRepository
      */
     public function getCompare()
     {

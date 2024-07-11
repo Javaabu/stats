@@ -3,7 +3,7 @@
  * Count Stats Repository base class
  */
 
-namespace Javaabu\Stats;
+namespace Javaabu\Stats\Repositories\TimeSeries;
 
 abstract class CountStatsRepository extends AggregateStatsRepository
 {

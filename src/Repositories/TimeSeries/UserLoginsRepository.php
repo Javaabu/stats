@@ -1,10 +1,10 @@
 <?php
-namespace Javaabu\Stats;
+namespace Javaabu\Stats\Repositories\TimeSeries;
 
 
+use Illuminate\Database\Eloquent\Builder;
 use Javaabu\Helpers\Activitylog\Activity;
 use Javaabu\Models\User;
-use Illuminate\Database\Eloquent\Builder;
 
 abstract class UserLoginsRepository extends CountStatsRepository
 {

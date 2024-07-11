@@ -20,4 +20,9 @@ class ExactDateRange implements DateRange
     {
         return $this->end_date;
     }
+
+    public function getName(): string
+    {
+        return 'custom';
+    }
 }

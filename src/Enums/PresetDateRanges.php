@@ -61,4 +61,9 @@ enum PresetDateRanges: string implements IsEnum, DateRange
             self::LIFETIME => $max_date ? Carbon::parse($max_date) : now(),
         };
     }
+
+    public function getName(): string
+    {
+        return $this->value;
+    }
 }

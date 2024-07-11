@@ -3,10 +3,11 @@
  * Aggregate stats repository base class
  */
 
-namespace Javaabu\Stats;
+namespace Javaabu\Stats\Repositories\TimeSeries;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
+use Javaabu\Stats\StatsRepository;
 
 abstract class AggregateStatsRepository extends StatsRepository
 {
