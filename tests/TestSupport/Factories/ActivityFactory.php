@@ -17,11 +17,15 @@ class ActivityFactory extends Factory
         ];
     }
 
-    public function withUser(): ActivityFactory
+    public function withUser(User|int|null $user = null): ActivityFactory
     {
-        return $this->state(function (array $attributes) {
+        return $this->state(function (array $attributes) use ($user) {
             return [
-                'causer_id' => fake()->passThrough(function () {
+                'causer_id' => fake()->passThrough(function () use ($user) {
+                    if ($user) {
+                        return $user instanceof User ? $user->id : $user;
+                    }
+
                     $random_user = User::inRandomOrder()->value('id');
 
                     if (! $random_user) {

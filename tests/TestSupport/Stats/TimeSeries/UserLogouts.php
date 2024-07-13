@@ -2,11 +2,11 @@
 namespace Javaabu\Stats\Tests\TestSupport\Stats\TimeSeries;
 
 use Illuminate\Database\Eloquent\Builder;
+use Javaabu\Stats\Filters\StatsFilter;
 use Javaabu\Stats\Repositories\TimeSeries\CountStatsRepository;
 
 class UserLogouts extends CountStatsRepository
 {
-
     /**
      * @var string
      */
@@ -16,6 +16,16 @@ class UserLogouts extends CountStatsRepository
      * @var string
      */
     protected string $aggregate_field = 'logins';
+
+    /**
+     * Get all the allowed filters
+     */
+    public function allowedFilters(): array
+    {
+        return [
+            StatsFilter::exact('user', 'causer_id'),
+        ];
+    }
 
     /**
      * Get the base query

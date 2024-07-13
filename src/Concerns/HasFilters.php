@@ -23,7 +23,7 @@ trait HasFilters
     /**
      * Get a specific filter
      */
-    public function  getFilter(string $filter, $default = null)
+    public function getFilter(string $filter, $default = null)
     {
         return $this->filters[$filter] ?? $default;
     }
@@ -100,9 +100,9 @@ trait HasFilters
     {
         $allowed_filters = $this->allowedFilters();
 
-        /** @var Filter $filter */
-        foreach ($allowed_filters as $filter) {
-            if ($filter == $filter->getName()) {
+        /** @var Filter $allowed_filter */
+        foreach ($allowed_filters as $allowed_filter) {
+            if ($filter == $allowed_filter->getName()) {
                 return true;
             }
         }

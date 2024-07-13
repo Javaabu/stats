@@ -2,7 +2,6 @@
 
 namespace Javaabu\Stats\Contracts;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 
 interface Filter
@@ -15,5 +14,5 @@ interface Filter
     /**
      * Get the date to
      */
-    public function apply(Builder $query, $value, InteractsWithFilters $stat): Carbon;
+    public function apply(Builder $query, $value, InteractsWithFilters $stat): Builder;
 }
