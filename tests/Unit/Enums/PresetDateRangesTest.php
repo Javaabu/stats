@@ -23,7 +23,7 @@ class PresetDateRangesTest extends TestCase
         $this->assertEquals('2024-07-01 00:00:00', PresetDateRanges::LAST_7_DAYS->getDateFrom(), 'Incorrect start of LAST_7_DAYS');
         $this->assertEquals('2024-06-24 00:00:00', PresetDateRanges::LAST_14_DAYS->getDateFrom(), 'Incorrect start of LAST_14_DAYS');
         $this->assertEquals('2024-06-08 00:00:00', PresetDateRanges::LAST_30_DAYS->getDateFrom(), 'Incorrect start of LAST_30_DAYS');
-        $this->assertEquals('2022-07-08 22:07:00', PresetDateRanges::LIFETIME->getDateFrom(now()->subYears(2)), 'Incorrect start of LIFETIME');
+        $this->assertEquals('2019-01-01 00:00:00', PresetDateRanges::LIFETIME->getDateFrom(), 'Incorrect start of LIFETIME');
     }
 
     /** @test */

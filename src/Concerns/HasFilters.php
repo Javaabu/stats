@@ -57,14 +57,18 @@ trait HasFilters
             return $filter->getName();
         });
 
-        $diff = $filter_names->diff($allowed_filter_names);
+        if ($throw_on_fail) {
+            $diff = $filter_names->diff($allowed_filter_names);
 
-        if ($diff->count()) {
-            if ($throw_on_fail) {
+            if ($diff->count()) {
                 throw InvalidFiltersException::filtersNotAllowed($diff, $allowed_filter_names);
             }
-
-            return false;
+         } else {
+            foreach ($filter_names as $filter) {
+                if (! $allowed_filter_names->contains($filter)) {
+                    return false;
+                }
+            }
         }
 
         return true;

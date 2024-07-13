@@ -24,7 +24,7 @@ enum PresetDateRanges: string implements IsEnum, DateRange
     case LAST_30_DAYS = 'last_30_days';
     case LIFETIME = 'lifetime';
 
-    public function getDateFrom(?Carbon $min_date = null): Carbon
+    public function getDateFrom(): Carbon
     {
         $start_of_week = config('stats.week_starts_on');
 
@@ -40,11 +40,11 @@ enum PresetDateRanges: string implements IsEnum, DateRange
             self::LAST_7_DAYS => now()->subDays(7)->startOfDay(),
             self::LAST_14_DAYS => now()->subDays(14)->startOfDay(),
             self::LAST_30_DAYS => now()->subDays(30)->startOfDay(),
-            self::LIFETIME => $min_date ? Carbon::parse($min_date) : now()->subYears(5)->startOfYear(),
+            self::LIFETIME => now()->subYears(5)->startOfYear(),
         };
     }
 
-    public function getDateTo(?Carbon $max_date = null): Carbon
+    public function getDateTo(): Carbon
     {
         $end_of_week = config('stats.week_ends_on');
 
@@ -58,7 +58,7 @@ enum PresetDateRanges: string implements IsEnum, DateRange
             self::THIS_YEAR => now()->endOfYear(),
             self::LAST_YEAR => now()->subYear()->endOfYear(),
             self::LAST_7_DAYS, self::LAST_14_DAYS, self::LAST_30_DAYS => now()->endOfDay(),
-            self::LIFETIME => $max_date ? Carbon::parse($max_date) : now(),
+            self::LIFETIME => now(),
         };
     }
 

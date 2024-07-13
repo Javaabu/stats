@@ -105,7 +105,7 @@ class HasDateRangeTest extends TestCase
     {
         $stat = new UserLogouts();
 
-        $this->assertEquals(PresetDateRanges::LIFETIME, $stat->getDateRange());
+        $this->assertEquals(PresetDateRanges::THIS_YEAR, $stat->getDateRange());
 
         $stat->setDateRange(PresetDateRanges::LAST_7_DAYS);
 

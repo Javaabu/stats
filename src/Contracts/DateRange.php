@@ -9,12 +9,12 @@ interface DateRange
     /**
      * Get the date from
      */
-    public function getDateFrom(?Carbon $min_date = null): Carbon;
+    public function getDateFrom(): Carbon;
 
     /**
      * Get the date to
      */
-    public function getDateTo(?Carbon $max_date = null): Carbon;
+    public function getDateTo(): Carbon;
 
     /**
      * Get the name for the type of date range

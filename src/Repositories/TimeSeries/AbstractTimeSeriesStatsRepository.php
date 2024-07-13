@@ -28,41 +28,15 @@ abstract class AbstractTimeSeriesStatsRepository implements TimeSeriesStatsRepos
     /**
      * Create a new stats repository instance.
      */
-    public function __construct(DateRange $date_range = PresetDateRanges::LIFETIME, array $filters = [])
+    public function __construct(DateRange $date_range = PresetDateRanges::THIS_YEAR, array $filters = [])
     {
         $this->setDateRange($date_range);
         $this->setFilters($filters);
     }
 
-    /**
-     * Get the metric names
-     *
-     * @param null $filters
-     * @return array
-     */
-    public static function getMetricNames($filters = [])
-    {
-        $metrics = [];
 
-        $allowed_metrics = $filters ? self::metricsThatAllowFilters($filters) : self::METRICS;
 
-        foreach ($allowed_metrics as $key => $metric) {
-            $metrics[$key] = $metric['name'];
-        }
 
-        return $metrics;
-    }
-
-    /**
-     * Get the metric names
-     *
-     * @param $metric
-     * @return string
-     */
-    public static function getMetricName($metric)
-    {
-        return self::METRICS[$metric]['name'] ?? '';
-    }
 
 
 

@@ -60,7 +60,7 @@ class TimeSeriesStats
     /**
      * Create from metric
      */
-    public static function createFromMetric(string $metric, DateRange $date_range = PresetDateRanges::LIFETIME, array $filters = []): TimeSeriesStatsRepository
+    public static function createFromMetric(string $metric, DateRange $date_range = PresetDateRanges::THIS_YEAR, array $filters = []): TimeSeriesStatsRepository
     {
         $class = static::getClassNameForMetric($metric);
         return new $class($date_range, $filters);
@@ -69,31 +69,39 @@ class TimeSeriesStats
     /**
      * Get the metrics that allow these filters
      */
-    public static function metricsThatAllowFilters(array|string $filters): array
+    public static function metricsThatAllowFilters(array|string $filters, bool $return_names = true): array
     {
         $metrics = self::statsMap();
 
         $filters = Arr::wrap($filters);
         $filtered = [];
 
-        foreach ($metrics as $slug => $data) {
+        foreach ($metrics as $slug => $metric_class) {
             $metric = self::createFromMetric($slug);
 
-            $allowed_filters = $metric->allowedFilters();
-            $allowed = true;
-
-            foreach ($filters as $filter) {
-                if (! in_array($filter, $allowed_filters)) {
-                    $allowed = false;
-                    break;
-                }
-            }
-
-            if ($metric) {
-                $filtered[$slug] = $data;
+            if ($metric->ensureAllFiltersAllowed($filters)) {
+                $filtered[$slug] = $return_names ? $metric->getName() : $metric_class;
             }
         }
 
         return $filtered;
+    }
+
+    /**
+     * Get the metric names
+     */
+    public static function getMetricNames(array|string $filters = []): array
+    {
+        return self::metricsThatAllowFilters($filters, true);
+    }
+
+    /**
+     * Get the metric names
+     */
+    public static function getMetricName(string $metric): string
+    {
+        $metric = self::createFromMetric($metric);
+
+        return $metric->getName();
     }
 }

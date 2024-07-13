@@ -11,12 +11,12 @@ class ExactDateRange implements DateRange
 
     }
 
-    public function getDateFrom(?Carbon $min_date = null): Carbon
+    public function getDateFrom(): Carbon
     {
         return $this->start_date;
     }
 
-    public function getDateTo(?Carbon $max_date = null): Carbon
+    public function getDateTo(): Carbon
     {
         return $this->end_date;
     }

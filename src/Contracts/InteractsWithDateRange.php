@@ -47,12 +47,12 @@ interface InteractsWithDateRange
     /**
      * Get the max date for the query
      */
-    public function getMaxDate(): ?Carbon;
+    public function getMaxDate(?Carbon $fallback = null): ?Carbon;
 
     /**
      * Get the min date for the query
      */
-    public function getMinDate(): ?Carbon;
+    public function getMinDate(?Carbon $fallback = null): ?Carbon;
 
     /**
      * Set the date range

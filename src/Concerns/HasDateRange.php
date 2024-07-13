@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Javaabu\Stats\Contracts\DateRange;
 use Javaabu\Stats\Contracts\InteractsWithDateRange;
+use Javaabu\Stats\Enums\PresetDateRanges;
 use Javaabu\Stats\Enums\TimeSeriesModes;
 use Javaabu\Stats\Support\ExactDateRange;
 
@@ -55,24 +56,24 @@ trait HasDateRange
         return 'created_at';
     }
 
-    public function getMaxDate(): ?Carbon
+    public function getMaxDate(?Carbon $fallback = null): ?Carbon
     {
         $max = $this->query()->max($this->getDateField());
 
-        return $max ? Carbon::parse($max) : null;
+        return $max ? Carbon::parse($max) : $fallback;
     }
 
-    public function getMinDate(): ?Carbon
+    public function getMinDate(?Carbon $fallback = null): ?Carbon
     {
         $min = $this->query()->min($this->getDateField());
 
-        return $min ? Carbon::parse($min) : null;
+        return $min ? Carbon::parse($min) : $fallback;
     }
 
     public function setDateRange(DateRange $date_range)
     {
-        $date_from = $date_range->getDateFrom($this->getMinDate());
-        $date_to = $date_range->getDateTo($this->getMaxDate());
+        $date_from = $date_range == PresetDateRanges::LIFETIME ? $this->getMinDate($date_range->getDateFrom()) : $date_range->getDateFrom();
+        $date_to = $date_range == PresetDateRanges::LIFETIME ? $this->getMaxDate($date_range->getDateTo()) : $date_range->getDateTo();
 
         $this->date_range = $date_range;
 

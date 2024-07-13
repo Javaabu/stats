@@ -2,6 +2,7 @@
 
 namespace Javaabu\Stats\Tests\Unit;
 
+use Javaabu\Stats\Enums\PresetDateRanges;
 use Javaabu\Stats\Tests\TestCase;
 use Javaabu\Stats\Tests\TestSupport\Stats\TimeSeries\UserLogouts;
 use Javaabu\Stats\TimeSeriesStats;
@@ -17,5 +18,84 @@ class TimeSeriesStatsTest extends TestCase
 
         $this->assertEquals('user_logouts', TimeSeriesStats::getMetricForStat(UserLogouts::class));
         $this->assertEquals(UserLogouts::class, TimeSeriesStats::getClassNameForMetric('user_logouts'));
+    }
+
+    /** @test */
+    public function it_can_get_the_stats_map(): void
+    {
+        TimeSeriesStats::register([
+            'user_logouts' => UserLogouts::class
+        ]);
+
+        $this->assertEquals([
+            'user_logouts' => UserLogouts::class
+        ], TimeSeriesStats::statsMap());
+    }
+
+    /** @test */
+    public function it_can_get_the_class_name_for_a_metric(): void
+    {
+        TimeSeriesStats::register([
+            'user_logouts' => UserLogouts::class
+        ]);
+
+        $this->assertEquals(UserLogouts::class, TimeSeriesStats::getClassNameForMetric('user_logouts'));
+    }
+
+    /** @test */
+    public function it_can_get_the_metric_name_for_a_stat(): void
+    {
+        TimeSeriesStats::register([
+            'user_logouts' => UserLogouts::class
+        ]);
+
+        $this->assertEquals('user_logouts', TimeSeriesStats::getMetricForStat(UserLogouts::class));
+    }
+
+    /** @test */
+    public function it_can_create_from_a_metric(): void
+    {
+        TimeSeriesStats::register([
+            'user_logouts' => UserLogouts::class
+        ]);
+
+        $stat = TimeSeriesStats::createFromMetric('user_logouts', PresetDateRanges::LAST_7_DAYS);
+
+        $this->assertInstanceOf(UserLogouts::class, $stat);
+        $this->assertEquals(PresetDateRanges::LAST_7_DAYS, $stat->getDateRange());
+    }
+
+    /** @test */
+    public function it_can_get_metric_classes_that_allow_all_the_given_filters(): void
+    {
+        TimeSeriesStats::register([
+            'user_logouts' => UserLogouts::class
+        ]);
+
+        $this->assertEquals(['user_logouts' => UserLogouts::class], TimeSeriesStats::metricsThatAllowFilters(['user'], false));
+        $this->assertEquals(['user_logouts' => UserLogouts::class], TimeSeriesStats::metricsThatAllowFilters('user', false));
+        $this->assertEmpty(TimeSeriesStats::metricsThatAllowFilters(['user', 'admin'], false));
+    }
+
+    /** @test */
+    public function it_can_get_metric_names_that_allow_all_the_given_filters(): void
+    {
+        TimeSeriesStats::register([
+            'user_logouts' => UserLogouts::class
+        ]);
+
+        $this->assertEquals(['user_logouts' => 'User Logouts'], TimeSeriesStats::getMetricNames(['user']));
+        $this->assertEquals(['user_logouts' => 'User Logouts'], TimeSeriesStats::getMetricNames('user'));
+        $this->assertEmpty(TimeSeriesStats::getMetricNames(['user', 'admin']));
+    }
+
+    /** @test */
+    public function it_can_get_the_metric_name_from_metric(): void
+    {
+        TimeSeriesStats::register([
+            'user_logouts' => UserLogouts::class
+        ]);
+
+        $this->assertEquals('User Logouts', TimeSeriesStats::getMetricName('user_logouts'));
     }
 }
