@@ -7,24 +7,23 @@ namespace Javaabu\Stats\Repositories\TimeSeries;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
-use Javaabu\Stats\StatsRepository;
 
-abstract class AggregateStatsRepository extends StatsRepository
+abstract class AggregateStatsRepository extends AbstractTimeSeriesStatsRepository
 {
     /**
      * @var string
      */
-    protected $table;
+    protected string $table;
 
     /**
      * @var string
      */
-    protected $aggregate_sql;
+    protected string $aggregate_sql;
 
     /**
      * @var string
      */
-    protected $date_field = 'created_at';
+    protected string $date_field = 'created_at';
 
     /**
      * Get the main table for the repository
@@ -41,7 +40,7 @@ abstract class AggregateStatsRepository extends StatsRepository
      *
      * @return string
      */
-    public function getDateField()
+    public function getDateField(): string
     {
         return $this->getTable().'.'.$this->date_field;
     }
@@ -51,21 +50,9 @@ abstract class AggregateStatsRepository extends StatsRepository
      *
      * @return string
      */
-    public function getAggregateSql()
+    public function getAggregateSql(): string
     {
         return $this->aggregate_sql;
-    }
-
-    /**
-     * Get the filtered query
-     *
-     * @param Builder $query
-     * @return Builder
-     */
-    protected function applyDateFilters(Builder $query): Builder
-    {
-        return $query->whereBetween($this->getDateField(), [$this->getDateFrom(), $this->getDateTo()])
-                     ->orderBy($this->getDateField(), 'ASC');
     }
 
     /**
@@ -85,7 +72,7 @@ abstract class AggregateStatsRepository extends StatsRepository
      *
      * @return Builder
      */
-    public function day()
+    public function day(): Builder
     {
         return $this->filteredQuery()
             ->select(DB::raw($this->getAggregateSql().", DATE(".$this->getDateField().") as day"))
@@ -97,7 +84,7 @@ abstract class AggregateStatsRepository extends StatsRepository
      *
      * @return Builder
      */
-    public function week()
+    public function week(): Builder
     {
         return $this->filteredQuery()
             //->select(DB::raw($this->getAggregateSql().", DATE_FORMAT(DATE_ADD(".$this->getDateField().", INTERVAL(1-DAYOFWEEK(".$this->getDateField().")) DAY), '%X-%m-%d, %V') as week"))
@@ -110,7 +97,7 @@ abstract class AggregateStatsRepository extends StatsRepository
      *
      * @return Builder
      */
-    public function month()
+    public function month(): Builder
     {
         return $this->filteredQuery()
             ->select(DB::raw($this->getAggregateSql().", DATE_FORMAT(".$this->getDateField().", '%Y, %m') as month"))
@@ -122,7 +109,7 @@ abstract class AggregateStatsRepository extends StatsRepository
      *
      * @return Builder
      */
-    public function year()
+    public function year(): Builder
     {
         return $this->filteredQuery()
             ->select(DB::raw($this->getAggregateSql().", YEAR(".$this->getDateField().") as year"))
@@ -131,10 +118,8 @@ abstract class AggregateStatsRepository extends StatsRepository
 
     /**
      * Get the total
-     *
-     * @return int
      */
-    public function total()
+    public function total(): float|int
     {
         return $this->filteredQuery()
                     ->select(DB::raw($this->getAggregateSql()))

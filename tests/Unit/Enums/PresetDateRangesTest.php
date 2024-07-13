@@ -1,6 +1,6 @@
 <?php
 
-namespace Javaabu\Stats\Tests\Unit;
+namespace Javaabu\Stats\Tests\Unit\Enums;
 
 use Javaabu\Stats\Enums\PresetDateRanges;
 use Javaabu\Stats\Tests\TestCase;

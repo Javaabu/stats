@@ -6,6 +6,8 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Javaabu\Stats\Contracts\DateRange;
 use Javaabu\Stats\Contracts\InteractsWithDateRange;
+use Javaabu\Stats\Enums\TimeSeriesModes;
+use Javaabu\Stats\Support\ExactDateRange;
 
 /** @var $this InteractsWithDateRange */
 trait HasDateRange
@@ -36,12 +38,16 @@ trait HasDateRange
 
     public function setDateFrom(Carbon|string $date_from)
     {
-        $this->date_from = Carbon::parse($date_from);
+        $date_from = Carbon::parse($date_from);
+
+        $this->setDateRange(new ExactDateRange($date_from, $this->getDateTo()));
     }
 
     public function setDateTo(Carbon|string $date_to)
     {
-        $this->date_to = Carbon::parse($date_to);
+        $date_to = Carbon::parse($date_to);
+
+        $this->setDateRange(new ExactDateRange($this->getDateFrom(), $date_to));
     }
 
     public function getDateField(): string
@@ -70,8 +76,8 @@ trait HasDateRange
 
         $this->date_range = $date_range;
 
-        $this->setDateFrom($date_from);
-        $this->setDateTo($date_to);
+        $this->date_from = $date_from;
+        $this->date_to = $date_to;
     }
 
     /**
@@ -89,5 +95,13 @@ trait HasDateRange
     public function filteredQueryWithoutDateFilters(): Builder
     {
         return $this->applyFilters($this->query());
+    }
+
+    /**
+     * Get the interval length for the given mode
+     */
+    public function interval(TimeSeriesModes $mode): int
+    {
+        return $mode->interval($this->getDateFrom(), $this->getDateTo());
     }
 }

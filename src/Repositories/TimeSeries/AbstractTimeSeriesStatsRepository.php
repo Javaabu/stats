@@ -13,9 +13,12 @@ use Illuminate\Support\Str;
 use Javaabu\Stats\Concerns\HasDateRange;
 use Javaabu\Stats\Contracts\DateRange;
 use Javaabu\Stats\Contracts\TimeSeriesStatsRepository;
+use Javaabu\Stats\Enums\PresetDateRanges;
+use Javaabu\Stats\Enums\TimeSeriesModes;
 use Javaabu\Stats\Formatters\StatsFormatter;
+use Javaabu\Stats\TimeSeriesStats;
 
-class AbstractTimeSeriesStatsRepository implements TimeSeriesStatsRepository
+abstract class AbstractTimeSeriesStatsRepository implements TimeSeriesStatsRepository
 {
     use HasDateRange;
     use HasFilters;
@@ -25,73 +28,10 @@ class AbstractTimeSeriesStatsRepository implements TimeSeriesStatsRepository
     /**
      * Create a new stats repository instance.
      */
-    public function __construct(DateRange $date_range, array $filters = [])
+    public function __construct(DateRange $date_range = PresetDateRanges::LIFETIME, array $filters = [])
     {
         $this->setDateRange($date_range);
-        $this->ensureAllFiltersAllowed($filters);
-    }
-
-    /**
-     * Get the metrics that allow these filters
-     *
-     * @param mixed $filters
-     * @return array
-     */
-    public static function metricsThatAllowFilters($filters): array
-    {
-        $metrics = self::METRICS;
-
-        $filters = Arr::wrap($filters);
-        $filtered = [];
-
-        foreach ($metrics as $slug => $data) {
-            $metric = self::createFromMetric($slug);
-
-            $allowed_filters = $metric->allowedFilters();
-            $allowed = true;
-
-            foreach ($filters as $filter) {
-                if (! in_array($filter, $allowed_filters)) {
-                    $allowed = false;
-                    break;
-                }
-            }
-
-            if ($allowed) {
-                $filtered[$slug] = $data;
-            }
-        }
-
-        return $filtered;
-    }
-
-    /**
-     * Create from metric
-     *
-     * @param $metric
-     * @param string $date_range
-     * @param array $filters
-     * @return \Javaabu\Stats\StatsRepository
-     */
-    public static function createFromMetric($metric, $date_range = 'lifetime', $filters = [])
-    {
-        $class = self::getMetricClass($metric);
-        return new $class($date_range, $filters);
-    }
-
-    /**
-     * Get the metric class
-     *
-     * @param $metric
-     * @return string
-     */
-    public static function getMetricClass($metric)
-    {
-        if (!array_key_exists($metric, self::METRICS)) {
-            throw new \InvalidArgumentException('Invalid metric');
-        }
-
-        return self::METRICS[$metric]['class'];
+        $this->setFilters($filters);
     }
 
     /**
@@ -392,57 +332,42 @@ class AbstractTimeSeriesStatsRepository implements TimeSeriesStatsRepository
         return [$prev_date_from, $prev_date_to];
     }
 
-
-
     /**
      * Get the stats
-     *
-     * @param string $mode
-     * @return Collection
      */
-    public function results($mode)
+    public function results(TimeSeriesModes $mode): Collection
     {
-        // verify the range is valid
-        if (!static::isValidMode($mode)) {
-            throw new \InvalidArgumentException('Invalid mode');
-        }
-
-        $mode_method = Str::camel($mode);
+        $mode_method = $mode->queryMethodName();
         return $this->{$mode_method}()->get();
     }
-
-
-
-
-
-
-
-
 
     /**
      * Get the aggregate field name
      *
      * @return string
      */
-    public function getAggregateFieldName()
+    public function getAggregateFieldName(): string
     {
         return $this->aggregate_field;
     }
 
     /**
      * Get the metric
-     *
-     * @return string
      */
-    public function metric()
+    public function metric(): string
     {
-        foreach (self::METRICS as $slug => $metric) {
-            if ($this instanceof $metric['class']) {
-                return $slug;
-            }
-        }
+        return TimeSeriesStats::getMetricForStat(get_class($this));
+    }
 
-        return null;
+    /**
+     * Get the name of the metric
+     */
+    public function getName(): string
+    {
+        return __(Str::of(class_basename($this))
+                ->snake(' ')
+                ->title()
+                ->toString());
     }
 
     /**
@@ -452,7 +377,7 @@ class AbstractTimeSeriesStatsRepository implements TimeSeriesStatsRepository
      * @param string $mode
      * @return array
      */
-    public function format($format, $mode = 'day')
+    public function format($format, $mode = 'day'): array
     {
         return StatsFormatter::createFromFormat($format, $this)->format($mode);
     }

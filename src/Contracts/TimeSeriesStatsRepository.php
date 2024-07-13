@@ -61,7 +61,12 @@ interface TimeSeriesStatsRepository extends
     public function month(): Builder;
 
     /**
+     * Get the year query
+     */
+    public function year(): Builder;
+
+    /**
      * Get the total
      */
-    public function total();
+    public function total(): int|float;
 }

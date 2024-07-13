@@ -10,19 +10,19 @@ abstract class TotalAmountStatsRepository extends AggregateStatsRepository
     /**
      * @var string
      */
-    protected $aggregate_field = 'total_mvr';
+    protected string $aggregate_field = 'total_mvr';
 
     /**
      * @var string
      */
-    protected $sum_field = 'amount';
+    protected string $sum_field = 'amount';
 
     /**
      * Get the main table for the repository
      *
      * @return string
      */
-    public function getAggregateSql()
+    public function getAggregateSql(): string
     {
         return 'sum('.$this->getFieldToSum().') as '.$this->getAggregateFieldName();
     }
@@ -32,7 +32,7 @@ abstract class TotalAmountStatsRepository extends AggregateStatsRepository
      *
      * @return string
      */
-    public function getFieldToSum()
+    public function getFieldToSum(): string
     {
         return $this->sum_field;
     }

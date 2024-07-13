@@ -4,7 +4,7 @@ namespace Javaabu\Stats\Tests\TestSupport\Stats\TimeSeries;
 use Illuminate\Database\Eloquent\Builder;
 use Javaabu\Stats\Repositories\TimeSeries\CountStatsRepository;
 
-class UserLogouts extends CountStatsRepository
+class UserLogoutsUnregistered extends CountStatsRepository
 {
 
     /**

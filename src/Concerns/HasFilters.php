@@ -37,11 +37,21 @@ trait HasFilters
     }
 
     /**
+     * Set the filters
+     */
+    public function setFilters(array $filters)
+    {
+        $this->ensureAllFiltersAllowed($filters, true);
+
+        $this->filters = $filters;
+    }
+
+    /**
      * Check if all the filters are allowed
      */
-    public function ensureAllFiltersAllowed(array $filters)
+    public function ensureAllFiltersAllowed(array $filters, bool $throw_on_fail = false): bool
     {
-        $filter_names = collect(array_keys($filters));
+        $filter_names = collect(array_is_list($filters) ? $filters : array_keys($filters));
 
         $allowed_filter_names = collect($this->allowedFilters())->map(function (Filter $filter) {
             return $filter->getName();
@@ -50,10 +60,14 @@ trait HasFilters
         $diff = $filter_names->diff($allowed_filter_names);
 
         if ($diff->count()) {
-            throw InvalidFiltersException::filtersNotAllowed($diff, $allowed_filter_names);
+            if ($throw_on_fail) {
+                throw InvalidFiltersException::filtersNotAllowed($diff, $allowed_filter_names);
+            }
+
+            return false;
         }
 
-        $this->filters = $filters;
+        return true;
     }
 
     /**
@@ -77,5 +91,22 @@ trait HasFilters
             });
 
         return $query;
+    }
+
+    /**
+     * Check if is an allowed filter
+     */
+    public function isAllowedFilter(string $filter): bool
+    {
+        $allowed_filters = $this->allowedFilters();
+
+        /** @var Filter $filter */
+        foreach ($allowed_filters as $filter) {
+            if ($filter == $filter->getName()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
