@@ -18,4 +18,9 @@ class User extends Authenticatable
     {
         return new UserFactory();
     }
+
+    public function scopeSearch($query, $search)
+    {
+        return $query->where('name', 'like', '%' . $search . '%');
+    }
 }
