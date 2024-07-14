@@ -2,9 +2,12 @@
 
 namespace Javaabu\Stats\Tests\Unit;
 
+use Illuminate\Support\Facades\Gate;
 use Javaabu\Stats\Enums\PresetDateRanges;
 use Javaabu\Stats\Tests\TestCase;
+use Javaabu\Stats\Tests\TestSupport\Models\User;
 use Javaabu\Stats\Tests\TestSupport\Stats\TimeSeries\UserLogouts;
+use Javaabu\Stats\Tests\TestSupport\Stats\TimeSeries\UserLogoutsWithPermission;
 use Javaabu\Stats\TimeSeriesStats;
 
 class TimeSeriesStatsTest extends TestCase
@@ -72,9 +75,9 @@ class TimeSeriesStatsTest extends TestCase
             'user_logouts' => UserLogouts::class
         ]);
 
-        $this->assertEquals(['user_logouts' => UserLogouts::class], TimeSeriesStats::metricsThatAllowFilters(['user'], false));
-        $this->assertEquals(['user_logouts' => UserLogouts::class], TimeSeriesStats::metricsThatAllowFilters('user', false));
-        $this->assertEmpty(TimeSeriesStats::metricsThatAllowFilters(['user', 'admin'], false));
+        $this->assertEquals(['user_logouts' => UserLogouts::class], TimeSeriesStats::metricsThatAllowFilters(['user'], null, false));
+        $this->assertEquals(['user_logouts' => UserLogouts::class], TimeSeriesStats::metricsThatAllowFilters('user', null, false));
+        $this->assertEmpty(TimeSeriesStats::metricsThatAllowFilters(['user', 'admin'], null, false));
     }
 
     /** @test */
@@ -97,5 +100,39 @@ class TimeSeriesStatsTest extends TestCase
         ]);
 
         $this->assertEquals('User Logouts', TimeSeriesStats::getMetricName('user_logouts'));
+    }
+
+    /** @test */
+    public function it_can_check_if_a_guest_can_view_any_stat(): void
+    {
+        TimeSeriesStats::register([
+            'user_logouts' => UserLogouts::class
+        ], false);
+
+        $this->assertTrue(TimeSeriesStats::canViewAny());
+
+        TimeSeriesStats::register([
+            'user_logouts_with_permission' => UserLogoutsWithPermission::class
+        ], false);
+
+        $this->assertFalse(TimeSeriesStats::canViewAny());
+    }
+
+    /** @test */
+    public function it_can_check_if_a_user_can_view_any_stat(): void
+    {
+        $user = User::factory()->make();
+
+        TimeSeriesStats::register([
+            'user_logouts_with_permission' => UserLogoutsWithPermission::class
+        ], false);
+
+        $this->assertFalse(TimeSeriesStats::canViewAny($user));
+
+        Gate::define('view_stats', function (User $user) {
+            return true;
+        });
+
+        $this->assertTrue(TimeSeriesStats::canViewAny($user));
     }
 }

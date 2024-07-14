@@ -6,6 +6,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Javaabu\Stats\Tests\TestCase;
 use Javaabu\Stats\Tests\TestSupport\Stats\TimeSeries\UserLogouts;
 use Javaabu\Stats\Tests\TestSupport\Stats\TimeSeries\UserLogoutsUnregistered;
+use Javaabu\Stats\Tests\TestSupport\Stats\TimeSeries\UserLogoutsWithPermission;
 use Javaabu\Stats\TimeSeriesStats;
 
 class AbstractTimeSeriesStatsRepositoryTest extends TestCase
@@ -38,5 +39,17 @@ class AbstractTimeSeriesStatsRepositoryTest extends TestCase
         $stat = new UserLogouts();
 
         $this->assertEquals('User Logouts', $stat->getName());
+    }
+
+    /** @test */
+    public function it_can_check_if_a_given_user_can_view_the_stats(): void
+    {
+        $stat = new UserLogouts();
+
+        $this->assertTrue($stat->canView());
+
+        $stat = new UserLogoutsWithPermission();
+
+        $this->assertFalse($stat->canView());
     }
 }

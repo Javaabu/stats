@@ -2,6 +2,7 @@
 
 namespace Javaabu\Stats;
 
+use Illuminate\Contracts\Auth\Access\Authorizable;
 use Illuminate\Support\Arr;
 use Javaabu\Stats\Contracts\DateRange;
 use Javaabu\Stats\Contracts\TimeSeriesStatsRepository;
@@ -16,9 +17,9 @@ class TimeSeriesStats
      *
      * @param array<string, class-string<TimeSeriesStatsRepository>> $stats
      */
-    public static function register(array $stats)
+    public static function register(array $stats, bool $merge = true)
     {
-        static::$stats_map = array_merge(static::$stats_map, $stats);
+        static::$stats_map = $merge ? array_merge(static::$stats_map, $stats) : $stats;
     }
 
     /**
@@ -69,7 +70,7 @@ class TimeSeriesStats
     /**
      * Get the metrics that allow these filters
      */
-    public static function metricsThatAllowFilters(array|string $filters, bool $return_names = true): array
+    public static function metricsThatAllowFilters(array|string $filters, ?Authorizable $user = null, bool $return_names = true): array
     {
         $metrics = self::statsMap();
 
@@ -79,7 +80,7 @@ class TimeSeriesStats
         foreach ($metrics as $slug => $metric_class) {
             $metric = self::createFromMetric($slug);
 
-            if ($metric->ensureAllFiltersAllowed($filters)) {
+            if ($metric->canView($user) && $metric->ensureAllFiltersAllowed($filters)) {
                 $filtered[$slug] = $return_names ? $metric->getName() : $metric_class;
             }
         }
@@ -90,9 +91,9 @@ class TimeSeriesStats
     /**
      * Get the metric names
      */
-    public static function getMetricNames(array|string $filters = []): array
+    public static function getMetricNames(array|string $filters = [], ?Authorizable $user = null): array
     {
-        return self::metricsThatAllowFilters($filters, true);
+        return self::metricsThatAllowFilters($filters, $user, true);
     }
 
     /**
@@ -103,5 +104,23 @@ class TimeSeriesStats
         $metric = self::createFromMetric($metric);
 
         return $metric->getName();
+    }
+
+    /**
+     * Check if the user can view any stats
+     */
+    public static function canViewAny(?Authorizable $user = null): bool
+    {
+        $metrics = self::statsMap();
+
+        foreach ($metrics as $slug => $metric_class) {
+            $metric = self::createFromMetric($slug);
+
+            if ($metric->canView($user)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

@@ -1,12 +1,11 @@
 <?php
 namespace Javaabu\Stats\Tests\TestSupport\Stats\TimeSeries;
 
-use Illuminate\Contracts\Auth\Access\Authorizable;
 use Illuminate\Database\Eloquent\Builder;
 use Javaabu\Stats\Filters\StatsFilter;
 use Javaabu\Stats\Repositories\TimeSeries\CountStatsRepository;
 
-class UserLogouts extends CountStatsRepository
+class UserLogoutsWithPermission extends CountStatsRepository
 {
     /**
      * @var string
@@ -44,13 +43,5 @@ class UserLogouts extends CountStatsRepository
     public function query(): Builder
     {
         return $this->baseQuery()->whereCauserType('user');
-    }
-
-    /**
-     * Check whether the given user can view the stat
-     */
-    public function canView(?Authorizable $user = null): bool
-    {
-        return true;
     }
 }

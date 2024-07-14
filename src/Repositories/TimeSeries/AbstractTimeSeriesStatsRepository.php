@@ -6,6 +6,7 @@
 namespace Javaabu\Stats\Repositories\TimeSeries;
 
 use Carbon\Carbon;
+use Illuminate\Contracts\Auth\Access\Authorizable;
 use Javaabu\Stats\Concerns\HasFilters;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
@@ -34,11 +35,13 @@ abstract class AbstractTimeSeriesStatsRepository implements TimeSeriesStatsRepos
         $this->setFilters($filters);
     }
 
-
-
-
-
-
+    /**
+     * Check whether the given user can view the stat
+     */
+    public function canView(?Authorizable $user = null): bool
+    {
+        return $user && $user->can('view_stats');
+    }
 
 
     /**

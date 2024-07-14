@@ -2,6 +2,7 @@
 
 namespace Javaabu\Stats\Contracts;
 
+use Illuminate\Contracts\Auth\Access\Authorizable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Javaabu\Stats\Enums\TimeSeriesModes;
@@ -24,6 +25,11 @@ interface TimeSeriesStatsRepository extends
      * Get the name of the metric
      */
     public function getName(): string;
+
+    /**
+     * Check whether the given user can view the stat
+     */
+    public function canView(?Authorizable $user = null): bool;
 
     /**
      * Get the metric
