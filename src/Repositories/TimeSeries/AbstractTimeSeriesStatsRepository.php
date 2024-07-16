@@ -152,50 +152,6 @@ abstract class AbstractTimeSeriesStatsRepository implements TimeSeriesStatsRepos
     }
 
     /**
-     * Format the date for a given mode
-     *
-     * @param Carbon $start_date
-     * @param $mode
-     * @param bool $for_display
-     * @return string
-     */
-    public static function formatDateForMode(Carbon $start_date, $mode, $for_display = true)
-    {
-        // verify the range is valid
-        if (!static::isValidMode($mode)) {
-            throw new \InvalidArgumentException('Invalid mode');
-        }
-
-        $formatted = null;
-
-        switch ($mode) {
-            case 'hour':
-                $formatted = $for_display ? $start_date->format('j M y h:iA') : $start_date->format('Y-m-d H:i');
-                break;
-
-            case 'day':
-                $formatted = $for_display ? $start_date->format('j M y') : $start_date->format('Y-m-d');
-                break;
-
-            case 'week':
-                $formatted = $for_display ? $start_date->year . ' - Week ' . $start_date->weekOfYear :
-                    $start_date->year . ', ' . $start_date->weekOfYear;
-                break;
-
-            case 'month':
-                $formatted = $for_display ? $start_date->format('Y F') : $start_date->format('Y, m');
-                break;
-
-            case 'year':
-                $formatted = $start_date->format('Y');
-                break;
-
-        }
-
-        return $formatted;
-    }
-
-    /**
      * Get the next date for a given mode
      *
      * @param Carbon $start_date

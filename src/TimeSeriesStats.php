@@ -123,4 +123,12 @@ class TimeSeriesStats
 
         return false;
     }
+
+    /**
+     * Get the date locale name
+     */
+    public static function dateLocale(): string
+    {
+        return config('stats.date_locale') . '@Stats';
+    }
 }

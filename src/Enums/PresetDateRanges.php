@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Javaabu\Helpers\Enums\IsEnum;
 use Javaabu\Helpers\Enums\NativeEnumsTrait;
 use Javaabu\Stats\Contracts\DateRange;
+use Javaabu\Stats\TimeSeriesStats;
 
 enum PresetDateRanges: string implements IsEnum, DateRange
 {
@@ -26,13 +27,11 @@ enum PresetDateRanges: string implements IsEnum, DateRange
 
     public function getDateFrom(): Carbon
     {
-        $start_of_week = config('stats.week_starts_on');
-
         return match ($this) {
             self::TODAY => Carbon::today(),
             self::YESTERDAY => Carbon::yesterday(),
-            self::THIS_WEEK => now()->startOfWeek($start_of_week),
-            self::LAST_WEEK => now()->subWeek()->startOfWeek($start_of_week),
+            self::THIS_WEEK => now()->locale(TimeSeriesStats::dateLocale())->startOfWeek(),
+            self::LAST_WEEK => now()->locale(TimeSeriesStats::dateLocale())->subWeek()->startOfWeek(),
             self::THIS_MONTH => now()->startOfMonth(),
             self::LAST_MONTH => now()->subMonth()->startOfMonth(),
             self::THIS_YEAR => now()->startOfYear(),
@@ -46,13 +45,11 @@ enum PresetDateRanges: string implements IsEnum, DateRange
 
     public function getDateTo(): Carbon
     {
-        $end_of_week = config('stats.week_ends_on');
-
         return match ($this) {
             self::TODAY => Carbon::today()->endOfDay(),
             self::YESTERDAY => Carbon::yesterday()->endOfDay(),
-            self::THIS_WEEK => now()->endOfWeek($end_of_week),
-            self::LAST_WEEK => now()->subWeek()->endOfWeek($end_of_week),
+            self::THIS_WEEK => now()->locale(TimeSeriesStats::dateLocale())->endOfWeek(),
+            self::LAST_WEEK => now()->locale(TimeSeriesStats::dateLocale())->subWeek()->endOfWeek(),
             self::THIS_MONTH => now()->endOfMonth(),
             self::LAST_MONTH => now()->subMonth()->endOfMonth(),
             self::THIS_YEAR => now()->endOfYear(),

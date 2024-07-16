@@ -3,23 +3,41 @@
 return [
     /*
     |--------------------------------------------------------------------------
-    | Start day of the week
+    | First day of the week
     |--------------------------------------------------------------------------
     |
-    | Used to determine the start of week
+    | Used to determine the start day of week
     |
     */
 
-    'week_starts_on' => \Carbon\Carbon::SUNDAY,
+    'first_day_of_week' => \Carbon\Carbon::SUNDAY,
+
 
     /*
     |--------------------------------------------------------------------------
-    | End day of the week
+    | The locale used for dates
     |--------------------------------------------------------------------------
     |
-    | Used to determine the end of week
+    | The locale used to format dates
     |
     */
 
-    'week_ends_on' => \Carbon\Carbon::SATURDAY,
+    'date_locale' => 'en_GB',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Date formats for different time modes
+    |--------------------------------------------------------------------------
+    |
+    | Used to format the date when generating stats in different time series modes
+    |
+    */
+
+    'date_formats' => [
+        'hour' => 'j M y h:i A',
+        'day' => 'j M y',
+        'week' => 'Y - \W\e\e\k W',
+        'month' => 'Y F',
+        'year' => 'Y',
+    ]
 ];

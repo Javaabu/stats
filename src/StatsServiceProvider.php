@@ -17,6 +17,10 @@ class StatsServiceProvider extends ServiceProvider
                 __DIR__ . '/../config/stats.php' => config_path('stats.php'),
             ], 'stats-config');
         }
+
+        \Carbon\Translator::get(TimeSeriesStats::dateLocale())->setTranslations([
+            'first_day_of_week' => config('stats.first_day_of_week'),
+        ]);
     }
 
     /**
