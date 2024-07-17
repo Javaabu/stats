@@ -8,6 +8,44 @@ use Javaabu\Stats\Tests\TestCase;
 class PresetDateRangesTest extends TestCase
 {
     /** @test */
+    public function it_can_generate_correct_previous_start_date(): void
+    {
+        $this->travelTo('2024-07-08 10:07 PM');
+
+        $this->assertEquals('2024-07-07 00:00:00', PresetDateRanges::TODAY->getPreviousDateRange()->getDateFrom(), 'Incorrect previous start of TODAY');
+        $this->assertEquals('2024-07-06 00:00:00', PresetDateRanges::YESTERDAY->getPreviousDateRange()->getDateFrom(), 'Incorrect previous start of YESTERDAY');
+        $this->assertEquals('2024-06-30 00:00:00', PresetDateRanges::THIS_WEEK->getPreviousDateRange()->getDateFrom(), 'Incorrect previous start of THIS_WEEK');
+        $this->assertEquals('2024-06-23 00:00:00', PresetDateRanges::LAST_WEEK->getPreviousDateRange()->getDateFrom(), 'Incorrect previous start of LAST_WEEK');
+        $this->assertEquals('2024-06-01 00:00:00', PresetDateRanges::THIS_MONTH->getPreviousDateRange()->getDateFrom(), 'Incorrect previous start of THIS_MONTH');
+        $this->assertEquals('2024-05-01 00:00:00', PresetDateRanges::LAST_MONTH->getPreviousDateRange()->getDateFrom(), 'Incorrect previous start of LAST_MONTH');
+        $this->assertEquals('2023-01-01 00:00:00', PresetDateRanges::THIS_YEAR->getPreviousDateRange()->getDateFrom(), 'Incorrect previous start of THIS_YEAR');
+        $this->assertEquals('2022-01-01 00:00:00', PresetDateRanges::LAST_YEAR->getPreviousDateRange()->getDateFrom(), 'Incorrect previous start of LAST_YEAR');
+        $this->assertEquals('2024-06-23 00:00:00', PresetDateRanges::LAST_7_DAYS->getPreviousDateRange()->getDateFrom(), 'Incorrect previous start of LAST_7_DAYS');
+        $this->assertEquals('2024-06-09 00:00:00', PresetDateRanges::LAST_14_DAYS->getPreviousDateRange()->getDateFrom(), 'Incorrect previous start of LAST_14_DAYS');
+        $this->assertEquals('2024-05-08 00:00:00', PresetDateRanges::LAST_30_DAYS->getPreviousDateRange()->getDateFrom(), 'Incorrect previous start of LAST_30_DAYS');
+        $this->assertEquals('2013-01-01 00:00:00', PresetDateRanges::LIFETIME->getPreviousDateRange()->getDateFrom(), 'Incorrect previous start of LIFETIME');
+    }
+
+    /** @test */
+    public function it_can_generate_correct_previous_end_date(): void
+    {
+        $this->travelTo('2024-07-08 10:07 PM');
+
+        $this->assertEquals('2024-07-07 23:59:59', PresetDateRanges::TODAY->getPreviousDateRange()->getDateTo(), 'Incorrect previous end of TODAY');
+        $this->assertEquals('2024-07-06 23:59:59', PresetDateRanges::YESTERDAY->getPreviousDateRange()->getDateTo(), 'Incorrect previous end of YESTERDAY');
+        $this->assertEquals('2024-07-06 23:59:59', PresetDateRanges::THIS_WEEK->getPreviousDateRange()->getDateTo(), 'Incorrect previous end of THIS_WEEK');
+        $this->assertEquals('2024-06-29 23:59:59', PresetDateRanges::LAST_WEEK->getPreviousDateRange()->getDateTo(), 'Incorrect previous end of LAST_WEEK');
+        $this->assertEquals('2024-06-30 23:59:59', PresetDateRanges::THIS_MONTH->getPreviousDateRange()->getDateTo(), 'Incorrect previous end of THIS_MONTH');
+        $this->assertEquals('2024-05-31 23:59:59', PresetDateRanges::LAST_MONTH->getPreviousDateRange()->getDateTo(), 'Incorrect previous end of LAST_MONTH');
+        $this->assertEquals('2023-12-31 23:59:59', PresetDateRanges::THIS_YEAR->getPreviousDateRange()->getDateTo(), 'Incorrect previous end of THIS_YEAR');
+        $this->assertEquals('2022-12-31 23:59:59', PresetDateRanges::LAST_YEAR->getPreviousDateRange()->getDateTo(), 'Incorrect previous end of LAST_YEAR');
+        $this->assertEquals('2024-06-30 23:59:59', PresetDateRanges::LAST_7_DAYS->getPreviousDateRange()->getDateTo(), 'Incorrect previous end of LAST_7_DAYS');
+        $this->assertEquals('2024-06-23 23:59:59', PresetDateRanges::LAST_14_DAYS->getPreviousDateRange()->getDateTo(), 'Incorrect previous end of LAST_14_DAYS');
+        $this->assertEquals('2024-06-07 23:59:59', PresetDateRanges::LAST_30_DAYS->getPreviousDateRange()->getDateTo(), 'Incorrect previous end of LAST_30_DAYS');
+        $this->assertEquals('2018-12-31 23:59:59', PresetDateRanges::LIFETIME->getPreviousDateRange()->getDateTo(), 'Incorrect previous end of LIFETIME');
+    }
+
+    /** @test */
     public function it_can_generate_correct_start_date(): void
     {
         $this->travelTo('2024-07-08 10:07 PM');

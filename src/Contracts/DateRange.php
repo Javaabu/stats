@@ -20,4 +20,9 @@ interface DateRange
      * Get the name for the type of date range
      */
     public function getName(): string;
+
+    /**
+     * Get the previous date range
+     */
+    public function getPreviousDateRange(): DateRange;
 }

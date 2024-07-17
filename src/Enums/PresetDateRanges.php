@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Javaabu\Helpers\Enums\IsEnum;
 use Javaabu\Helpers\Enums\NativeEnumsTrait;
 use Javaabu\Stats\Contracts\DateRange;
+use Javaabu\Stats\Support\ExactDateRange;
 use Javaabu\Stats\TimeSeriesStats;
 
 enum PresetDateRanges: string implements IsEnum, DateRange
@@ -62,5 +63,53 @@ enum PresetDateRanges: string implements IsEnum, DateRange
     public function getName(): string
     {
         return $this->value;
+    }
+
+    protected function generatePreviousFromDate(): Carbon
+    {
+        $from_date = $this->getDateFrom();
+
+        return match ($this) {
+            self::TODAY => $from_date->subDay(),
+            self::YESTERDAY => $from_date->subDay(),
+            self::THIS_WEEK => $from_date->subWeek(),
+            self::LAST_WEEK => $from_date->subWeek(),
+            self::THIS_MONTH => $from_date->subMonth(),
+            self::LAST_MONTH => $from_date->subMonth(),
+            self::THIS_YEAR => $from_date->subYear(),
+            self::LAST_YEAR => $from_date->subYear(),
+            self::LAST_7_DAYS => $from_date->subDays(7 + 1),
+            self::LAST_14_DAYS => $from_date->subDays(14 + 1),
+            self::LAST_30_DAYS => $from_date->subDays(30 + 1),
+            self::LIFETIME => $from_date->subYears(5 + 1),
+        };
+    }
+
+    protected function generatePreviousToDate(Carbon $from_date): Carbon
+    {
+        $from_date = $from_date->copy();
+
+        return match ($this) {
+            self::TODAY => $from_date->endOfDay(),
+            self::YESTERDAY => $from_date->endOfDay(),
+            self::THIS_WEEK => $from_date->endOfWeek(),
+            self::LAST_WEEK => $from_date->endOfWeek(),
+            self::THIS_MONTH => $from_date->endOfMonth(),
+            self::LAST_MONTH => $from_date->endOfMonth(),
+            self::THIS_YEAR => $from_date->endOfYear(),
+            self::LAST_YEAR => $from_date->endOfYear(),
+            self::LAST_7_DAYS => $from_date->addDays(7)->endOfDay(),
+            self::LAST_14_DAYS => $from_date->addDays(14)->endOfDay(),
+            self::LAST_30_DAYS => $from_date->addDays(30)->endOfDay(),
+            self::LIFETIME => $from_date->addYears(5)->endOfYear(),
+        };
+    }
+
+    public function getPreviousDateRange(): DateRange
+    {
+        $previous_date_from = $this->generatePreviousFromDate();
+        $previous_date_to = $this->generatePreviousToDate($previous_date_from);
+
+        return new ExactDateRange($previous_date_from, $previous_date_to);
     }
 }
