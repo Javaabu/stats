@@ -4,6 +4,7 @@ namespace Javaabu\Stats\Tests\Unit;
 
 use Illuminate\Support\Facades\Gate;
 use Javaabu\Stats\Enums\PresetDateRanges;
+use Javaabu\Stats\Formatters\TimeSeries\DefaultStatsFormatter;
 use Javaabu\Stats\Tests\TestCase;
 use Javaabu\Stats\Tests\TestSupport\Models\User;
 use Javaabu\Stats\Tests\TestSupport\Stats\TimeSeries\UserLogouts;
@@ -12,6 +13,62 @@ use Javaabu\Stats\TimeSeriesStats;
 
 class TimeSeriesStatsTest extends TestCase
 {
+    /** @test */
+    public function it_can_register_a_time_series_stat_formatter(): void
+    {
+        TimeSeriesStats::registerFormatters([
+            'default' => DefaultStatsFormatter::class
+        ]);
+
+        $this->assertEquals('default', TimeSeriesStats::getNameForFormatter(DefaultStatsFormatter::class));
+        $this->assertEquals(DefaultStatsFormatter::class, TimeSeriesStats::getClassNameForFormat('default'));
+    }
+
+    /** @test */
+    public function it_can_get_the_formatters_map(): void
+    {
+        TimeSeriesStats::registerFormatters([
+            'default' => DefaultStatsFormatter::class
+        ]);
+
+        $this->assertEquals([
+            'default' => DefaultStatsFormatter::class
+        ], TimeSeriesStats::formattersMap());
+    }
+
+    /** @test */
+    public function it_can_get_the_class_name_for_a_formatter(): void
+    {
+        TimeSeriesStats::registerFormatters([
+            'default' => DefaultStatsFormatter::class
+        ]);
+
+        $this->assertEquals(DefaultStatsFormatter::class, TimeSeriesStats::getClassNameForFormat('default'));
+    }
+
+    /** @test */
+    public function it_can_get_the_name_for_a_formatter(): void
+    {
+        TimeSeriesStats::registerFormatters([
+            'default' => DefaultStatsFormatter::class
+        ]);
+
+        $this->assertEquals('default', TimeSeriesStats::getNameForFormatter(DefaultStatsFormatter::class));
+    }
+
+    /** @test */
+    public function it_can_create_from_a_formatter(): void
+    {
+        TimeSeriesStats::registerFormatters([
+            'default' => DefaultStatsFormatter::class
+        ]);
+
+        $formatter = TimeSeriesStats::createFromFormat('default');
+
+        $this->assertInstanceOf(DefaultStatsFormatter::class, $formatter);
+        $this->assertEquals('default', $formatter->getName());
+    }
+
     /** @test */
     public function it_can_register_a_time_series_stat(): void
     {

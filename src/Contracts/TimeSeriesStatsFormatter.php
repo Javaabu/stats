@@ -2,28 +2,17 @@
 
 namespace Javaabu\Stats\Contracts;
 
+use Javaabu\Stats\Enums\TimeSeriesModes;
+
 interface TimeSeriesStatsFormatter
 {
-    public function getStats()
-    {
-        return $this->stats;
-    }
-
-    /**
-     * Get the comparison data
-     *
-     * @return TimeSeriesStatsRepository
-     */
-    public function getCompare()
-    {
-        return $this->compare;
-    }
-
     /**
      * Format the data
-     *
-     * @param string $mode
-     * @return array
      */
-    public abstract function format($mode);
+    public function format(TimeSeriesModes $mode, TimeSeriesStatsRepository $stats, ?TimeSeriesStatsRepository $compare = null): array;
+
+    /**
+     * Get the name of the formatter
+     */
+    public function getName(): string;
 }

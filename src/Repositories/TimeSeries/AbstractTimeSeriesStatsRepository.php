@@ -83,13 +83,9 @@ abstract class AbstractTimeSeriesStatsRepository implements TimeSeriesStatsRepos
 
     /**
      * Get the result formatted
-     *
-     * @param $format
-     * @param string $mode
-     * @return array
      */
-    public function format($format, $mode = 'day'): array
+    public function format(string $format, TimeSeriesModes $mode = TimeSeriesModes::DAY): array
     {
-        return StatsFormatter::createFromFormat($format, $this)->format($mode);
+        return TimeSeriesStats::createFromFormat($format)->format($mode, $this);
     }
 }

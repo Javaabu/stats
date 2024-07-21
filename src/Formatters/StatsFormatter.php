@@ -44,16 +44,11 @@ abstract class StatsFormatter
 
     /**
      * Create from formatter
-     *
-     * @param $format
-     * @param StatsRepository $stats
-     * @param StatsRepository|null $compare
-     * @return StatsFormatter
      */
-    public static function createFromFormat($format, StatsRepository $stats, StatsRepository $compare = null)
+    public static function createFromFormat(string $format): StatsFormatter
     {
         $class = self::getFormatterClass($format);
-        return new $class($stats, $compare);
+        return new $class();
     }
 
     /**

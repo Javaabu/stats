@@ -5,12 +5,69 @@ namespace Javaabu\Stats;
 use Illuminate\Contracts\Auth\Access\Authorizable;
 use Illuminate\Support\Arr;
 use Javaabu\Stats\Contracts\DateRange;
+use Javaabu\Stats\Contracts\TimeSeriesStatsFormatter;
 use Javaabu\Stats\Contracts\TimeSeriesStatsRepository;
 use Javaabu\Stats\Enums\PresetDateRanges;
 
 class TimeSeriesStats
 {
     protected static array $stats_map = [];
+    protected static array $formatters_map = [];
+
+    /**
+     * Register a formatter or a number of formatters
+     *
+     * @param array<string, class-string<TimeSeriesStatsFormatter>> $formatters
+     */
+    public static function registerFormatters(array $formatters, bool $merge = true)
+    {
+        static::$formatters_map = $merge ? array_merge(static::$formatters_map, $formatters) : $formatters;
+    }
+
+    /**
+     * Get the formatters map
+     *
+     * @return  array<string, class-string<TimeSeriesStatsFormatter>>
+     */
+    public static function formattersMap(): array
+    {
+        return static::$formatters_map;
+    }
+
+    /**
+     * Find the class name of a formatter using its name
+     *
+     * @return class-string<TimeSeriesStatsFormatter>
+     */
+    public static function getClassNameForFormat(string $name): string
+    {
+        return Arr::get(static::$formatters_map, $name, $name);
+    }
+
+    /**
+     * Get the name for the formatter
+     *
+     * @param class-string<TimeSeriesStatsFormatter> $formatter
+     */
+    public static function getNameForFormatter(string $formatter): string
+    {
+        $name = array_search($formatter, static::$formatters_map, true);
+
+        if (! $name) {
+            $name = $formatter;
+        }
+
+        return $name;
+    }
+
+    /**
+     * Create from format
+     */
+    public static function createFromFormat(string $format): TimeSeriesStatsFormatter
+    {
+        $class = static::getClassNameForFormat($format);
+        return new $class();
+    }
 
     /**
      * Register a stat or a number of stats
