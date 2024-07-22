@@ -37,10 +37,10 @@ enum PresetDateRanges: string implements IsEnum, DateRange
             self::LAST_MONTH => now()->subMonth()->startOfMonth(),
             self::THIS_YEAR => now()->startOfYear(),
             self::LAST_YEAR => now()->subYear()->startOfYear(),
-            self::LAST_7_DAYS => now()->subDays(7)->startOfDay(),
-            self::LAST_14_DAYS => now()->subDays(14)->startOfDay(),
-            self::LAST_30_DAYS => now()->subDays(30)->startOfDay(),
-            self::LIFETIME => now()->subYears(5)->startOfYear(),
+            self::LAST_7_DAYS => now()->subDays(7 - 1)->startOfDay(),
+            self::LAST_14_DAYS => now()->subDays(14 - 1)->startOfDay(),
+            self::LAST_30_DAYS => now()->subDays(30 - 1)->startOfDay(),
+            self::LIFETIME => now()->subYears(5 - 1)->startOfYear(),
         };
     }
 
@@ -78,10 +78,10 @@ enum PresetDateRanges: string implements IsEnum, DateRange
             self::LAST_MONTH => $from_date->subMonth(),
             self::THIS_YEAR => $from_date->subYear(),
             self::LAST_YEAR => $from_date->subYear(),
-            self::LAST_7_DAYS => $from_date->subDays(7 + 1),
-            self::LAST_14_DAYS => $from_date->subDays(14 + 1),
-            self::LAST_30_DAYS => $from_date->subDays(30 + 1),
-            self::LIFETIME => $from_date->subYears(5 + 1),
+            self::LAST_7_DAYS => $from_date->subDays(7),
+            self::LAST_14_DAYS => $from_date->subDays(14),
+            self::LAST_30_DAYS => $from_date->subDays(30),
+            self::LIFETIME => $from_date->subYears(5),
         };
     }
 
@@ -98,10 +98,10 @@ enum PresetDateRanges: string implements IsEnum, DateRange
             self::LAST_MONTH => $from_date->endOfMonth(),
             self::THIS_YEAR => $from_date->endOfYear(),
             self::LAST_YEAR => $from_date->endOfYear(),
-            self::LAST_7_DAYS => $from_date->addDays(7)->endOfDay(),
-            self::LAST_14_DAYS => $from_date->addDays(14)->endOfDay(),
-            self::LAST_30_DAYS => $from_date->addDays(30)->endOfDay(),
-            self::LIFETIME => $from_date->addYears(5)->endOfYear(),
+            self::LAST_7_DAYS => $from_date->addDays(7 - 1)->endOfDay(),
+            self::LAST_14_DAYS => $from_date->addDays(14 - 1)->endOfDay(),
+            self::LAST_30_DAYS => $from_date->addDays(30 - 1)->endOfDay(),
+            self::LIFETIME => $from_date->addYears(5 - 1)->endOfYear(),
         };
     }
 

@@ -20,10 +20,10 @@ class PresetDateRangesTest extends TestCase
         $this->assertEquals('2024-05-01 00:00:00', PresetDateRanges::LAST_MONTH->getPreviousDateRange()->getDateFrom(), 'Incorrect previous start of LAST_MONTH');
         $this->assertEquals('2023-01-01 00:00:00', PresetDateRanges::THIS_YEAR->getPreviousDateRange()->getDateFrom(), 'Incorrect previous start of THIS_YEAR');
         $this->assertEquals('2022-01-01 00:00:00', PresetDateRanges::LAST_YEAR->getPreviousDateRange()->getDateFrom(), 'Incorrect previous start of LAST_YEAR');
-        $this->assertEquals('2024-06-23 00:00:00', PresetDateRanges::LAST_7_DAYS->getPreviousDateRange()->getDateFrom(), 'Incorrect previous start of LAST_7_DAYS');
-        $this->assertEquals('2024-06-09 00:00:00', PresetDateRanges::LAST_14_DAYS->getPreviousDateRange()->getDateFrom(), 'Incorrect previous start of LAST_14_DAYS');
-        $this->assertEquals('2024-05-08 00:00:00', PresetDateRanges::LAST_30_DAYS->getPreviousDateRange()->getDateFrom(), 'Incorrect previous start of LAST_30_DAYS');
-        $this->assertEquals('2013-01-01 00:00:00', PresetDateRanges::LIFETIME->getPreviousDateRange()->getDateFrom(), 'Incorrect previous start of LIFETIME');
+        $this->assertEquals('2024-06-25 00:00:00', PresetDateRanges::LAST_7_DAYS->getPreviousDateRange()->getDateFrom(), 'Incorrect previous start of LAST_7_DAYS');
+        $this->assertEquals('2024-06-11 00:00:00', PresetDateRanges::LAST_14_DAYS->getPreviousDateRange()->getDateFrom(), 'Incorrect previous start of LAST_14_DAYS');
+        $this->assertEquals('2024-05-10 00:00:00', PresetDateRanges::LAST_30_DAYS->getPreviousDateRange()->getDateFrom(), 'Incorrect previous start of LAST_30_DAYS');
+        $this->assertEquals('2015-01-01 00:00:00', PresetDateRanges::LIFETIME->getPreviousDateRange()->getDateFrom(), 'Incorrect previous start of LIFETIME');
     }
 
     /** @test */
@@ -39,10 +39,10 @@ class PresetDateRangesTest extends TestCase
         $this->assertEquals('2024-05-31 23:59:59', PresetDateRanges::LAST_MONTH->getPreviousDateRange()->getDateTo(), 'Incorrect previous end of LAST_MONTH');
         $this->assertEquals('2023-12-31 23:59:59', PresetDateRanges::THIS_YEAR->getPreviousDateRange()->getDateTo(), 'Incorrect previous end of THIS_YEAR');
         $this->assertEquals('2022-12-31 23:59:59', PresetDateRanges::LAST_YEAR->getPreviousDateRange()->getDateTo(), 'Incorrect previous end of LAST_YEAR');
-        $this->assertEquals('2024-06-30 23:59:59', PresetDateRanges::LAST_7_DAYS->getPreviousDateRange()->getDateTo(), 'Incorrect previous end of LAST_7_DAYS');
-        $this->assertEquals('2024-06-23 23:59:59', PresetDateRanges::LAST_14_DAYS->getPreviousDateRange()->getDateTo(), 'Incorrect previous end of LAST_14_DAYS');
-        $this->assertEquals('2024-06-07 23:59:59', PresetDateRanges::LAST_30_DAYS->getPreviousDateRange()->getDateTo(), 'Incorrect previous end of LAST_30_DAYS');
-        $this->assertEquals('2018-12-31 23:59:59', PresetDateRanges::LIFETIME->getPreviousDateRange()->getDateTo(), 'Incorrect previous end of LIFETIME');
+        $this->assertEquals('2024-07-01 23:59:59', PresetDateRanges::LAST_7_DAYS->getPreviousDateRange()->getDateTo(), 'Incorrect previous end of LAST_7_DAYS');
+        $this->assertEquals('2024-06-24 23:59:59', PresetDateRanges::LAST_14_DAYS->getPreviousDateRange()->getDateTo(), 'Incorrect previous end of LAST_14_DAYS');
+        $this->assertEquals('2024-06-08 23:59:59', PresetDateRanges::LAST_30_DAYS->getPreviousDateRange()->getDateTo(), 'Incorrect previous end of LAST_30_DAYS');
+        $this->assertEquals('2019-12-31 23:59:59', PresetDateRanges::LIFETIME->getPreviousDateRange()->getDateTo(), 'Incorrect previous end of LIFETIME');
     }
 
     /** @test */
@@ -58,10 +58,10 @@ class PresetDateRangesTest extends TestCase
         $this->assertEquals('2024-06-01 00:00:00', PresetDateRanges::LAST_MONTH->getDateFrom(), 'Incorrect start of LAST_MONTH');
         $this->assertEquals('2024-01-01 00:00:00', PresetDateRanges::THIS_YEAR->getDateFrom(), 'Incorrect start of THIS_YEAR');
         $this->assertEquals('2023-01-01 00:00:00', PresetDateRanges::LAST_YEAR->getDateFrom(), 'Incorrect start of LAST_YEAR');
-        $this->assertEquals('2024-07-01 00:00:00', PresetDateRanges::LAST_7_DAYS->getDateFrom(), 'Incorrect start of LAST_7_DAYS');
-        $this->assertEquals('2024-06-24 00:00:00', PresetDateRanges::LAST_14_DAYS->getDateFrom(), 'Incorrect start of LAST_14_DAYS');
-        $this->assertEquals('2024-06-08 00:00:00', PresetDateRanges::LAST_30_DAYS->getDateFrom(), 'Incorrect start of LAST_30_DAYS');
-        $this->assertEquals('2019-01-01 00:00:00', PresetDateRanges::LIFETIME->getDateFrom(), 'Incorrect start of LIFETIME');
+        $this->assertEquals('2024-07-02 00:00:00', PresetDateRanges::LAST_7_DAYS->getDateFrom(), 'Incorrect start of LAST_7_DAYS');
+        $this->assertEquals('2024-06-25 00:00:00', PresetDateRanges::LAST_14_DAYS->getDateFrom(), 'Incorrect start of LAST_14_DAYS');
+        $this->assertEquals('2024-06-09 00:00:00', PresetDateRanges::LAST_30_DAYS->getDateFrom(), 'Incorrect start of LAST_30_DAYS');
+        $this->assertEquals('2020-01-01 00:00:00', PresetDateRanges::LIFETIME->getDateFrom(), 'Incorrect start of LIFETIME');
     }
 
     /** @test */

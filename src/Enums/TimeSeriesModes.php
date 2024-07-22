@@ -34,6 +34,11 @@ enum TimeSeriesModes: string implements IsEnum
         return Str::camel('diff_in_' . Str::plural($this->value));
     }
 
+    public function incrementMethodName(): string
+    {
+        return Str::camel('add_' . $this->value);
+    }
+
     public function queryMethodName(): string
     {
         return Str::camel($this->value);
@@ -42,7 +47,6 @@ enum TimeSeriesModes: string implements IsEnum
     public function interval(Carbon $date_from, Carbon $date_to): int
     {
         $diff_method = $this->diffMethodName();
-        //$date_to = $this == self::HOUR ? $date_to->copy()->addHour() : $date_to->copy()->addDay();
 
         return (int) $date_from->{$diff_method}($date_to, true);
     }
@@ -50,6 +54,15 @@ enum TimeSeriesModes: string implements IsEnum
     public function getDateFormat(): string
     {
         return config('stats.date_formats.' . $this->value);
+    }
+
+    public function increment(Carbon $date): Carbon
+    {
+        $date = $date->copy()->locale(TimeSeriesStats::dateLocale());
+
+        $method = $this->incrementMethodName();
+
+        return $date->{$method}();
     }
 
     public function formatDate(Carbon $date, bool $for_display = true): string

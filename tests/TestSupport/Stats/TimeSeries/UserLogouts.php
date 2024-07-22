@@ -16,7 +16,7 @@ class UserLogouts extends CountStatsRepository
     /**
      * @var string
      */
-    protected string $aggregate_field = 'logins';
+    protected string $aggregate_field = 'logouts';
 
     /**
      * Get all the allowed filters

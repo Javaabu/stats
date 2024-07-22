@@ -5,6 +5,7 @@
 
 namespace Javaabu\Stats\Formatters;
 
+use Javaabu\Stats\Formatters\TimeSeries\ChartjsStatsFormatter;
 use Javaabu\Stats\StatsRepository;
 
 abstract class StatsFormatter

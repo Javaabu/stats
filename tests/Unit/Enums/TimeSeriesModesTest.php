@@ -53,6 +53,16 @@ class TimeSeriesModesTest extends TestCase
     }
 
     /** @test */
+    public function it_can_generate_the_correct_increment_method_name_for_time_series_modes(): void
+    {
+        $this->assertEquals('addHour', TimeSeriesModes::HOUR->incrementMethodName(), 'Invalid increment method name for HOUR');
+        $this->assertEquals('addDay', TimeSeriesModes::DAY->incrementMethodName(), 'Invalid increment method name for DAY');
+        $this->assertEquals('addWeek', TimeSeriesModes::WEEK->incrementMethodName(), 'Invalid increment method name for WEEK');
+        $this->assertEquals('addMonth', TimeSeriesModes::MONTH->incrementMethodName(), 'Invalid increment method name for MONTH');
+        $this->assertEquals('addYear', TimeSeriesModes::YEAR->incrementMethodName(), 'Invalid increment method name for YEAR');
+    }
+
+    /** @test */
     public function it_can_generate_the_correct_interval_for_time_series_modes(): void
     {
         $date_from = Carbon::parse('2024-07-09 18:34:00');
@@ -63,5 +73,17 @@ class TimeSeriesModesTest extends TestCase
         $this->assertEquals(52, TimeSeriesModes::WEEK->interval($date_from, $date_to), 'Invalid interval for WEEK');
         $this->assertEquals(12, TimeSeriesModes::MONTH->interval($date_from, $date_to), 'Invalid interval for MONTH');
         $this->assertEquals(1, TimeSeriesModes::YEAR->interval($date_from, $date_to), 'Invalid interval for YEAR');
+    }
+
+    /** @test */
+    public function it_can_correctly_increment_the_date_for_each_time_series_mode(): void
+    {
+        $date = Carbon::parse('2024-07-16 11:51 AM');
+
+        $this->assertEquals('2024-07-16 12:51', TimeSeriesModes::HOUR->formatDate(TimeSeriesModes::HOUR->increment($date), false), 'Invalid incremented date for HOUR');
+        $this->assertEquals('2024-07-17', TimeSeriesModes::DAY->formatDate(TimeSeriesModes::DAY->increment($date), false), 'Invalid incremented date for DAY');
+        $this->assertEquals('2024, 30', TimeSeriesModes::WEEK->formatDate(TimeSeriesModes::WEEK->increment($date), false), 'Invalid incremented date for WEEK');
+        $this->assertEquals('2024, 08', TimeSeriesModes::MONTH->formatDate(TimeSeriesModes::MONTH->increment($date), false), 'Invalid incremented date for MONTH');
+        $this->assertEquals('2025', TimeSeriesModes::YEAR->formatDate(TimeSeriesModes::YEAR->increment($date), false), 'Invalid incremented date for YEAR');
     }
 }

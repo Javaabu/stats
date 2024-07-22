@@ -27,7 +27,7 @@ class HasDateRangeTest extends TestCase
     {
         $stat = new UserLogouts(PresetDateRanges::LAST_7_DAYS);
 
-        $this->assertEquals('2024-07-06 00:00:00', $stat->getDateFrom()->toDateTimeString());
+        $this->assertEquals('2024-07-07 00:00:00', $stat->getDateFrom()->toDateTimeString());
         $this->assertEquals('2024-07-13 23:59:59', $stat->getDateTo()->toDateTimeString());
     }
 
@@ -44,7 +44,7 @@ class HasDateRangeTest extends TestCase
     {
         $stat = new UserLogouts(PresetDateRanges::LAST_7_DAYS);
 
-        $this->assertEquals('2024-07-06 00:00 - 2024-07-13 23:59', $stat->formattedDateRange());
+        $this->assertEquals('2024-07-07 00:00 - 2024-07-13 23:59', $stat->formattedDateRange());
     }
 
     /** @test */
@@ -110,7 +110,7 @@ class HasDateRangeTest extends TestCase
         $stat->setDateRange(PresetDateRanges::LAST_7_DAYS);
 
         $this->assertEquals(PresetDateRanges::LAST_7_DAYS, $stat->getDateRange());
-        $this->assertEquals('2024-07-06 00:00:00', $stat->getDateFrom()->toDateTimeString());
+        $this->assertEquals('2024-07-07 00:00:00', $stat->getDateFrom()->toDateTimeString());
         $this->assertEquals('2024-07-13 23:59:59', $stat->getDateTo()->toDateTimeString());
     }
 
@@ -165,9 +165,29 @@ class HasDateRangeTest extends TestCase
     /** @test */
     public function it_can_get_the_interval_for_the_given_mode(): void
     {
-        $stat = new UserLogouts(PresetDateRanges::LAST_7_DAYS);
+        $stat = new UserLogouts(PresetDateRanges::TODAY);
+        $this->assertEquals(0, $stat->interval(TimeSeriesModes::DAY));
 
-        $this->assertEquals(7, $stat->interval(TimeSeriesModes::DAY));
+        $stat = new UserLogouts(PresetDateRanges::YESTERDAY);
+        $this->assertEquals(0, $stat->interval(TimeSeriesModes::DAY));
+
+        $stat = new UserLogouts(PresetDateRanges::LAST_MONTH);
+        $this->assertEquals(29, $stat->interval(TimeSeriesModes::DAY));
+
+        $stat = new UserLogouts(PresetDateRanges::LAST_WEEK);
+        $this->assertEquals(6, $stat->interval(TimeSeriesModes::DAY));
+
+        $stat = new UserLogouts(PresetDateRanges::LAST_7_DAYS);
+        $this->assertEquals(6, $stat->interval(TimeSeriesModes::DAY));
+
+        $stat = new UserLogouts(PresetDateRanges::LAST_14_DAYS);
+        $this->assertEquals(13, $stat->interval(TimeSeriesModes::DAY));
+
+        $stat = new UserLogouts(PresetDateRanges::LAST_30_DAYS);
+        $this->assertEquals(29, $stat->interval(TimeSeriesModes::DAY));
+
+        $stat = new UserLogouts(PresetDateRanges::LIFETIME);
+        $this->assertEquals(4, $stat->interval(TimeSeriesModes::YEAR));
     }
 
 }
