@@ -13,6 +13,13 @@ abstract class TestCase extends BaseTestCase
 
     public function setUp(): void
     {
+        if (isset($_ENV['DB_CONNECTION']) || isset($_ENV['DB_DATABASE'])) {
+            if (! $this->shouldUseMysql()) {
+                $_ENV['DB_CONNECTION'] = 'sqlite';
+                $_ENV['DB_DATABASE'] = ':memory:';
+            }
+        }
+
         parent::setUp();
 
         $this->app['config']->set('app.key', 'base64:yWa/ByhLC/GUvfToOuaPD7zDwB64qkc/QkaQOrT5IpE=');
@@ -28,6 +35,11 @@ abstract class TestCase extends BaseTestCase
             Artisan::call('migrate');
         }
 
+    }
+
+    public function shouldUseMysql(): bool
+    {
+        return property_exists($this, 'use_mysql') ? $this->use_mysql : false;
     }
 
     protected function getPackageProviders($app)

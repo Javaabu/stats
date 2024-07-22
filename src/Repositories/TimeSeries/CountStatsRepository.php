@@ -14,8 +14,6 @@ abstract class CountStatsRepository extends AggregateStatsRepository
 
     /**
      * Get the aggregate sql expression for the repository
-     *
-     * @return string
      */
     public function getAggregateSql(): string
     {

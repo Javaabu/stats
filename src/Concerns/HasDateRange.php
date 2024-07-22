@@ -86,8 +86,7 @@ trait HasDateRange
      */
     public function applyDateFilters(Builder $query): Builder
     {
-        return $query->whereBetween($this->getDateField(), [$this->getDateFrom(), $this->getDateTo()])
-            ->latest($this->getDateField());
+        return $query->whereBetween($this->getDateField(), [$this->getDateFrom(), $this->getDateTo()]);
     }
 
     /**

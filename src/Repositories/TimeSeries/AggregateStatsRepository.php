@@ -27,18 +27,14 @@ abstract class AggregateStatsRepository extends AbstractTimeSeriesStatsRepositor
 
     /**
      * Get the main table for the repository
-     *
-     * @return string
      */
-    public function getTable()
+    public function getTable(): string
     {
         return $this->table;
     }
 
     /**
      * Get the date field for the repository
-     *
-     * @return string
      */
     public function getDateField(): string
     {
@@ -47,8 +43,6 @@ abstract class AggregateStatsRepository extends AbstractTimeSeriesStatsRepositor
 
     /**
      * Get the aggregate sql expression for the repository
-     *
-     * @return string
      */
     public function getAggregateSql(): string
     {
@@ -60,11 +54,12 @@ abstract class AggregateStatsRepository extends AbstractTimeSeriesStatsRepositor
      *
      * @return Builder
      */
-    public function hour()
+    public function hour(): Builder
     {
         return $this->filteredQuery()
             ->select(DB::raw($this->getAggregateSql().", DATE_FORMAT(".$this->getDateField().", '%Y-%m-%d %H:00') as hour"))
-            ->groupBy('hour');
+            ->groupBy('hour')
+            ->orderBy('hour', 'ASC');
     }
 
     /**
@@ -76,7 +71,8 @@ abstract class AggregateStatsRepository extends AbstractTimeSeriesStatsRepositor
     {
         return $this->filteredQuery()
             ->select(DB::raw($this->getAggregateSql().", DATE(".$this->getDateField().") as day"))
-            ->groupBy('day');
+            ->groupBy('day')
+            ->orderBy('day', 'ASC');
     }
 
     /**
@@ -89,7 +85,8 @@ abstract class AggregateStatsRepository extends AbstractTimeSeriesStatsRepositor
         return $this->filteredQuery()
             //->select(DB::raw($this->getAggregateSql().", DATE_FORMAT(DATE_ADD(".$this->getDateField().", INTERVAL(1-DAYOFWEEK(".$this->getDateField().")) DAY), '%X-%m-%d, %V') as week"))
             ->select(DB::raw($this->getAggregateSql().", DATE_FORMAT(".$this->getDateField().", '%X, %V') as week"))
-            ->groupBy('week');
+            ->groupBy('week')
+            ->orderBy('week', 'ASC');
     }
 
     /**
@@ -101,7 +98,8 @@ abstract class AggregateStatsRepository extends AbstractTimeSeriesStatsRepositor
     {
         return $this->filteredQuery()
             ->select(DB::raw($this->getAggregateSql().", DATE_FORMAT(".$this->getDateField().", '%Y, %m') as month"))
-            ->groupBy('month');
+            ->groupBy('month')
+            ->orderBy('month', 'ASC');
     }
 
     /**
@@ -113,7 +111,8 @@ abstract class AggregateStatsRepository extends AbstractTimeSeriesStatsRepositor
     {
         return $this->filteredQuery()
             ->select(DB::raw($this->getAggregateSql().", YEAR(".$this->getDateField().") as year"))
-            ->groupBy('year');
+            ->groupBy('year')
+            ->orderBy('year', 'ASC');
     }
 
     /**

@@ -1,21 +1,16 @@
 <?php
 /**
- * Revenue Stats Repository base class
+ * Sum Stats Repository base class
  */
 
 namespace Javaabu\Stats\Repositories\TimeSeries;
 
-abstract class TotalAmountStatsRepository extends AggregateStatsRepository
+abstract class SumStatsRepository extends AggregateStatsRepository
 {
     /**
      * @var string
      */
-    protected string $aggregate_field = 'total_mvr';
-
-    /**
-     * @var string
-     */
-    protected string $sum_field = 'amount';
+    protected string $aggregate_field = 'total';
 
     /**
      * Get the main table for the repository
@@ -29,11 +24,6 @@ abstract class TotalAmountStatsRepository extends AggregateStatsRepository
 
     /**
      * Get the field to sum for the repository
-     *
-     * @return string
      */
-    public function getFieldToSum(): string
-    {
-        return $this->sum_field;
-    }
+    public abstract function getFieldToSum(): string;
 }

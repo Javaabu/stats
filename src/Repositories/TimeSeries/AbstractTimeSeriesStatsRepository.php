@@ -5,10 +5,8 @@
 
 namespace Javaabu\Stats\Repositories\TimeSeries;
 
-use Carbon\Carbon;
 use Illuminate\Contracts\Auth\Access\Authorizable;
 use Javaabu\Stats\Concerns\HasFilters;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Javaabu\Stats\Concerns\HasDateRange;
@@ -16,7 +14,6 @@ use Javaabu\Stats\Contracts\DateRange;
 use Javaabu\Stats\Contracts\TimeSeriesStatsRepository;
 use Javaabu\Stats\Enums\PresetDateRanges;
 use Javaabu\Stats\Enums\TimeSeriesModes;
-use Javaabu\Stats\Formatters\StatsFormatter;
 use Javaabu\Stats\TimeSeriesStats;
 
 abstract class AbstractTimeSeriesStatsRepository implements TimeSeriesStatsRepository
