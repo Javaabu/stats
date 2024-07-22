@@ -17,7 +17,7 @@ abstract class TestCase extends BaseTestCase
         if (isset($_ENV['DB_CONNECTION']) || isset($_ENV['DB_DATABASE'])) {
             if (! $this->shouldUseMysql()) {
                 RefreshDatabaseState::$migrated = false;
-                
+
                 $_ENV['DB_CONNECTION'] = 'sqlite';
                 $_ENV['DB_DATABASE'] = ':memory:';
             }

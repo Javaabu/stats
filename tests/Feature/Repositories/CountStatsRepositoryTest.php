@@ -126,4 +126,78 @@ class CountStatsRepositoryTest extends TestCase
         ], $data);
     }
 
+    /** @test */
+    public function it_can_get_can_get_the_monthly_count(): void
+    {
+        $this->travelTo('2024-07-22 8:06 PM');
+
+        Payment::factory()
+            ->count(5)
+            ->create([
+                'paid_at' => '2024-07-22 7:06 PM',
+            ]);
+
+        Payment::factory()
+            ->count(2)
+            ->create([
+                'paid_at' => '2024-01-03 7:06 PM',
+            ]);
+
+        // create the stat
+        $stat = new PaymentsCount(PresetDateRanges::THIS_YEAR);
+
+        $data = $stat->results(TimeSeriesModes::MONTH)->toArray();
+
+        $this->assertIsArray($data);
+        $this->assertCount(2, $data);
+
+        $this->assertEquals([
+            [
+                'count' => 2,
+                'month' => '2024, 01',
+            ],
+            [
+                'count' => 5,
+                'month' => '2024, 07',
+            ]
+        ], $data);
+    }
+
+    /** @test */
+    public function it_can_get_can_get_the_yearly_count(): void
+    {
+        $this->travelTo('2024-07-22 8:06 PM');
+
+        Payment::factory()
+            ->count(5)
+            ->create([
+                'paid_at' => '2024-07-22 7:06 PM',
+            ]);
+
+        Payment::factory()
+            ->count(2)
+            ->create([
+                'paid_at' => '2023-01-03 7:06 PM',
+            ]);
+
+        // create the stat
+        $stat = new PaymentsCount(PresetDateRanges::LIFETIME);
+
+        $data = $stat->results(TimeSeriesModes::YEAR)->toArray();
+
+        $this->assertIsArray($data);
+        $this->assertCount(2, $data);
+
+        $this->assertEquals([
+            [
+                'count' => 2,
+                'year' => '2023',
+            ],
+            [
+                'count' => 5,
+                'year' => '2024',
+            ]
+        ], $data);
+    }
+
 }
