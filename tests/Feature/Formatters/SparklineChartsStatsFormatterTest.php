@@ -6,16 +6,17 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Javaabu\Stats\Enums\PresetDateRanges;
 use Javaabu\Stats\Enums\TimeSeriesModes;
 use Javaabu\Stats\Formatters\TimeSeries\FlotStatsFormatter;
+use Javaabu\Stats\Formatters\TimeSeries\SparklineChartsStatsFormatter;
 use Javaabu\Stats\Tests\TestCase;
 use Javaabu\Stats\Tests\TestSupport\Factories\ActivityFactory;
 use Javaabu\Stats\Tests\TestSupport\Stats\TimeSeries\UserLogouts;
 
-class FlotStatsFormatterTest extends TestCase
+class SparklineChartsStatsFormatterTest extends TestCase
 {
     use RefreshDatabase;
 
     /** @test */
-    public function it_can_format_with_the_flot_formatter(): void
+    public function it_can_format_with_the_sparkline_formatter(): void
     {
         $this->travelTo('2024-07-04');
 
@@ -41,20 +42,20 @@ class FlotStatsFormatterTest extends TestCase
         $stat = new UserLogouts(PresetDateRanges::LAST_7_DAYS);
         $compare = new UserLogouts(PresetDateRanges::LAST_7_DAYS->getPreviousDateRange());
 
-        $formatter = new FlotStatsFormatter();
+        $formatter = new SparklineChartsStatsFormatter();
 
         $data = $formatter->format(TimeSeriesModes::DAY, $stat, $compare);
 
         $this->assertIsArray($data);
 
         $this->assertEquals([
-            [0, 0],
-            [1, 0],
-            [2, 0],
-            [3, 0],
-            [4, 0],
-            [5, 5],
-            [6, 2],
+            0,
+            0,
+            0,
+            0,
+            0,
+            5,
+            2,
         ], $data);
     }
 }
