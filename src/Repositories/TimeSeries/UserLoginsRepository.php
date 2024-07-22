@@ -1,50 +1,37 @@
 <?php
+
 namespace Javaabu\Stats\Repositories\TimeSeries;
 
-
 use Illuminate\Database\Eloquent\Builder;
-use Javaabu\Helpers\Activitylog\Activity;
-use Javaabu\Models\User;
+use Javaabu\Stats\Filters\StatsFilter;
 
-abstract class UserLoginsRepository extends CountStatsRepository
+class UserLoginsRepository extends ActivityLogStatsRepository
 {
-
     /**
      * @var string
      */
-    protected $table = 'activity_log';
+    protected string $aggregate_field = 'logins';
 
     /**
-     * @var string
+     * Get all the allowed filters
      */
-    protected $aggregate_field = 'logins';
-
-    /**
-     * Get the base query
-     *
-     * @return \Illuminate\Database\Query\Builder
-     */
-    public function baseQuery(): Builder
+    public function allowedFilters(): array
     {
-        return Activity::query()->whereDescription('login');
+        return [
+            StatsFilter::exact('user', 'causer_id'),
+        ];
     }
 
     /**
      * Get the base query
-     *
-     * @return \Illuminate\Database\Query\Builder
      */
     public function query(): Builder
     {
         return $this->baseQuery()->whereCauserType('user');
     }
 
-    /**
-     * @param \Illuminate\Database\Query\Builder $query
-     * @return Builder
-     */
-    protected function applyFilters(Builder $query): Builder
+    public function eventDescription(): string
     {
-        return $query;
+        return 'login';
     }
 }
