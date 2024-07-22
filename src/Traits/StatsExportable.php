@@ -2,10 +2,9 @@
 namespace Javaabu\Stats\Traits;
 
 use Javaabu\Stats\Exports\StatsExport;
+use Javaabu\Stats\Formatters\TimeSeries\CombinedStatsFormatter;
 use Javaabu\Stats\Http\Requests\StatsRequest;
-use Javaabu\Stats\Formatters\CombinedStatsFormatter;
 use Javaabu\Stats\StatsRepository;
-use Illuminate\Support\Str;
 
 trait StatsExportable
 {

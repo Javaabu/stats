@@ -8,7 +8,7 @@
 
 namespace Javaabu\Stats\Exports;
 
-use Javaabu\Stats\Formatters\CombinedStatsFormatter;
+use Javaabu\Stats\Formatters\TimeSeries\CombinedStatsFormatter;
 use Javaabu\Stats\StatsRepository;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromArray;
