@@ -2,6 +2,7 @@
 
 namespace Javaabu\Stats\Tests\TestSupport\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -20,6 +21,11 @@ class Payment extends Model
     protected static function newFactory()
     {
         return new PaymentFactory();
+    }
+
+    public function setPaidAtAttribute($value)
+    {
+        $this->attributes['paid_at'] = $value ? Carbon::parse($value) : null;
     }
 
     public function user(): BelongsTo

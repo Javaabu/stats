@@ -2,18 +2,17 @@
 
 namespace Javaabu\Stats\Tests\Feature\Formatters;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Javaabu\Stats\Enums\PresetDateRanges;
 use Javaabu\Stats\Enums\TimeSeriesModes;
 use Javaabu\Stats\Formatters\TimeSeries\ChartjsStatsFormatter;
-use Javaabu\Stats\Formatters\TimeSeries\DefaultStatsFormatter;
 use Javaabu\Stats\Tests\TestCase;
 use Javaabu\Stats\Tests\TestSupport\Factories\ActivityFactory;
+use Javaabu\Stats\Tests\TestSupport\MySQLRefreshDatabase;
 use Javaabu\Stats\Tests\TestSupport\Stats\TimeSeries\UserLogouts;
 
 class ChartjsStatsFormatterTest extends TestCase
 {
-    use RefreshDatabase;
+    use MySQLRefreshDatabase;
 
     /** @test */
     public function it_can_format_with_the_chartjs_formatter(): void
@@ -83,6 +82,59 @@ class ChartjsStatsFormatterTest extends TestCase
             0,
             0,
             0,
+        ], $compare_data);
+    }
+
+    /** @test */
+    public function it_can_format_with_the_chartjs_formatter_for_weekly_stats(): void
+    {
+        $this->travelTo('2024-07-22');
+
+        // last week
+        ActivityFactory::new()
+            ->logout()
+            ->withUser()
+            ->count(5)
+            ->create([
+                'created_at' => '2024-07-17',
+            ]);
+
+        // this week
+        ActivityFactory::new()
+            ->logout()
+            ->withUser()
+            ->count(2)
+            ->create([
+                'created_at' => '2024-07-22',
+            ]);
+
+        // create the stat
+        $stat = new UserLogouts(PresetDateRanges::THIS_WEEK);
+        $compare = new UserLogouts(PresetDateRanges::THIS_WEEK->getPreviousDateRange());
+
+        $formatter = new ChartjsStatsFormatter();
+
+        $data = $formatter->format(TimeSeriesModes::WEEK, $stat, $compare);
+
+        $this->assertIsArray($data);
+        $this->assertArrayHasKey('labels', $data);
+        $this->assertArrayHasKey('stats', $data);
+        $this->assertArrayHasKey('compare', $data);
+
+        $labels = $data['labels'];
+        $stat_data = $data['stats'];
+        $compare_data = $data['compare'];
+
+        $this->assertEquals([
+            '2024 - Week 30#2024 - Week 29',
+        ], $labels);
+
+        $this->assertEquals([
+            2,
+        ], $stat_data);
+
+        $this->assertEquals([
+            5,
         ], $compare_data);
     }
 }

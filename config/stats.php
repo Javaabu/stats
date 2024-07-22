@@ -3,14 +3,16 @@
 return [
     /*
     |--------------------------------------------------------------------------
-    | First day of the week
+    | Whether the week should start on Sunday
     |--------------------------------------------------------------------------
     |
-    | Used to determine the start day of week
+    | Used to determine the start day of week.
+    | true - Week starts on Sunday
+    | false - Week starts on Monday
     |
     */
 
-    'first_day_of_week' => \Carbon\Carbon::SUNDAY,
+    'week_starts_on_sunday' => true,
 
 
     /*
@@ -30,14 +32,15 @@ return [
     |--------------------------------------------------------------------------
     |
     | Used to format the date when generating stats in different time series modes
+    | Uses momentJS compatible formats
     |
     */
 
     'date_formats' => [
-        'hour' => 'j M y h:i A',
-        'day' => 'j M y',
-        'week' => 'Y - \W\e\e\k W',
-        'month' => 'Y F',
-        'year' => 'Y',
+        'hour' => 'D MMM YY hh:mm A',
+        'day' => 'D MMM YY',
+        'week' => 'gggg - \W\e\e\k w',
+        'month' => 'YYYY MMMM',
+        'year' => 'YYYY',
     ]
 ];

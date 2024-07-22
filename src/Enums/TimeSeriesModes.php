@@ -56,6 +56,17 @@ enum TimeSeriesModes: string implements IsEnum
         return config('stats.date_formats.' . $this->value);
     }
 
+    public function getInternalDateFormat(): string
+    {
+        return match ($this) {
+            self::HOUR => 'YYYY-MM-DD HH:mm',
+            self::DAY => 'YYYY-MM-DD',
+            self::WEEK => 'ggggww',
+            self::MONTH => 'YYYY, MM',
+            self::YEAR => 'YYYY',
+        };
+    }
+
     public function increment(Carbon $date): Carbon
     {
         $date = $date->copy()->locale(TimeSeriesStats::dateLocale());
@@ -70,16 +81,10 @@ enum TimeSeriesModes: string implements IsEnum
         $date = $date->copy()->locale(TimeSeriesStats::dateLocale());
 
         if ($for_display) {
-            return $date->format($this->getDateFormat());
+            return $date->isoFormat($this->getDateFormat());
         }
 
-        return match ($this) {
-            self::HOUR => $date->format('Y-m-d H:i'),
-            self::DAY => $date->format('Y-m-d'),
-            self::WEEK => $date->format('Y, W'),
-            self::MONTH => $date->format('Y, m'),
-            self::YEAR => $date->format('Y'),
-        };
+        return $date->isoFormat($this->getInternalDateFormat());
     }
 
 }

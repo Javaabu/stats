@@ -11,11 +11,11 @@ class TimeSeriesModesTest extends TestCase
     /** @test */
     public function it_can_get_the_date_format_for_the_time_series_mode(): void
     {
-        $this->assertEquals('j M y h:i A', TimeSeriesModes::HOUR->getDateFormat(), 'Invalid date format for HOUR');
-        $this->assertEquals('j M y', TimeSeriesModes::DAY->getDateFormat(), 'Invalid date format for DAY');
-        $this->assertEquals('Y - \W\e\e\k W', TimeSeriesModes::WEEK->getDateFormat(), 'Invalid date format for WEEK');
-        $this->assertEquals('Y F', TimeSeriesModes::MONTH->getDateFormat(), 'Invalid date format for MONTH');
-        $this->assertEquals('Y', TimeSeriesModes::YEAR->getDateFormat(), 'Invalid date format for YEAR');
+        $this->assertEquals('D MMM YY hh:mm A', TimeSeriesModes::HOUR->getDateFormat(), 'Invalid date format for HOUR');
+        $this->assertEquals('D MMM YY', TimeSeriesModes::DAY->getDateFormat(), 'Invalid date format for DAY');
+        $this->assertEquals('gggg - \W\e\e\k w', TimeSeriesModes::WEEK->getDateFormat(), 'Invalid date format for WEEK');
+        $this->assertEquals('YYYY MMMM', TimeSeriesModes::MONTH->getDateFormat(), 'Invalid date format for MONTH');
+        $this->assertEquals('YYYY', TimeSeriesModes::YEAR->getDateFormat(), 'Invalid date format for YEAR');
     }
 
     /** @test */
@@ -37,7 +37,7 @@ class TimeSeriesModesTest extends TestCase
 
         $this->assertEquals('2024-07-16 11:51', TimeSeriesModes::HOUR->formatDate($date, false), 'Invalid internal formatted date for HOUR');
         $this->assertEquals('2024-07-16', TimeSeriesModes::DAY->formatDate($date, false), 'Invalid internal formatted date for DAY');
-        $this->assertEquals('2024, 29', TimeSeriesModes::WEEK->formatDate($date, false), 'Invalid internal formatted date for WEEK');
+        $this->assertEquals('202429', TimeSeriesModes::WEEK->formatDate($date, false), 'Invalid internal formatted date for WEEK');
         $this->assertEquals('2024, 07', TimeSeriesModes::MONTH->formatDate($date, false), 'Invalid internal formatted date for MONTH');
         $this->assertEquals('2024', TimeSeriesModes::YEAR->formatDate($date, false), 'Invalid internal formatted date for YEAR');
     }
@@ -82,7 +82,7 @@ class TimeSeriesModesTest extends TestCase
 
         $this->assertEquals('2024-07-16 12:51', TimeSeriesModes::HOUR->formatDate(TimeSeriesModes::HOUR->increment($date), false), 'Invalid incremented date for HOUR');
         $this->assertEquals('2024-07-17', TimeSeriesModes::DAY->formatDate(TimeSeriesModes::DAY->increment($date), false), 'Invalid incremented date for DAY');
-        $this->assertEquals('2024, 30', TimeSeriesModes::WEEK->formatDate(TimeSeriesModes::WEEK->increment($date), false), 'Invalid incremented date for WEEK');
+        $this->assertEquals('202430', TimeSeriesModes::WEEK->formatDate(TimeSeriesModes::WEEK->increment($date), false), 'Invalid incremented date for WEEK');
         $this->assertEquals('2024, 08', TimeSeriesModes::MONTH->formatDate(TimeSeriesModes::MONTH->increment($date), false), 'Invalid incremented date for MONTH');
         $this->assertEquals('2025', TimeSeriesModes::YEAR->formatDate(TimeSeriesModes::YEAR->increment($date), false), 'Invalid incremented date for YEAR');
     }

@@ -2,6 +2,7 @@
 
 namespace Javaabu\Stats;
 
+use Carbon\Carbon;
 use Illuminate\Contracts\Auth\Access\Authorizable;
 use Illuminate\Support\Arr;
 use Javaabu\Stats\Contracts\DateRange;
@@ -187,5 +188,21 @@ class TimeSeriesStats
     public static function dateLocale(): string
     {
         return config('stats.date_locale') . '@Stats';
+    }
+
+    /**
+     * Get the first day of the week
+     */
+    public static function firstDayOfWeek(): int
+    {
+        return config('stats.week_starts_on_sunday') ? Carbon::SUNDAY : Carbon::MONDAY;
+    }
+
+    /**
+     * Get the MySQL week mode
+     */
+    public static function weekMode(): int
+    {
+        return static::firstDayOfWeek() == Carbon::SUNDAY ? 6 : 3;
     }
 }

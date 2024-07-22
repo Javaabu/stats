@@ -7,6 +7,7 @@ namespace Javaabu\Stats\Repositories\TimeSeries;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
+use Javaabu\Stats\TimeSeriesStats;
 
 abstract class AggregateStatsRepository extends AbstractTimeSeriesStatsRepository
 {
@@ -82,9 +83,11 @@ abstract class AggregateStatsRepository extends AbstractTimeSeriesStatsRepositor
      */
     public function week(): Builder
     {
+        $week_mode = TimeSeriesStats::weekMode();
+
         return $this->filteredQuery()
-            //->select(DB::raw($this->getAggregateSql().", DATE_FORMAT(DATE_ADD(".$this->getDateField().", INTERVAL(1-DAYOFWEEK(".$this->getDateField().")) DAY), '%X-%m-%d, %V') as week"))
-            ->select(DB::raw($this->getAggregateSql().", DATE_FORMAT(".$this->getDateField().", '%X, %V') as week"))
+            //->select(DB::raw($this->getAggregateSql().", DATE_FORMAT(".$this->getDateField().", '%X, %V') as week"))
+            ->select(DB::raw($this->getAggregateSql().", YEARWEEK(".$this->getDateField().", $week_mode) as week"))
             ->groupBy('week')
             ->orderBy('week', 'ASC');
     }

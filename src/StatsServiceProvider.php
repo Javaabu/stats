@@ -19,7 +19,7 @@ class StatsServiceProvider extends ServiceProvider
         }
 
         \Carbon\Translator::get(TimeSeriesStats::dateLocale())->setTranslations([
-            'first_day_of_week' => config('stats.first_day_of_week'),
+            'first_day_of_week' => TimeSeriesStats::firstDayOfWeek(),
         ]);
     }
 
