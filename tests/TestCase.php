@@ -4,6 +4,7 @@ namespace Javaabu\Stats\Tests;
 
 use Illuminate\Foundation\Testing\RefreshDatabaseState;
 use Illuminate\Support\Facades\Artisan;
+use Javaabu\Stats\Tests\TestSupport\MySQLRefreshDatabaseState;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 use Javaabu\Stats\StatsServiceProvider;
 use Javaabu\Stats\Tests\TestSupport\Providers\TestServiceProvider;
@@ -16,7 +17,12 @@ abstract class TestCase extends BaseTestCase
     {
         if (isset($_ENV['DB_CONNECTION']) || isset($_ENV['DB_DATABASE'])) {
             if (! $this->shouldUseMysql()) {
-                RefreshDatabaseState::$migrated = false;
+
+                if (MySQLRefreshDatabaseState::$driver_switched) {
+                    RefreshDatabaseState::$migrated = false;
+                }
+
+                MySQLRefreshDatabaseState::$driver_switched = false;
 
                 $_ENV['DB_CONNECTION'] = 'sqlite';
                 $_ENV['DB_DATABASE'] = ':memory:';

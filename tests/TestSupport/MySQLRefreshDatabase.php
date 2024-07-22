@@ -13,7 +13,12 @@ trait MySQLRefreshDatabase
 
     public function setUp(): void
     {
-        RefreshDatabaseState::$migrated = false;
+        if (! MySQLRefreshDatabaseState::$migrated) {
+            RefreshDatabaseState::$migrated = false;
+        }
+
+        MySQLRefreshDatabaseState::$migrated = true;
+        MySQLRefreshDatabaseState::$driver_switched = true;
 
         $_ENV['DB_CONNECTION'] = 'mysql';
         $_ENV['DB_DATABASE'] = 'stats_test';
