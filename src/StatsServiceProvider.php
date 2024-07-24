@@ -3,6 +3,7 @@
 namespace Javaabu\Stats;
 
 use Illuminate\Support\ServiceProvider;
+use Javaabu\Stats\Http\Middleware\AbortIfCannotViewAnyTimeSeriesStats;
 
 class StatsServiceProvider extends ServiceProvider
 {
@@ -30,5 +31,12 @@ class StatsServiceProvider extends ServiceProvider
     {
         // merge package config with user defined config
         $this->mergeConfigFrom(__DIR__ . '/../config/stats.php', 'stats');
+
+        $this->registerMiddlewareAliases();
+    }
+
+    protected function registerMiddlewareAliases(): void
+    {
+        app('router')->aliasMiddleware('stats.view-timeseries', AbortIfCannotViewAnyTimeSeriesStats::class);
     }
 }

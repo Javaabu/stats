@@ -9,6 +9,7 @@ use Javaabu\Stats\Contracts\DateRange;
 use Javaabu\Stats\Contracts\TimeSeriesStatsFormatter;
 use Javaabu\Stats\Contracts\TimeSeriesStatsRepository;
 use Javaabu\Stats\Enums\PresetDateRanges;
+use Javaabu\Stats\Enums\StatListReturnType;
 
 class TimeSeriesStats
 {
@@ -33,6 +34,14 @@ class TimeSeriesStats
     public static function formattersMap(): array
     {
         return static::$formatters_map;
+    }
+
+    /**
+     * Get the allowed formats
+     */
+    public static function allowedFormats(): array
+    {
+        return array_keys(static::formattersMap());
     }
 
     /**
@@ -128,7 +137,7 @@ class TimeSeriesStats
     /**
      * Get the metrics that allow these filters
      */
-    public static function metricsThatAllowFilters(array|string $filters, ?Authorizable $user = null, bool $return_names = true): array
+    public static function metricsThatAllowFilters(array|string $filters, ?Authorizable $user = null, StatListReturnType $return_type = StatListReturnType::METRIC_AND_NAME): array
     {
         $metrics = self::statsMap();
 
@@ -139,7 +148,11 @@ class TimeSeriesStats
             $metric = self::createFromMetric($slug);
 
             if ($metric->canView($user) && $metric->ensureAllFiltersAllowed($filters)) {
-                $filtered[$slug] = $return_names ? $metric->getName() : $metric_class;
+                if ($return_type == StatListReturnType::METRIC) {
+                    $filtered[] = $slug;
+                } else {
+                    $filtered[$slug] = $return_type == StatListReturnType::METRIC_AND_NAME ? $metric->getName() : $metric_class;
+                }
             }
         }
 
@@ -151,7 +164,15 @@ class TimeSeriesStats
      */
     public static function getMetricNames(array|string $filters = [], ?Authorizable $user = null): array
     {
-        return self::metricsThatAllowFilters($filters, $user, true);
+        return self::metricsThatAllowFilters($filters, $user, StatListReturnType::METRIC_AND_NAME);
+    }
+
+    /**
+     * Get the allowed metric names
+     */
+    public static function allowedMetrics(array|string $filters = [], ?Authorizable $user = null): array
+    {
+        return self::metricsThatAllowFilters($filters, $user, StatListReturnType::METRIC);
     }
 
     /**

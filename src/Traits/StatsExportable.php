@@ -3,7 +3,7 @@ namespace Javaabu\Stats\Traits;
 
 use Javaabu\Stats\Exports\StatsExport;
 use Javaabu\Stats\Formatters\TimeSeries\CombinedStatsFormatter;
-use Javaabu\Stats\Http\Requests\StatsRequest;
+use Javaabu\Stats\Http\Requests\TimeSeriesStatsRequest;
 use Javaabu\Stats\StatsRepository;
 
 trait StatsExportable
@@ -11,10 +11,10 @@ trait StatsExportable
     /**
      * Validate stats filters
      *
-     * @param StatsRequest $request
+     * @param TimeSeriesStatsRequest $request
      * @param array $filters
      */
-    protected function validateStatsFilters(StatsRequest $request, $filters = [])
+    protected function validateStatsFilters(TimeSeriesStatsRequest $request, $filters = [])
     {
         if ($filters) {
             $this->validate($request, [
@@ -26,12 +26,12 @@ trait StatsExportable
     /**
      * Display a listing of the resource.
      *
-     * @param StatsRequest $request
+     * @param TimeSeriesStatsRequest $request
      * @param array $filters
      * @param string $export_title
      * @return \Illuminate\Http\Response
      */
-    public function exportStats(StatsRequest $request, $filters = [], $export_title = '')
+    public function exportStats(TimeSeriesStatsRequest $request, $filters = [], $export_title = '')
     {
         $this->validateStatsFilters($request);
 

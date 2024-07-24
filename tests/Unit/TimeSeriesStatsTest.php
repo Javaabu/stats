@@ -4,6 +4,7 @@ namespace Javaabu\Stats\Tests\Unit;
 
 use Illuminate\Support\Facades\Gate;
 use Javaabu\Stats\Enums\PresetDateRanges;
+use Javaabu\Stats\Enums\StatListReturnType;
 use Javaabu\Stats\Formatters\TimeSeries\DefaultStatsFormatter;
 use Javaabu\Stats\Tests\TestCase;
 use Javaabu\Stats\Tests\TestSupport\Models\User;
@@ -126,15 +127,27 @@ class TimeSeriesStatsTest extends TestCase
     }
 
     /** @test */
+    public function it_can_get_metrics_that_allow_all_the_given_filters(): void
+    {
+        TimeSeriesStats::register([
+            'user_logouts' => UserLogoutsRepository::class
+        ]);
+
+        $this->assertEquals(['user_logouts'], TimeSeriesStats::metricsThatAllowFilters(['user'], null, StatListReturnType::METRIC));
+        $this->assertEquals(['user_logouts'], TimeSeriesStats::metricsThatAllowFilters('user', null, StatListReturnType::METRIC));
+        $this->assertEmpty(TimeSeriesStats::metricsThatAllowFilters(['user', 'admin'], null, StatListReturnType::METRIC));
+    }
+
+    /** @test */
     public function it_can_get_metric_classes_that_allow_all_the_given_filters(): void
     {
         TimeSeriesStats::register([
             'user_logouts' => UserLogoutsRepository::class
         ]);
 
-        $this->assertEquals(['user_logouts' => UserLogoutsRepository::class], TimeSeriesStats::metricsThatAllowFilters(['user'], null, false));
-        $this->assertEquals(['user_logouts' => UserLogoutsRepository::class], TimeSeriesStats::metricsThatAllowFilters('user', null, false));
-        $this->assertEmpty(TimeSeriesStats::metricsThatAllowFilters(['user', 'admin'], null, false));
+        $this->assertEquals(['user_logouts' => UserLogoutsRepository::class], TimeSeriesStats::metricsThatAllowFilters(['user'], null, StatListReturnType::METRIC_AND_CLASS));
+        $this->assertEquals(['user_logouts' => UserLogoutsRepository::class], TimeSeriesStats::metricsThatAllowFilters('user', null, StatListReturnType::METRIC_AND_CLASS));
+        $this->assertEmpty(TimeSeriesStats::metricsThatAllowFilters(['user', 'admin'], null, StatListReturnType::METRIC_AND_CLASS));
     }
 
     /** @test */
