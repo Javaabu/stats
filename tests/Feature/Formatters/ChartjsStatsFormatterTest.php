@@ -8,7 +8,7 @@ use Javaabu\Stats\Formatters\TimeSeries\ChartjsStatsFormatter;
 use Javaabu\Stats\Tests\TestCase;
 use Javaabu\Stats\Tests\TestSupport\Factories\ActivityFactory;
 use Javaabu\Stats\Tests\TestSupport\MySQLRefreshDatabase;
-use Javaabu\Stats\Tests\TestSupport\Stats\TimeSeries\UserLogouts;
+use Javaabu\Stats\Tests\TestSupport\Stats\TimeSeries\UserLogoutsRepository;
 
 class ChartjsStatsFormatterTest extends TestCase
 {
@@ -38,8 +38,8 @@ class ChartjsStatsFormatterTest extends TestCase
             ]);
 
         // create the stat
-        $stat = new UserLogouts(PresetDateRanges::LAST_7_DAYS);
-        $compare = new UserLogouts(PresetDateRanges::LAST_7_DAYS->getPreviousDateRange());
+        $stat = new UserLogoutsRepository(PresetDateRanges::LAST_7_DAYS);
+        $compare = new UserLogoutsRepository(PresetDateRanges::LAST_7_DAYS->getPreviousDateRange());
 
         $formatter = new ChartjsStatsFormatter();
 
@@ -109,8 +109,8 @@ class ChartjsStatsFormatterTest extends TestCase
             ]);
 
         // create the stat
-        $stat = new UserLogouts(PresetDateRanges::THIS_WEEK);
-        $compare = new UserLogouts(PresetDateRanges::THIS_WEEK->getPreviousDateRange());
+        $stat = new UserLogoutsRepository(PresetDateRanges::THIS_WEEK);
+        $compare = new UserLogoutsRepository(PresetDateRanges::THIS_WEEK->getPreviousDateRange());
 
         $formatter = new ChartjsStatsFormatter();
 

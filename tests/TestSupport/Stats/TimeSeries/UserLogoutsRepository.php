@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Javaabu\Stats\Filters\StatsFilter;
 use Javaabu\Stats\Repositories\TimeSeries\CountStatsRepository;
 
-class UserLogouts extends CountStatsRepository
+class UserLogoutsRepository extends CountStatsRepository
 {
     /**
      * @var string

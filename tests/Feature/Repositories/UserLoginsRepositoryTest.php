@@ -1,28 +1,28 @@
 <?php
 
-namespace Javaabu\Stats\Tests\Feature\Formatters;
+namespace Javaabu\Stats\Tests\Feature\Repositories;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Javaabu\Stats\Enums\PresetDateRanges;
 use Javaabu\Stats\Enums\TimeSeriesModes;
 use Javaabu\Stats\Formatters\TimeSeries\FlotStatsFormatter;
-use Javaabu\Stats\Formatters\TimeSeries\SparklineChartsStatsFormatter;
+use Javaabu\Stats\Repositories\TimeSeries\UserLoginsRepository;
 use Javaabu\Stats\Tests\TestCase;
 use Javaabu\Stats\Tests\TestSupport\Factories\ActivityFactory;
 use Javaabu\Stats\Tests\TestSupport\Stats\TimeSeries\UserLogoutsRepository;
 
-class SparklineChartsStatsFormatterTest extends TestCase
+class UserLoginsRepositoryTest extends TestCase
 {
     use RefreshDatabase;
 
     /** @test */
-    public function it_can_format_with_the_sparkline_formatter(): void
+    public function it_can_generate_user_login_stats(): void
     {
         $this->travelTo('2024-07-04');
 
         // yesterday
         ActivityFactory::new()
-            ->logout()
+            ->login()
             ->withUser()
             ->count(5)
             ->create([
@@ -31,7 +31,7 @@ class SparklineChartsStatsFormatterTest extends TestCase
 
         // today
         ActivityFactory::new()
-            ->logout()
+            ->login()
             ->withUser()
             ->count(2)
             ->create([
@@ -39,23 +39,22 @@ class SparklineChartsStatsFormatterTest extends TestCase
             ]);
 
         // create the stat
-        $stat = new UserLogoutsRepository(PresetDateRanges::LAST_7_DAYS);
-        $compare = new UserLogoutsRepository(PresetDateRanges::LAST_7_DAYS->getPreviousDateRange());
+        $stat = new UserLoginsRepository(PresetDateRanges::LAST_7_DAYS);
 
-        $formatter = new SparklineChartsStatsFormatter();
-
-        $data = $formatter->format(TimeSeriesModes::DAY, $stat, $compare);
+        $data = $stat->results(TimeSeriesModes::DAY)->toArray();
 
         $this->assertIsArray($data);
+        $this->assertCount(2, $data);
 
         $this->assertEquals([
-            0,
-            0,
-            0,
-            0,
-            0,
-            5,
-            2,
+            [
+                'logins' => 5,
+                'day' => '2024-07-03',
+            ],
+            [
+                'logins' => 2,
+                'day' => '2024-07-04',
+            ]
         ], $data);
     }
 }

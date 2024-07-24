@@ -8,7 +8,7 @@ use Javaabu\Stats\Enums\TimeSeriesModes;
 use Javaabu\Stats\Formatters\TimeSeries\CombinedStatsFormatter;
 use Javaabu\Stats\Tests\TestCase;
 use Javaabu\Stats\Tests\TestSupport\Factories\ActivityFactory;
-use Javaabu\Stats\Tests\TestSupport\Stats\TimeSeries\UserLogouts;
+use Javaabu\Stats\Tests\TestSupport\Stats\TimeSeries\UserLogoutsRepository;
 
 class CombinedStatsFormatterTest extends TestCase
 {
@@ -38,8 +38,8 @@ class CombinedStatsFormatterTest extends TestCase
             ]);
 
         // create the stat
-        $stat = new UserLogouts(PresetDateRanges::LAST_7_DAYS);
-        $compare = new UserLogouts(PresetDateRanges::LAST_7_DAYS->getPreviousDateRange());
+        $stat = new UserLogoutsRepository(PresetDateRanges::LAST_7_DAYS);
+        $compare = new UserLogoutsRepository(PresetDateRanges::LAST_7_DAYS->getPreviousDateRange());
 
         $formatter = new CombinedStatsFormatter();
 

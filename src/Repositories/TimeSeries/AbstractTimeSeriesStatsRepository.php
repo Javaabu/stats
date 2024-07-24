@@ -72,10 +72,16 @@ abstract class AbstractTimeSeriesStatsRepository implements TimeSeriesStatsRepos
      */
     public function getName(): string
     {
-        return __(Str::of(class_basename($this))
-                ->snake(' ')
-                ->title()
-                ->toString());
+        $class_name = Str::of(class_basename($this))
+            ->snake(' ')
+            ->title()
+            ->toString();
+
+        if (Str::endsWith($class_name, 'Repository')) {
+            $class_name = trim(Str::beforeLast($class_name, 'Repository'));
+        }
+
+        return __($class_name);
     }
 
     /**

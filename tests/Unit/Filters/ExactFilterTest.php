@@ -6,7 +6,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Javaabu\Stats\Filters\StatsFilter;
 use Javaabu\Stats\Tests\TestCase;
 use Javaabu\Stats\Tests\TestSupport\Models\User;
-use Javaabu\Stats\Tests\TestSupport\Stats\TimeSeries\UserLogouts;
+use Javaabu\Stats\Tests\TestSupport\Stats\TimeSeries\UserLogoutsRepository;
 use Javaabu\Stats\Tests\TestSupport\Stats\TimeSeries\UserLogoutsUnregistered;
 use Javaabu\Stats\Tests\TestSupport\Stats\TimeSeries\UserLogoutsWithPermission;
 use Javaabu\Stats\TimeSeriesStats;
@@ -23,7 +23,7 @@ class ExactFilterTest extends TestCase
 
         $filter = StatsFilter::exact('name');
 
-        $stat = new UserLogouts();
+        $stat = new UserLogoutsRepository();
         $query = User::query();
 
 
@@ -38,7 +38,7 @@ class ExactFilterTest extends TestCase
 
         $filter = StatsFilter::exact('username', 'name');
 
-        $stat = new UserLogouts();
+        $stat = new UserLogoutsRepository();
         $query = User::query();
 
 
