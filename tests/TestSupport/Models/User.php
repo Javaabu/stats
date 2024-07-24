@@ -23,4 +23,9 @@ class User extends Authenticatable
     {
         return $query->where('name', 'like', '%' . $search . '%');
     }
+
+    public function getMorphClass()
+    {
+        return 'user';
+    }
 }
