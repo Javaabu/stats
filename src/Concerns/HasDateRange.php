@@ -32,9 +32,9 @@ trait HasDateRange
         return $this->date_range;
     }
 
-    public function formattedDateRange(string $format = 'Y-m-d H:i', string $separator = ' - '): string
+    public function formattedDateRange(string $format = 'YYYY-MM-DD HH:mm', string $separator = ' - '): string
     {
-        return $this->getDateFrom()->format($format) . $separator . $this->getDateTo()->format($format);
+        return $this->getDateFrom()->isoFormat($format) . $separator . $this->getDateTo()->isoFormat($format);
     }
 
     public function setDateFrom(Carbon|string $date_from)

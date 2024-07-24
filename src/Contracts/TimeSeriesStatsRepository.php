@@ -22,6 +22,11 @@ interface TimeSeriesStatsRepository extends
     public function getAggregateFieldName(): string;
 
     /**
+     * Get the aggregate field label
+     */
+    public function getAggregateFieldLabel(): string;
+
+    /**
      * Get the name of the metric
      */
     public function getName(): string;

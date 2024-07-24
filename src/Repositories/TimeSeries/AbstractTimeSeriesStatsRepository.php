@@ -21,8 +21,6 @@ abstract class AbstractTimeSeriesStatsRepository implements TimeSeriesStatsRepos
     use HasDateRange;
     use HasFilters;
 
-    protected string $aggregate_field;
-
     /**
      * Create a new stats repository instance.
      */
@@ -50,13 +48,16 @@ abstract class AbstractTimeSeriesStatsRepository implements TimeSeriesStatsRepos
     }
 
     /**
-     * Get the aggregate field name
-     *
-     * @return string
+     * Get the aggregate field label
      */
-    public function getAggregateFieldName(): string
+    public function getAggregateFieldLabel(): string
     {
-        return $this->aggregate_field;
+        $aggregate_field = Str::of($this->getAggregateFieldName())
+            ->snake(' ')
+            ->title()
+            ->toString();
+
+        return __($aggregate_field);
     }
 
     /**

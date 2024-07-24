@@ -10,13 +10,6 @@ use Javaabu\Stats\Tests\TestSupport\Models\Payment;
 class PaymentsSum extends SumStatsRepository
 {
     /**
-     * @var string
-     */
-    protected string $table = 'payments';
-
-    protected string $date_field = 'paid_at';
-
-    /**
      * Get all the allowed filters
      */
     public function allowedFilters(): array
@@ -45,5 +38,18 @@ class PaymentsSum extends SumStatsRepository
     public function getFieldToSum(): string
     {
         return 'amount';
+    }
+
+    public function getTable(): string
+    {
+        return 'payments';
+    }
+
+    /**
+     * Get the date field name
+     */
+    public function getDateFieldName(): string
+    {
+        return 'paid_at';
     }
 }

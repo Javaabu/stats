@@ -6,17 +6,6 @@ use Javaabu\Stats\Repositories\TimeSeries\CountStatsRepository;
 
 class UserLogoutsUnregistered extends CountStatsRepository
 {
-
-    /**
-     * @var string
-     */
-    protected string $table = 'activity_log';
-
-    /**
-     * @var string
-     */
-    protected string $aggregate_field = 'logins';
-
     /**
      * Get the base query
      */
@@ -33,5 +22,18 @@ class UserLogoutsUnregistered extends CountStatsRepository
     public function query(): Builder
     {
         return $this->baseQuery()->whereCauserType('user');
+    }
+
+    public function getTable(): string
+    {
+        return 'activity_log';
+    }
+
+    /**
+     * Get the aggregate field name
+     */
+    public function getAggregateFieldName(): string
+    {
+        return 'logouts';
     }
 }

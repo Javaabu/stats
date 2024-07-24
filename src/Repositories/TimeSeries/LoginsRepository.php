@@ -9,9 +9,12 @@ use Javaabu\Stats\Filters\StatsFilter;
 abstract class LoginsRepository extends ActivityLogStatsRepository
 {
     /**
-     * @var string
+     * Get the aggregate field name
      */
-    protected string $aggregate_field = 'logins';
+    public function getAggregateFieldName(): string
+    {
+        return 'logins';
+    }
 
     /**
      * Get all the allowed filters

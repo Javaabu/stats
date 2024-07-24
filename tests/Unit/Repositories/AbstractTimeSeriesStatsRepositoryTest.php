@@ -52,4 +52,12 @@ class AbstractTimeSeriesStatsRepositoryTest extends TestCase
 
         $this->assertFalse($stat->canView());
     }
+
+    /** @test */
+    public function it_can_generate_the_aggregate_field_label(): void
+    {
+        $stat = new UserLogoutsRepository();
+
+        $this->assertEquals('Logouts', $stat->getAggregateFieldLabel());
+    }
 }

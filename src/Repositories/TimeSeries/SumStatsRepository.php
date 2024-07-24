@@ -8,9 +8,12 @@ namespace Javaabu\Stats\Repositories\TimeSeries;
 abstract class SumStatsRepository extends AggregateStatsRepository
 {
     /**
-     * @var string
+     * Get the aggregate field name
      */
-    protected string $aggregate_field = 'total';
+    public function getAggregateFieldName(): string
+    {
+        return 'total';
+    }
 
     /**
      * Get the main table for the repository

@@ -7,7 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 
 abstract class SignupsRepository extends CountStatsRepository
 {
-    protected string $aggregate_field = 'signups';
+    /**
+     * Get the aggregate field name
+     */
+    public function getAggregateFieldName(): string
+    {
+        return 'signups';
+    }
 
     /**
      * Get the main table for the repository

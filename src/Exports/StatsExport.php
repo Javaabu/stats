@@ -8,8 +8,9 @@
 
 namespace Javaabu\Stats\Exports;
 
+use Javaabu\Stats\Contracts\TimeSeriesStatsRepository;
+use Javaabu\Stats\Enums\TimeSeriesModes;
 use Javaabu\Stats\Formatters\TimeSeries\CombinedStatsFormatter;
-use Javaabu\Stats\StatsRepository;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Concerns\RegistersEventListeners;
@@ -29,79 +30,49 @@ class StatsExport implements
 {
     use Exportable, RegistersEventListeners;
 
-    /**
-     * @var CombinedStatsFormatter
-     */
-    protected $formatter;
+    protected CombinedStatsFormatter $formatter;
 
-    /**
-     * @var string
-     */
-    protected $mode;
+    protected TimeSeriesModes $mode;
 
-    /**
-     * @var string
-     */
-    protected $metric;
-
-    /**
-     * @var string
-     */
-    protected $field_name;
-
-    /**
-     * @var boolean
-     */
-    protected $with_compare;
+    protected TimeSeriesStatsRepository $stats;
+    protected ?TimeSeriesStatsRepository $compare;
 
     /**
      * Create a new stats export instance.
-     *
-     * @param CombinedStatsFormatter $formatter
-     * @param $mode
      */
-    public function __construct(CombinedStatsFormatter $formatter, $mode)
+    public function __construct(TimeSeriesModes $mode, TimeSeriesStatsRepository $stats, ?TimeSeriesStatsRepository $compare = null)
     {
-        $this->formatter = $formatter;
-        $this->metric = $formatter->getStats()->metric();
-        $this->field_name = $formatter->getStats()->getAggregateFieldName();
+        $this->formatter = new CombinedStatsFormatter();
         $this->mode = $mode;
-        $this->with_compare = ! empty($formatter->getCompare());
+        $this->stats = $stats;
+        $this->compare = $compare;
     }
 
     /**
      * Get the metric
-     *
-     * @return string
      */
-    public function metric()
+    public function metric(): string
     {
-        return $this->metric;
+        return $this->stats->metric();
     }
 
     /**
      * Get the report title
-     *
-     * @return string
      */
-    public function getReportTitle()
+    public function getReportTitle(): string
     {
-        return StatsRepository::getMetricName($this->metric());
+        return $this->stats->getName();
     }
 
     /**
      * Get the formatted date range
-     *
-     * @param string $format
-     * @param string $separator
-     * @return string
      */
-    public function formattedDateRange($format = 'Ymd', $separator = '-')
+    public function formattedDateRange(string $format = 'YYYYMMDD', string $separator = '-'): string
     {
-        $date_range = $this->formatter->getStats()->formattedDateRange($format, $separator);
+        $date_range = $this->stats->formattedDateRange($format, $separator);
 
-        if ($this->with_compare) {
-            $date_range .= ' ' .$this->formatter->getCompare()->formattedDateRange($format, $separator);
+        if ($compare = $this->compare) {
+            $date_range .= ' ' . $compare->formattedDateRange($format, $separator);
         }
 
         return $date_range;
@@ -126,12 +97,9 @@ class StatsExport implements
         ]);
     }
 
-    /**
-     * @return array
-     */
     public function array(): array
     {
-        return $this->formatter->format($this->mode);
+        return $this->formatter->format($this->mode, $this->stats, $this->compare);
     }
 
     /**
@@ -140,14 +108,14 @@ class StatsExport implements
     public function headings(): array
     {
         $headings = [
-            slug_to_title($this->mode),
+            $this->mode->getLabel(),
         ];
 
-        if ($this->with_compare) {
+        if ($this->compare) {
             $headings[] = 'Date Range';
         }
 
-        $headings[] = slug_to_title($this->field_name);
+        $headings[] = $this->stats->getAggregateFieldLabel();
 
         return $headings;
     }
@@ -161,13 +129,13 @@ class StatsExport implements
     {
         $values = [];
 
-        $values[] = $row[$this->mode];
+        $values[] = $row[$this->mode->value];
 
-        if ($this->with_compare) {
+        if ($this->compare) {
             $values[] = $row['date_range'];
         }
 
-        $values[] = $row[$this->field_name];
+        $values[] = $row[$this->stats->getAggregateFieldName()];
 
         return $values;
     }
@@ -183,11 +151,11 @@ class StatsExport implements
 
         $formats['A'] = NumberFormat::FORMAT_TEXT;
 
-        if ($this->with_compare) {
+        if ($this->compare) {
             $formats['B'] = NumberFormat::FORMAT_TEXT;
         }
 
-        $formats[$this->with_compare ? 'C' : 'B'] = NumberFormat::FORMAT_NUMBER;
+        $formats[$this->compare ? 'C' : 'B'] = NumberFormat::FORMAT_NUMBER;
 
         return $formats;
     }

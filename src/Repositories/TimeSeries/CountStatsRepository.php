@@ -8,9 +8,12 @@ namespace Javaabu\Stats\Repositories\TimeSeries;
 abstract class CountStatsRepository extends AggregateStatsRepository
 {
     /**
-     * @var string
+     * Get the aggregate field name
      */
-    protected string $aggregate_field = 'count';
+    public function getAggregateFieldName(): string
+    {
+        return 'count';
+    }
 
     /**
      * Get the aggregate sql expression for the repository

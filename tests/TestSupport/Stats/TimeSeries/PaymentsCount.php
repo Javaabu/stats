@@ -10,13 +10,6 @@ use Javaabu\Stats\Tests\TestSupport\Models\Payment;
 class PaymentsCount extends CountStatsRepository
 {
     /**
-     * @var string
-     */
-    protected string $table = 'payments';
-
-    protected string $date_field = 'paid_at';
-
-    /**
      * Get all the allowed filters
      */
     public function allowedFilters(): array
@@ -40,5 +33,18 @@ class PaymentsCount extends CountStatsRepository
     public function canView(?Authorizable $user = null): bool
     {
         return true;
+    }
+
+    public function getTable(): string
+    {
+        return 'payments';
+    }
+
+    /**
+     * Get the date field name
+     */
+    public function getDateFieldName(): string
+    {
+        return 'paid_at';
     }
 }

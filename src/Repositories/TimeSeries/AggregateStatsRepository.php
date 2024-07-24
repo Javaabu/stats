@@ -12,26 +12,21 @@ use Javaabu\Stats\TimeSeriesStats;
 abstract class AggregateStatsRepository extends AbstractTimeSeriesStatsRepository
 {
     /**
-     * @var string
-     */
-    protected string $table;
-
-    /**
-     * @var string
-     */
-    protected string $aggregate_sql;
-
-    /**
-     * @var string
-     */
-    protected string $date_field = 'created_at';
-
-    /**
      * Get the main table for the repository
      */
-    public function getTable(): string
+    public abstract function getTable(): string;
+
+    /**
+     * Get the aggregate sql expression for the repository
+     */
+    public abstract function getAggregateSql(): string;
+
+    /**
+     * Get the date field name for the repository
+     */
+    public function getDateFieldName(): string
     {
-        return $this->table;
+        return 'created_at';
     }
 
     /**
@@ -39,15 +34,7 @@ abstract class AggregateStatsRepository extends AbstractTimeSeriesStatsRepositor
      */
     public function getDateField(): string
     {
-        return $this->getTable().'.'.$this->date_field;
-    }
-
-    /**
-     * Get the aggregate sql expression for the repository
-     */
-    public function getAggregateSql(): string
-    {
-        return $this->aggregate_sql;
+        return $this->getTable().'.'.$this->getDateFieldName();
     }
 
     /**

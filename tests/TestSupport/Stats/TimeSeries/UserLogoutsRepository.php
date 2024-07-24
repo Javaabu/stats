@@ -9,16 +9,6 @@ use Javaabu\Stats\Repositories\TimeSeries\CountStatsRepository;
 class UserLogoutsRepository extends CountStatsRepository
 {
     /**
-     * @var string
-     */
-    protected string $table = 'activity_log';
-
-    /**
-     * @var string
-     */
-    protected string $aggregate_field = 'logouts';
-
-    /**
      * Get all the allowed filters
      */
     public function allowedFilters(): array
@@ -52,5 +42,18 @@ class UserLogoutsRepository extends CountStatsRepository
     public function canView(?Authorizable $user = null): bool
     {
         return true;
+    }
+
+    public function getTable(): string
+    {
+        return 'activity_log';
+    }
+
+    /**
+     * Get the aggregate field name
+     */
+    public function getAggregateFieldName(): string
+    {
+        return 'logouts';
     }
 }
