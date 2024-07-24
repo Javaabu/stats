@@ -13,6 +13,13 @@ trait MySQLRefreshDatabase
 
     public function setUp(): void
     {
+        $this->setupMySql();
+
+        parent::setUp();
+    }
+
+    protected function setupMySql(): void
+    {
         if (! MySQLRefreshDatabaseState::$migrated) {
             RefreshDatabaseState::$migrated = false;
         }
@@ -22,7 +29,5 @@ trait MySQLRefreshDatabase
 
         $_ENV['DB_CONNECTION'] = 'mysql';
         $_ENV['DB_DATABASE'] = 'stats_test';
-
-        parent::setUp();
     }
 }

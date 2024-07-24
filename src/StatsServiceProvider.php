@@ -3,6 +3,11 @@
 namespace Javaabu\Stats;
 
 use Illuminate\Support\ServiceProvider;
+use Javaabu\Stats\Formatters\TimeSeries\ChartjsStatsFormatter;
+use Javaabu\Stats\Formatters\TimeSeries\CombinedStatsFormatter;
+use Javaabu\Stats\Formatters\TimeSeries\DefaultStatsFormatter;
+use Javaabu\Stats\Formatters\TimeSeries\FlotStatsFormatter;
+use Javaabu\Stats\Formatters\TimeSeries\SparklineChartsStatsFormatter;
 use Javaabu\Stats\Http\Middleware\AbortIfCannotViewAnyTimeSeriesStats;
 
 class StatsServiceProvider extends ServiceProvider
@@ -22,6 +27,8 @@ class StatsServiceProvider extends ServiceProvider
         \Carbon\Translator::get(TimeSeriesStats::dateLocale())->setTranslations([
             'first_day_of_week' => TimeSeriesStats::firstDayOfWeek(),
         ]);
+
+        $this->registerFormatters();
     }
 
     /**
@@ -35,8 +42,19 @@ class StatsServiceProvider extends ServiceProvider
         $this->registerMiddlewareAliases();
     }
 
-    protected function registerMiddlewareAliases(): void
+    protected function registerFormatters()
     {
-        app('router')->aliasMiddleware('stats.view-timeseries', AbortIfCannotViewAnyTimeSeriesStats::class);
+        TimeSeriesStats::registerFormatters([
+            'default' => DefaultStatsFormatter::class,
+            'chartjs' => ChartjsStatsFormatter::class,
+            'sparkline' => SparklineChartsStatsFormatter::class,
+            'flot' => FlotStatsFormatter::class,
+            'combined' => CombinedStatsFormatter::class,
+        ]);
+    }
+
+    protected function registerMiddlewareAliases()
+    {
+        app('router')->aliasMiddleware('stats.view-time-series', AbortIfCannotViewAnyTimeSeriesStats::class);
     }
 }

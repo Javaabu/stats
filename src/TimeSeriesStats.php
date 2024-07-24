@@ -5,11 +5,13 @@ namespace Javaabu\Stats;
 use Carbon\Carbon;
 use Illuminate\Contracts\Auth\Access\Authorizable;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Route;
 use Javaabu\Stats\Contracts\DateRange;
 use Javaabu\Stats\Contracts\TimeSeriesStatsFormatter;
 use Javaabu\Stats\Contracts\TimeSeriesStatsRepository;
 use Javaabu\Stats\Enums\PresetDateRanges;
 use Javaabu\Stats\Enums\StatListReturnType;
+use Javaabu\Stats\Http\Controllers\Api\TimeSeriesStatsController;
 
 class TimeSeriesStats
 {
@@ -225,5 +227,19 @@ class TimeSeriesStats
     public static function weekMode(): int
     {
         return static::firstDayOfWeek() == Carbon::SUNDAY ? 6 : 3;
+    }
+
+    /**
+     * Register the api routes
+     */
+    public static function registerApiRoute(
+        string $url = '/stats/time-series',
+        string $name = 'stats.time-series.index',
+        array $middleware = ['stats.view-time-series']
+    ): \Illuminate\Routing\Route
+    {
+        return Route::get($url, [TimeSeriesStatsController::class, 'index'])
+                    ->name($name)
+                    ->middleware($middleware);
     }
 }

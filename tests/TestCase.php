@@ -4,6 +4,7 @@ namespace Javaabu\Stats\Tests;
 
 use Illuminate\Foundation\Testing\RefreshDatabaseState;
 use Illuminate\Support\Facades\Artisan;
+use Javaabu\Helpers\HelpersServiceProvider;
 use Javaabu\Stats\Tests\TestSupport\MySQLRefreshDatabaseState;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 use Javaabu\Stats\StatsServiceProvider;
@@ -54,6 +55,7 @@ abstract class TestCase extends BaseTestCase
     protected function getPackageProviders($app)
     {
         return [
+            HelpersServiceProvider::class,
             ActivitylogServiceProvider::class,
             StatsServiceProvider::class,
             TestServiceProvider::class

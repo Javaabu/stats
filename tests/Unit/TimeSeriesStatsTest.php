@@ -30,7 +30,7 @@ class TimeSeriesStatsTest extends TestCase
     {
         TimeSeriesStats::registerFormatters([
             'default' => DefaultStatsFormatter::class
-        ]);
+        ], false);
 
         $this->assertEquals([
             'default' => DefaultStatsFormatter::class
@@ -86,7 +86,7 @@ class TimeSeriesStatsTest extends TestCase
     {
         TimeSeriesStats::register([
             'user_logouts' => UserLogoutsRepository::class
-        ]);
+        ], false);
 
         $this->assertEquals([
             'user_logouts' => UserLogoutsRepository::class
