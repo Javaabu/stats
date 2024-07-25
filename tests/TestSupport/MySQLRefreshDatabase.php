@@ -18,9 +18,9 @@ trait MySQLRefreshDatabase
         parent::setUp();
     }
 
-    protected function setupMySql(bool $refresh = false): void
+    protected function setupMySql(): void
     {
-        if ($refresh || (! MySQLRefreshDatabaseState::$migrated)) {
+        if (! MySQLRefreshDatabaseState::$migrated) {
             RefreshDatabaseState::$migrated = false;
         }
 

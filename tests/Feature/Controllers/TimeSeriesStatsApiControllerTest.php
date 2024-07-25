@@ -9,6 +9,7 @@ use Javaabu\Stats\Tests\TestSupport\Models\User;
 use Javaabu\Stats\Tests\TestSupport\MySQLRefreshDatabase;
 use Javaabu\Stats\Tests\TestSupport\Stats\TimeSeries\TestUserLoginsRepository;
 use Javaabu\Stats\TimeSeriesStats;
+use Spatie\Activitylog\Models\Activity;
 
 class TimeSeriesStatsApiControllerTest extends TestCase
 {
@@ -16,11 +17,13 @@ class TimeSeriesStatsApiControllerTest extends TestCase
 
     public function setUp(): void
     {
-        $this->setupMySql(true);
+        $this->setupMySql();
 
         parent::setUp();
 
         TimeSeriesStats::registerApiRoute();
+
+        Activity::query()->delete();
     }
 
     /** @test */
