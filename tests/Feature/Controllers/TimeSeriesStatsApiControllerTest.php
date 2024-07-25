@@ -16,7 +16,7 @@ class TimeSeriesStatsApiControllerTest extends TestCase
 
     public function setUp(): void
     {
-        $this->setupMySql();
+        $this->setupMySql(true);
 
         parent::setUp();
 
