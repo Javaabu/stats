@@ -38,6 +38,7 @@ class TimeSeriesStatsController extends Controller
 
         if ($request->filled('compare_date_range')) {
             $compare_range = PresetDateRanges::from($request->input('compare_date_range'));
+            $compare_date_range = $compare_range->value;
         } elseif ($request->filled('compare_date_from')) {
             $compare_range = new ExactDateRange(
                 $request->input('compare_date_from'),
@@ -49,7 +50,7 @@ class TimeSeriesStatsController extends Controller
         }
 
         $stats = TimeSeriesStats::createFromMetric($metric, $range, $filters);
-        $date_range = $stats->getDateRange();
+        $date_range = $stats->getDateRange()->getName();
         $date_from = $stats->getDateFrom()->toDateTimeString();
         $date_to = $stats->getDateTo()->toDateTimeString();
         $aggregate_field = $stats->getAggregateFieldName();
