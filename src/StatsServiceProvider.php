@@ -24,6 +24,8 @@ class StatsServiceProvider extends ServiceProvider
             ], 'stats-config');
         }
 
+        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'stats');
+
         \Carbon\Translator::get(TimeSeriesStats::dateLocale())->setTranslations([
             'first_day_of_week' => TimeSeriesStats::firstDayOfWeek(),
         ]);

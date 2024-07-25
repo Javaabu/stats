@@ -42,5 +42,27 @@ return [
         'week' => 'gggg - \W\e\e\k w',
         'month' => 'YYYY MMMM',
         'year' => 'YYYY',
-    ]
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Default date range
+    |--------------------------------------------------------------------------
+    |
+    | Default date range to show on stats
+    |
+    */
+
+    'default_date_range' => \Javaabu\Stats\Enums\PresetDateRanges::LAST_7_DAYS,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Default Layout
+    |--------------------------------------------------------------------------
+    |
+    | Default layout view for stats views
+    |
+    */
+
+    'default_layout' => 'layouts.admin',
 ];

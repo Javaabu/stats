@@ -230,6 +230,14 @@ class TimeSeriesStats
     }
 
     /**
+     * Default date range
+     */
+    public static function defaultDateRange(): PresetDateRanges
+    {
+        return config('stats.default_date_range');
+    }
+
+    /**
      * Register the api routes
      */
     public static function registerApiRoute(

@@ -21,7 +21,7 @@ use Maatwebsite\Excel\Concerns\WithStrictNullComparison;
 use Maatwebsite\Excel\Events\BeforeSheet;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
-class StatsExport implements
+class TimeSeriesStatsExport implements
     FromArray,
     WithMapping,
     WithHeadings,
