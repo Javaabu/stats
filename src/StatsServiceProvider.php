@@ -9,6 +9,7 @@ use Javaabu\Stats\Formatters\TimeSeries\DefaultStatsFormatter;
 use Javaabu\Stats\Formatters\TimeSeries\FlotStatsFormatter;
 use Javaabu\Stats\Formatters\TimeSeries\SparklineChartsStatsFormatter;
 use Javaabu\Stats\Http\Middleware\AbortIfCannotViewAnyTimeSeriesStats;
+use Javaabu\Stats\Repositories\TimeSeries\UserSignupsRepository;
 
 class StatsServiceProvider extends ServiceProvider
 {
@@ -31,6 +32,8 @@ class StatsServiceProvider extends ServiceProvider
         ]);
 
         $this->registerFormatters();
+
+        $this->registerDefaultStats();
     }
 
     /**
@@ -53,6 +56,15 @@ class StatsServiceProvider extends ServiceProvider
             'flot' => FlotStatsFormatter::class,
             'combined' => CombinedStatsFormatter::class,
         ]);
+    }
+
+    protected function registerDefaultStats()
+    {
+        if (class_exists(\App\Models\User::class)) {
+            TimeSeriesStats::register([
+                'user_signups' => UserSignupsRepository::class,
+            ]);
+        }
     }
 
     protected function registerMiddlewareAliases()

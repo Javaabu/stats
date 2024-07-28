@@ -5,7 +5,11 @@
 
 <div class="row">
     <div class="col-md-3">
-        <x-forms::select2 name="metric" :options="\Javaabu\Stats\TimeSeriesStats::getMetricNames($filters, $user)" required />
+        <x-forms::select2
+            name="metric"
+            :options="\Javaabu\Stats\TimeSeriesStats::getMetricNames($filters, $user)"
+            :allow-clear="false"
+            required />
 
         @if($filters)
             @foreach($filters as $filter => $value)
@@ -15,7 +19,12 @@
     </div>
 
     <div class="col-md-3">
-        <x-forms::select2 name="mode" :options="\Javaabu\Stats\Enums\TimeSeriesModes::getLabels()" required />
+        <x-forms::select2
+            name="mode"
+            :options="\Javaabu\Stats\Enums\TimeSeriesModes::getLabels()"
+            :allow-clear="false"
+            :default="\Javaabu\Stats\TimeSeriesStats::defaultMode()"
+            required />
     </div>
 
     <div class="col-md-3">
@@ -25,10 +34,12 @@
                 name="date_range"
                 :options="\Javaabu\Stats\Enums\PresetDateRanges::getLabels()"
                 :default="\Javaabu\Stats\TimeSeriesStats::defaultDateRange()"
+                :allow-clear="false"
                 required />
         </div>
     </div>
     <div class="col-md-3">
+        <label>&nbsp;</label>
         <x-forms::checkbox name="custom_date_range" value="1" id="custom-date-range" />
     </div>
 </div>
@@ -55,7 +66,7 @@
             ]
         @endphp
 
-        <x-forms::select2 name="compare" :label="__('Compare To')" :options="$compares" />
+        <x-forms::select2 name="compare" :label="__('Compare To')" :options="$compares" :allow-clear="false" />
     </div>
     <div class="col-md-3">
         <div data-enable-elem="#compare"

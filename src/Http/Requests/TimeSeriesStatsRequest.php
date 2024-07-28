@@ -49,12 +49,14 @@ class TimeSeriesStatsRequest extends FormRequest
             ],
 
             'date_from' => [
+                'nullable',
                 'string',
                 'date',
                 'required_without:date_range',
             ],
 
             'date_to' => [
+                'nullable',
                 'string',
                 'date',
                 'required_without:date_range',
@@ -66,12 +68,14 @@ class TimeSeriesStatsRequest extends FormRequest
             ],
 
             'compare_date_from' => [
+                'nullable',
                 'string',
                 'date',
                 'required_with:compare_date_to'
             ],
 
             'compare_date_to' => [
+                'nullable',
                 'string',
                 'date',
                 'required_with:compare_date_from',

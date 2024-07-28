@@ -1,4 +1,6 @@
-<?php namespace Javaabu\Stats\Http\Controllers;
+<?php
+
+namespace Javaabu\Stats\Http\Controllers;
 
 use Javaabu\Helpers\Http\Controllers\Controller;
 use Javaabu\Stats\Concerns\ExportsTimeSeriesStats;
@@ -9,13 +11,11 @@ class TimeSeriesStatsController extends Controller
     use ExportsTimeSeriesStats;
 
     /**
-     * Display a listing of the resource.
-     *
-     * @return string
+     * Display the stats form
      */
     public function index()
     {
-        return view('admin.stats.index');
+        return view(config('stats.time_series_stats_view'));
     }
 
     /**

@@ -9,7 +9,7 @@ use Javaabu\Stats\Http\Requests\TimeSeriesStatsRequest;
 use Javaabu\Stats\Support\ExactDateRange;
 use Javaabu\Stats\TimeSeriesStats;
 
-class TimeSeriesStatsController extends Controller
+class TimeSeriesStatsApiController extends Controller
 {
     /**
      * Display a listing of the resource.

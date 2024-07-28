@@ -46,6 +46,17 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Default time series mode
+    |--------------------------------------------------------------------------
+    |
+    | Default mode to show on the stats form
+    |
+    */
+
+    'default_time_series_mode' => \Javaabu\Stats\Enums\TimeSeriesModes::DAY,
+
+    /*
+    |--------------------------------------------------------------------------
     | Default date range
     |--------------------------------------------------------------------------
     |
@@ -65,4 +76,26 @@ return [
     */
 
     'default_layout' => 'layouts.admin',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Scripts Stack
+    |--------------------------------------------------------------------------
+    |
+    | The name of the stack to push scripts
+    |
+    */
+
+    'scripts_stack' => 'scripts',
+
+   /*
+   |--------------------------------------------------------------------------
+   | View for time series stats
+   |--------------------------------------------------------------------------
+   |
+   | Used in the main time series stats controller
+   |
+   */
+
+    'time_series_stats_view' => 'stats::material-admin-26.time-series-stats.index',
 ];

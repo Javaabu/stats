@@ -1,7 +1,7 @@
-@extends('admin.stats.stats')
+@extends('stats::material-admin-26.time-series-stats.stats')
 
-@section('page-title', __('Statistics'))
+@section('page-title', __('Time Series Statistics'))
 
 @section('content')
-    @include('admin.stats._generator', ['url' => route('admin.stats.general-export')])
+    @include('stats::material-admin-26.time-series-stats._generator', ['url' => action([\Javaabu\Stats\Http\Controllers\TimeSeriesStatsController::class, 'export'])])
 @endsection

@@ -160,8 +160,12 @@ class TimeSeriesStatsApiControllerTest extends TestCase
                     'metric' => 'user_logins',
                     'format' => 'chartjs',
                     'date_range' => 'last_7_days',
+                    'date_from' => '',
+                    'date_to' => '',
                     'mode' => 'day',
-                    'compare' => true
+                    'compare' => true,
+                    'compare_date_from' => '',
+                    'compare_date_to' => '',
                 ],
                 '/stats/time-series'
         ))

@@ -11,7 +11,9 @@ use Javaabu\Stats\Contracts\TimeSeriesStatsFormatter;
 use Javaabu\Stats\Contracts\TimeSeriesStatsRepository;
 use Javaabu\Stats\Enums\PresetDateRanges;
 use Javaabu\Stats\Enums\StatListReturnType;
-use Javaabu\Stats\Http\Controllers\Api\TimeSeriesStatsController;
+use Javaabu\Stats\Enums\TimeSeriesModes;
+use Javaabu\Stats\Http\Controllers\Api\TimeSeriesStatsApiController;
+use Javaabu\Stats\Http\Controllers\TimeSeriesStatsController;
 
 class TimeSeriesStats
 {
@@ -230,6 +232,14 @@ class TimeSeriesStats
     }
 
     /**
+     * Default mode
+     */
+    public static function defaultMode(): TimeSeriesModes
+    {
+        return config('stats.default_time_series_mode');
+    }
+
+    /**
      * Default date range
      */
     public static function defaultDateRange(): PresetDateRanges
@@ -246,8 +256,27 @@ class TimeSeriesStats
         array $middleware = ['stats.view-time-series']
     ): \Illuminate\Routing\Route
     {
-        return Route::get($url, [TimeSeriesStatsController::class, 'index'])
+        return Route::get($url, [TimeSeriesStatsApiController::class, 'index'])
                     ->name($name)
                     ->middleware($middleware);
+    }
+
+    /**
+     * Register the admin routes
+     */
+    public static function registerRoutes(
+        string $url = '/stats/time-series',
+        string $index_name = 'stats.time-series.index',
+        string $export_name = 'stats.time-series.index',
+        array  $middleware = ['stats.view-time-series']
+    )
+    {
+        Route::get($url, [TimeSeriesStatsController::class, 'index'])
+            ->name($index_name)
+            ->middleware($middleware);
+
+        Route::post($url, [TimeSeriesStatsController::class, 'export'])
+            ->name($export_name)
+            ->middleware($middleware);
     }
 }

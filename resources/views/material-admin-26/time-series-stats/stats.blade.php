@@ -1,4 +1,4 @@
 @extends('layouts.admin')
 
-@section('title', 'Stats')
-@section('page-title', __('Stats'))
+@section('title', 'Time Series Stats')
+@section('page-title', __('Time Series Stats'))
