@@ -23,7 +23,7 @@
             data.format = 'chartjs';
 
             $.ajax({
-                url: '{{ action([\Javaabu\Stats\Http\Controllers\Api\TimeSeriesStatsApiController::class, 'index']) }}',
+                url: '{{ $apiUrl }}',
                 type: 'GET',
                 data: data,
                 beforeSend: function () {
@@ -42,9 +42,7 @@
                         display: true,
                         title: {
                             display: true,
-                            text: 'Primary Period - ' +
-                                moment(response.date_from).format('MMM D, YYYY') +
-                                ' - ' + moment(response.date_to).format('MMM D, YYYY'),
+                            text: response.date_range_title,
                             font: {
                                 weight: '400'
                             },
@@ -65,7 +63,7 @@
 
                     if (response.compare_date_range) {
                         datasets.push({
-                            label: titleCase(response.aggregate_field, '_') + ' (Compared)',
+                            label: response.aggregate_field_label + ' (Compared)',
                             data: response.result.compare,
                             lineTension: 0,
                             borderColor: 'rgb(255, 159, 64)',
@@ -79,9 +77,7 @@
                             //tipe: "time",
                             title: {
                                 display: true,
-                                text: 'Comparison Period - ' +
-                                    moment(response.compare_date_from).format('MMM D, YYYY') +
-                                    ' - ' + moment(response.compare_date_to).format('MMM D, YYYY'),
+                                text: response.compare_date_range_title,
                                 font: {
                                     weight: '400'
                                 },
@@ -102,7 +98,7 @@
                     }
 
                     datasets.push({
-                        label: titleCase(response.aggregate_field, '_'),
+                        label: response.aggregate_field_label,
                         data: response.result.stats,
                         lineTension: 0,
                         borderColor: 'rgb(54, 162, 235)',

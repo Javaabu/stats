@@ -71,6 +71,21 @@ class TimeSeriesStatsApiController extends Controller
         $formatter = TimeSeriesStats::createFromFormat($format);
         $result = $formatter->format($mode, $stats, $compare);
 
+        $date_range_title = __('Primary Period - :date_from - :date_to', [
+            'date_from' => $stats->getDateFrom()->isoFormat('MMM D, YYYY'),
+            'date_to' => $stats->getDateTo()->isoFormat('MMM D, YYYY')
+        ]);
+
+        $compare_date_range_title = null;
+
+        if ($compare) {
+            $compare_date_range_title = __('Comparison Period - :date_from - :date_to', [
+                'date_from' => $compare->getDateFrom()->isoFormat('MMM D, YYYY'),
+                'date_to' => $compare->getDateTo()->isoFormat('MMM D, YYYY')
+            ]);
+        }
+
+
         return response()->json(
             compact(
                 'metric',
@@ -78,9 +93,11 @@ class TimeSeriesStatsApiController extends Controller
                 'mode',
                 'aggregate_field',
                 'aggregate_field_label',
+                'date_range_title',
                 'date_range',
                 'date_from',
                 'date_to',
+                'compare_date_range_title',
                 'compare_date_range',
                 'compare_date_from',
                 'compare_date_to',

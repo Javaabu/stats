@@ -76,6 +76,8 @@ class TimeSeriesStatsControllerTest extends TestCase
     /** @test */
     public function it_can_export_time_series_stats_with_preset_date_range(): void
     {
+        $this->withoutExceptionHandling();
+
         $this->travelTo('2024-07-04');
 
         TimeSeriesStats::register([
