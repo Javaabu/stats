@@ -1,6 +1,10 @@
 <script src="{{ asset('vendors/chart.js/chart.min.js') }}"></script>
 <script type="text/javascript">
     $(document).ready(function () {
+        $([window, top.window]).blur(function() {
+            toggleLoading( $('#btn-download-stats'), false );
+        });
+
         Chart.defaults.font.family = 'Roboto, sans-serif';
         var ctx = document.getElementById('chart').getContext('2d');
 
@@ -209,8 +213,8 @@
                         showValidationErrorMsg(xhr);
                     } else {
                         Swal.fire({
-                            title: 'Error!',
-                            text: 'An error occurred while loading the data.',
+                            title: __('Error!'),
+                            text: __('An error occurred while loading the data.'),
                             icon: 'error'
                         });
                     }

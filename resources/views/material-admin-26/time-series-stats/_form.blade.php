@@ -32,7 +32,7 @@
         </div>
     </div>
     <div class="col-md-3">
-        <label>&nbsp;</label>
+        <label class="mt-2">&nbsp;</label>
         <x-forms::checkbox name="custom_date_range" value="1" id="custom-date-range" />
     </div>
 </div>
@@ -85,7 +85,7 @@
                 <i class="zmdi zmdi-chart"></i> {{ __('Generate') }}
             </a>
 
-            <x-forms::submit color="primary" class="btn--icon-text btn--raised" title="Download CSV">
+            <x-forms::submit id="btn-download-stats" color="primary" class="btn--icon-text btn--raised" title="Download CSV">
                 <i class="zmdi zmdi-download"></i> {{ __('Download') }}
             </x-forms::submit>
         </div>
