@@ -10,6 +10,7 @@ use Javaabu\Stats\Formatters\TimeSeries\DefaultStatsFormatter;
 use Javaabu\Stats\Formatters\TimeSeries\FlotStatsFormatter;
 use Javaabu\Stats\Formatters\TimeSeries\SparklineChartsStatsFormatter;
 use Javaabu\Stats\Http\Middleware\AbortIfCannotViewAnyTimeSeriesStats;
+use Javaabu\Stats\Repositories\TimeSeries\UserLoginsRepository;
 use Javaabu\Stats\Repositories\TimeSeries\UserSignupsRepository;
 
 class StatsServiceProvider extends ServiceProvider
@@ -71,6 +72,12 @@ class StatsServiceProvider extends ServiceProvider
             TimeSeriesStats::register([
                 'user_signups' => UserSignupsRepository::class,
             ]);
+
+            if (class_exists(\Spatie\Activitylog\Models\Activity::class)) {
+                TimeSeriesStats::register([
+                    'user_logins' => UserLoginsRepository::class,
+                ]);
+            }
         }
     }
 
