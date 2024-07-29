@@ -2,6 +2,7 @@
 
 namespace Javaabu\Stats;
 
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Javaabu\Stats\Formatters\TimeSeries\ChartjsStatsFormatter;
 use Javaabu\Stats\Formatters\TimeSeries\CombinedStatsFormatter;
@@ -26,6 +27,8 @@ class StatsServiceProvider extends ServiceProvider
         }
 
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'stats');
+
+        Blade::componentNamespace('Javaabu\\Stats\\Views\\Components', 'stats');
 
         \Carbon\Translator::get(TimeSeriesStats::dateLocale())->setTranslations([
             'first_day_of_week' => TimeSeriesStats::firstDayOfWeek(),

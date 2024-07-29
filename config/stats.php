@@ -68,6 +68,20 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Default CSS Framework
+    |--------------------------------------------------------------------------
+    |
+    | This option controls the default CSS framework that will be used by the
+    | package when rendering views
+    |
+    | Supported: "material-admin-26"
+    |
+    */
+
+    'framework' => 'material-admin-26',
+
+    /*
+    |--------------------------------------------------------------------------
     | Default Layout
     |--------------------------------------------------------------------------
     |

@@ -14,6 +14,8 @@ class TestServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom([
             __DIR__ . '/../database',
         ]);
+
+        $this->loadViewsFrom(__DIR__ . '/../views', 'test');
     }
 
     /**

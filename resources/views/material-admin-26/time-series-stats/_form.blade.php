@@ -1,21 +1,14 @@
-@php
-    $filters = isset($filters) ? $filters : [];
-    $user = isset($user) ? $user : auth()->user();
-@endphp
-
 <div class="row">
     <div class="col-md-3">
         <x-forms::select2
             name="metric"
-            :options="\Javaabu\Stats\TimeSeriesStats::getMetricNames($filters, $user)"
+            :options="$metrics"
             :allow-clear="false"
             required />
 
-        @if($filters)
-            @foreach($filters as $filter => $value)
-                <x-forms::hidden :name="'filters[' . $filter . ']'" :value="$value" />
-            @endforeach
-        @endif
+        @foreach($filters as $filter => $value)
+            <x-forms::hidden :name="'filters[' . $filter . ']'" :value="$value" />
+        @endforeach
     </div>
 
     <div class="col-md-3">

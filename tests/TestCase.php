@@ -4,8 +4,12 @@ namespace Javaabu\Stats\Tests;
 
 use Illuminate\Foundation\Testing\RefreshDatabaseState;
 use Illuminate\Support\Facades\Artisan;
+use Javaabu\Forms\FormsServiceProvider;
 use Javaabu\Helpers\HelpersServiceProvider;
+use Javaabu\Settings\SettingsServiceProvider;
+use Javaabu\Settings\Testing\FakesSettings;
 use Javaabu\Stats\Tests\TestSupport\MySQLRefreshDatabaseState;
+use Maatwebsite\Excel\ExcelServiceProvider;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 use Javaabu\Stats\StatsServiceProvider;
 use Javaabu\Stats\Tests\TestSupport\Providers\TestServiceProvider;
@@ -13,6 +17,7 @@ use Spatie\Activitylog\ActivitylogServiceProvider;
 
 abstract class TestCase extends BaseTestCase
 {
+    use FakesSettings;
 
     public function setUp(): void
     {
@@ -55,8 +60,11 @@ abstract class TestCase extends BaseTestCase
     protected function getPackageProviders($app)
     {
         return [
+            SettingsServiceProvider::class,
             HelpersServiceProvider::class,
             ActivitylogServiceProvider::class,
+            ExcelServiceProvider::class,
+            FormsServiceProvider::class,
             StatsServiceProvider::class,
             TestServiceProvider::class
         ];

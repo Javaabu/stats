@@ -86,6 +86,7 @@ class TimeSeriesStatsExport implements
     public static function beforeSheet(BeforeSheet $event)
     {
         $sheet = $event->sheet;
+        /** @var TimeSeriesStatsExport $export */
         $export = $event->getConcernable();
 
         $sheet->append([
