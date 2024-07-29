@@ -24,6 +24,10 @@ class StatsServiceProvider extends ServiceProvider
             $this->publishes([
                 __DIR__ . '/../config/stats.php' => config_path('stats.php'),
             ], 'stats-config');
+
+            $this->publishes([
+                __DIR__ . '/../resources/views' => resource_path('views/vendor/stats'),
+            ], 'stats-views');
         }
 
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'stats');
