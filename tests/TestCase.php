@@ -5,6 +5,8 @@ namespace Javaabu\Stats\Tests;
 use Illuminate\Foundation\Testing\RefreshDatabaseState;
 use Illuminate\Support\Facades\Artisan;
 use Javaabu\Forms\FormsServiceProvider;
+use Javaabu\GeneratorHelpers\Testing\InteractsWithTestFiles;
+use Javaabu\GeneratorHelpers\Testing\InteractsWithTestStubs;
 use Javaabu\Helpers\HelpersServiceProvider;
 use Javaabu\Settings\SettingsServiceProvider;
 use Javaabu\Settings\Testing\FakesSettings;
@@ -18,6 +20,8 @@ use Spatie\Activitylog\ActivitylogServiceProvider;
 abstract class TestCase extends BaseTestCase
 {
     use FakesSettings;
+    use InteractsWithTestStubs;
+    use InteractsWithTestFiles;
 
     public function setUp(): void
     {
@@ -36,6 +40,8 @@ abstract class TestCase extends BaseTestCase
         }
 
         parent::setUp();
+
+        $this->loadTestStubsFrom( __DIR__ . '/TestSupport/stubs');
 
         $this->app['config']->set('app.key', 'base64:yWa/ByhLC/GUvfToOuaPD7zDwB64qkc/QkaQOrT5IpE=');
 

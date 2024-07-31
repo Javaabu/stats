@@ -1,0 +1,32 @@
+<?php
+
+namespace App\Stats\TimeSeries;
+
+use {{ModelClass}};
+use Illuminate\Database\Eloquent\Builder;
+use Javaabu\Stats\Repositories\TimeSeries\CountStatsRepository;
+
+class {{StatName}} extends CountStatsRepository
+{
+    public function query(): Builder
+    {
+        return {{Model}}::query();
+    }
+
+    public function allowedFilters(): array
+    {
+        return [
+            // define your filters here
+        ];
+    }
+
+    public function getTable(): string
+    {
+        return '{{table}}';
+    }
+
+    public function getAggregateFieldName(): string
+    {
+        return 'count';
+    }
+}
