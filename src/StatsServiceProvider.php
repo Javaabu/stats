@@ -4,6 +4,7 @@ namespace Javaabu\Stats;
 
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
+use Javaabu\GeneratorHelpers\StubRenderer;
 use Javaabu\Stats\Formatters\TimeSeries\ChartjsStatsFormatter;
 use Javaabu\Stats\Formatters\TimeSeries\CombinedStatsFormatter;
 use Javaabu\Stats\Formatters\TimeSeries\DefaultStatsFormatter;
@@ -29,9 +30,15 @@ class StatsServiceProvider extends ServiceProvider
             $this->publishes([
                 __DIR__ . '/../resources/views' => resource_path('views/vendor/stats'),
             ], 'stats-views');
+
+            $this->publishes([
+                __DIR__ . '/../stubs' => base_path('stubs/vendor/stats'),
+            ], 'stats-stubs');
         }
 
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'stats');
+
+        StubRenderer::loadStubsFrom(__DIR__ . '/../stubs', 'stats');
 
         Blade::componentNamespace('Javaabu\\Stats\\Views\\Components', 'stats');
 

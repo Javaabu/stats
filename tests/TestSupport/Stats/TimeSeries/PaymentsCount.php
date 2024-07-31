@@ -47,4 +47,12 @@ class PaymentsCount extends CountStatsRepository
     {
         return 'paid_at';
     }
+
+    /**
+     * Get the aggregate field name
+     */
+    public function getAggregateFieldName(): string
+    {
+        return 'count';
+    }
 }
