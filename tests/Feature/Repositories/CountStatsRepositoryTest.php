@@ -200,4 +200,17 @@ class CountStatsRepositoryTest extends TestCase
         ], $data);
     }
 
+    /** @test */
+    public function it_can_get_the_total_count(): void
+    {
+        $this->travelTo('2024-07-22 8:06 PM');
+
+        // create the stat
+        $stat = new PaymentsCount(PresetDateRanges::TODAY);
+
+        $data = $stat->total();
+
+        $this->assertEquals(0, $data);
+    }
+
 }

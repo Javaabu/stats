@@ -110,8 +110,10 @@ abstract class AggregateStatsRepository extends AbstractTimeSeriesStatsRepositor
      */
     public function total(): float|int
     {
-        return $this->filteredQuery()
+        $total = $this->filteredQuery()
                     ->select(DB::raw($this->getAggregateSql()))
                     ->value($this->getAggregateFieldName());
+
+        return is_null($total) ? 0 : $total;
     }
 }
