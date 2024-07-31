@@ -10,4 +10,9 @@ class UserSignupsRepository extends SignupsRepository
     {
         return \App\Models\User::class;
     }
+
+    public function getName(): string
+    {
+        return __('Admin User Signups');
+    }
 }

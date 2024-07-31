@@ -6,6 +6,7 @@
 namespace Javaabu\Stats\Repositories\TimeSeries;
 
 use Illuminate\Contracts\Auth\Access\Authorizable;
+use Javaabu\GeneratorHelpers\StringCaser;
 use Javaabu\Stats\Concerns\HasFilters;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
@@ -52,10 +53,7 @@ abstract class AbstractTimeSeriesStatsRepository implements TimeSeriesStatsRepos
      */
     public function getAggregateFieldLabel(): string
     {
-        $aggregate_field = Str::of($this->getAggregateFieldName())
-            ->snake(' ')
-            ->title()
-            ->toString();
+        $aggregate_field = StringCaser::title($this->getAggregateFieldName());
 
         return __($aggregate_field);
     }
@@ -68,19 +66,23 @@ abstract class AbstractTimeSeriesStatsRepository implements TimeSeriesStatsRepos
         return TimeSeriesStats::getMetricForStat(get_class($this));
     }
 
+    protected function generateName(): string
+    {
+        $class_name = StringCaser::title(class_basename($this));
+
+        if (Str::endsWith($class_name, 'Repository')) {
+            $class_name = trim(Str::beforeLast($class_name, 'Repository'));
+        }
+
+        return $class_name;
+    }
+
     /**
      * Get the name of the metric
      */
     public function getName(): string
     {
-        $class_name = Str::of(class_basename($this))
-            ->snake(' ')
-            ->title()
-            ->toString();
-
-        if (Str::endsWith($class_name, 'Repository')) {
-            $class_name = trim(Str::beforeLast($class_name, 'Repository'));
-        }
+        $class_name = $this->generateName();
 
         return __($class_name);
     }

@@ -8,4 +8,9 @@ class UserLoginsRepository extends LoginsRepository
     {
         return \App\Models\User::class;
     }
+
+    public function getName(): string
+    {
+        return __('Admin User Logins');
+    }
 }
