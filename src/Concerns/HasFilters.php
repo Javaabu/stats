@@ -79,7 +79,7 @@ trait HasFilters
      */
     public function allowedFilters(): array
     {
-        return property_exists($this, 'allowed_filters') ? $this->allowed_filters : [];
+        return [];
     }
 
     /**
