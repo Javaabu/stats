@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Javaabu\GeneratorHelpers\Concerns\GeneratesFiles;
 use Javaabu\Stats\Generators\AbstractStatGenerator;
 use Javaabu\Stats\Generators\CountStatGenerator;
+use Javaabu\Stats\Generators\SumStatGenerator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -79,7 +80,8 @@ class GenerateTimeSeriesStatCommand extends Command
     protected function getGeneratorClass(string $type): string
     {
         return match ($type) {
-            'count' => CountStatGenerator::class
+            'count' => CountStatGenerator::class,
+            'sum' => SumStatGenerator::class
         };
     }
 

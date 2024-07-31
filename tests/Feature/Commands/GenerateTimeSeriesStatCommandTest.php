@@ -2,14 +2,11 @@
 
 namespace Javaabu\Stats\Tests\Feature\Commands;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Javaabu\Stats\Tests\TestCase;
 use Javaabu\Stats\Tests\TestSupport\Models\Payment;
 
 class GenerateTimeSeriesStatCommandTest extends TestCase
 {
-    use RefreshDatabase;
-
     public function setUp(): void
     {
         parent::setUp();
@@ -35,6 +32,21 @@ class GenerateTimeSeriesStatCommandTest extends TestCase
         );
 
         parent::tearDown();
+    }
+
+    /** @test */
+    public function it_can_generate_a_new_sum_stat_file(): void
+    {
+        $expected_path = $this->app->path('Stats/TimeSeries/PaymentsSum.php');
+        $expected_content = $this->getTestStubContents('Stats/TimeSeries/PaymentsSum.php');
+
+        $this->artisan('stats:time-series', ['name' => 'PaymentsSum', 'model' => Payment::class, '--type' => 'sum'])
+            ->assertSuccessful();
+
+        $this->assertFileExists($expected_path);
+
+        $actual_content = $this->getGeneratedFileContents($expected_path);
+        $this->assertEquals($expected_content, $actual_content);
     }
 
     /** @test */
