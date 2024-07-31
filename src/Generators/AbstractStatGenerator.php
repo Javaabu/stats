@@ -12,6 +12,7 @@ abstract class AbstractStatGenerator
     protected string $name;
     protected string $model_class;
     protected string $table;
+    protected string $metric;
     protected StubRenderer $renderer;
 
     /**
@@ -19,7 +20,8 @@ abstract class AbstractStatGenerator
      */
     public function __construct(string $name, string $model_class)
     {
-        $this->name = $name;
+        $this->name = StringCaser::studly($name);
+        $this->metric = StringCaser::snake($this->name);
         $this->model_class = $this->resolveFullModelClass($model_class);
         $this->table = $this->resolveTableName($this->model_class);
         $this->renderer = app()->make(StubRenderer::class);
@@ -112,5 +114,15 @@ abstract class AbstractStatGenerator
     public function getName(): string
     {
         return $this->name;
+    }
+
+    public function getMetric(): string
+    {
+        return $this->metric;
+    }
+
+    public function getFullClassName(): string
+    {
+        return '\\App\\Stats\\TimeSeries\\' . $this->getName();
     }
 }
