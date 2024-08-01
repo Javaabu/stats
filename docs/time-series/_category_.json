@@ -1,0 +1,11 @@
+{
+    "position": 1.3,
+    "label": "Time Series Stats",
+    "collapsible": true,
+    "collapsed": false,
+    "link": {
+        "type": "generated-index",
+        "slug": "/stats/_categories/time-series",
+        "description": "How to define and use time series statistics"
+    }
+}
