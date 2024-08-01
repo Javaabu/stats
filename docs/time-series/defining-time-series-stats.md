@@ -100,6 +100,21 @@ class PaymentsCountRepository extends AggregateStatsRepository
 ...
 ```
 
+# Modifying who can view the stat
+
+By default, a stat can be viewed by a user with the `view_stats` permission. To modify this, you can override the `canView` method of your stat class.
+
+```php
+...
+class PaymentsCountRepository extends AggregateStatsRepository
+{
+    public function canView(?Authorizable $user = null): bool
+    {
+        return $user && $user->can('viewStats', Payment::class);
+    }
+...
+```
+
 # Count Stats
 
 `CountStatsRepository` is an abstract stat class that extends the `AggregateStatsRepository` class. Count Stats can be used to easily display the count of some value over a given time period. You can define a count stat like so:
