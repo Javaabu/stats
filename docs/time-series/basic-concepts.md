@@ -70,11 +70,11 @@ Note that when calling the `results` method, the returned collection will not ha
 
 # Formatting the results
 
-To have the missing days also included as `0` values, you can format your results:
+To have the missing days also included as `0` values, you can format your results using a formatter that fills the missing days:
 
 ```php
 $formatted_results = $stat->format(
-    'default', // which format to use
+    'combined', // which format to use
     TimeSeriesModes::DAY); // returns an array
 ```
 
