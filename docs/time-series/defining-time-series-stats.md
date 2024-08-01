@@ -224,3 +224,48 @@ Instead of manually creating a sum stat class, you can use the provided `stats:t
 ```bash
 php artisan stats:time-series PaymentAmounts payment --type=sum
 ```
+
+# Login Stats
+
+`LoginsRepository` is an abstract stat class that can be used to display login counts for a specific user type. This stat uses data from [`spatie/laravel-activitylog`](https://github.com/spatie/laravel-activitylog) to generate the results. So you will need the `spatie/laravel-activitylog` package to use this type of stats. 
+
+```php
+<?php
+
+namespace App\Stats\TimeSeries;
+
+use App\Models\Customer;
+use Javaabu\Stats\Repositories\TimeSeries\LoginsRepository;
+
+class CustomerLoginsRepository extends LoginsRepository
+{
+
+    public function userModelClass(): string
+    {
+        return Customer::class;
+    }
+}
+```
+
+# Signup Stats
+
+`SignupsRepository` is an abstract stat class that can be used to display signup counts for a specific user type.
+
+```php
+<?php
+
+namespace App\Stats\TimeSeries;
+
+use App\Models\Customer;
+use Javaabu\Stats\Repositories\TimeSeries\SignupsRepository;
+
+class CustomerSignupsRepository extends SignupsRepository
+{
+
+    public function userModelClass(): string
+    {
+        return Customer::class;
+    }
+}
+
+```
