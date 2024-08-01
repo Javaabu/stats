@@ -1,6 +1,6 @@
 ---
 title: Getting started
-sidebar_position: 2
+sidebar_position: 1
 ---
 
 # JavaScript Prerequisites
@@ -65,7 +65,7 @@ Add the following code to your `admin.php` (if using Javaabu's Laravel Skeleton)
 This will add a `GET {admin_base_url}/stats/time-series` and a `POST {admin_base_url}/stats/time-series` endpoint.
 
 ```php
-// inside admin
+// inside admin.php route file
 
 /**
  * Protected routes
