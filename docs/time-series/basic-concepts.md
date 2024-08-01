@@ -90,4 +90,12 @@ $stat = TimeSeriesStats::createFromMetric('user_logins', PresetDateRanges::LAST_
 $filtered_results = $stat->results(TimeSeriesModes::DAY);
 ```
 
+# Getting the total for the date range
+
+You can get the total value for your given date range by calling the `total()` method of the stat.
+
+```php
+$total = $stat->total();
+```
+
 
