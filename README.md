@@ -2,6 +2,7 @@
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/javaabu/stats.svg?style=flat-square)](https://packagist.org/packages/javaabu/stats)
 [![Test Status](../../actions/workflows/run-tests.yml/badge.svg)](../../actions/workflows/run-tests.yml)
+![Code Coverage Badge](../image-data/coverage.svg)
 [![Total Downloads](https://img.shields.io/packagist/dt/javaabu/stats.svg?style=flat-square)](https://packagist.org/packages/javaabu/stats)
 
 ## Introduction
