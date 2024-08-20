@@ -80,6 +80,6 @@ jobs:
                 if: startsWith(github.event.head_commit.message, 'coverage') && matrix.php == '8.3' && matrix.laravel == '11.*' && matrix.stability == 'prefer-stable'
                 uses: timkrase/phpunit-coverage-badge@v1.2.1
                 with:
-                    coverage_badge_path: output/coverage.svg
+                    coverage_badge_path: .github/coverage.svg
                     push_badge: true
                     repo_token: ${{ secrets.GITHUB_TOKEN }}
