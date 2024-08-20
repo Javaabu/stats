@@ -61,7 +61,7 @@ jobs:
                 with:
                     php-version: ${{ matrix.php }}
                     extensions: curl, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, iconv
-                    coverage: none\
+                    coverage: ${{ startsWith(github.event.head_commit.message, 'coverage') && matrix.php == '8.3' && matrix.laravel == '11.*' && matrix.stability == 'prefer-stable' && 'xdebug' || 'none' }}
 
             -   name: Install dependencies
                 run: |
@@ -69,8 +69,26 @@ jobs:
                     composer update --${{ matrix.stability }} --prefer-dist --no-interaction
 
             -   name: Execute tests
-                run: vendor/bin/phpunit
+                run: |
+                    vendor/bin/phpunit ${{ startsWith(github.event.head_commit.message, 'coverage') && matrix.php == '8.3' && matrix.laravel == '11.*' && matrix.stability == 'prefer-stable' && '--coverage-clover=clover.xml' || '' }}
                 env:
                     DB_USERNAME: user
                     DB_PASSWORD: secret
                     DB_PORT: ${{ job.services.mysql.ports[3306] }}
+
+            -   name: Make code coverage badge
+                if: startsWith(github.event.head_commit.message, 'coverage') && matrix.php == '8.3' && matrix.laravel == '11.*' && matrix.stability == 'prefer-stable'
+                uses: timkrase/phpunit-coverage-badge@v1.2.1
+                with:
+                    coverage_badge_path: output/coverage.svg
+                    push_badge: false
+
+            -   name: Git push to image-data branch
+                if: startsWith(github.event.head_commit.message, 'coverage') && matrix.php == '8.3' && matrix.laravel == '11.*' && matrix.stability == 'prefer-stable'
+                uses: peaceiris/actions-gh-pages@v3
+                with:
+                    publish_dir: ./output
+                    publish_branch: image-data
+                    github_token: ${{ secrets.GITHUB_TOKEN }}
+                    user_name: 'github-actions[bot]'
+                    user_email: 'github-actions[bot]@users.noreply.github.com'
