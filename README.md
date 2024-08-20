@@ -5,6 +5,7 @@
 ![Code Coverage Badge](./.github/coverage.svg)
 [![Total Downloads](https://img.shields.io/packagist/dt/javaabu/stats.svg?style=flat-square)](https://packagist.org/packages/javaabu/stats)
 
+
 ## Introduction
 Simplifies stats generation for Laravel
 
