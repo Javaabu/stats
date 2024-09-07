@@ -14,11 +14,49 @@ use Javaabu\Stats\Enums\StatListReturnType;
 use Javaabu\Stats\Enums\TimeSeriesModes;
 use Javaabu\Stats\Http\Controllers\Api\TimeSeriesStatsApiController;
 use Javaabu\Stats\Http\Controllers\TimeSeriesStatsController;
+use Javaabu\Stats\Repositories\TimeSeries\UserLoginsRepository;
+use Javaabu\Stats\Repositories\TimeSeries\UserSignupsRepository;
 
 class TimeSeriesStats
 {
     protected static array $stats_map = [];
     protected static array $formatters_map = [];
+
+    protected static bool $exclude_default_stats = false;
+
+    /**
+     * Check whether predefined stats should be excluded
+     */
+    public static function shouldExcludeDefaultStats(): bool
+    {
+        return self::$exclude_default_stats;
+    }
+
+    /**
+     * Exclude predefined stats
+     */
+    public static function excludeDefaultStats()
+    {
+        self::$exclude_default_stats = true;
+    }
+
+    /**
+     * Register default stats
+     */
+    public static function registerDefaultStats()
+    {
+        if (class_exists(\App\Models\User::class)) {
+            self::register([
+                'user_signups' => UserSignupsRepository::class,
+            ]);
+
+            if (class_exists(\Spatie\Activitylog\Models\Activity::class)) {
+                self::register([
+                    'user_logins' => UserLoginsRepository::class,
+                ]);
+            }
+        }
+    }
 
     /**
      * Register a formatter or a number of formatters

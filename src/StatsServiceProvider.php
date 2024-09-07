@@ -53,7 +53,9 @@ class StatsServiceProvider extends ServiceProvider
 
         $this->registerFormatters();
 
-        $this->registerDefaultStats();
+        if (! TimeSeriesStats::shouldExcludeDefaultStats()) {
+            TimeSeriesStats::registerDefaultStats();
+        }
     }
 
     /**
@@ -76,21 +78,6 @@ class StatsServiceProvider extends ServiceProvider
             'flot' => FlotStatsFormatter::class,
             'combined' => CombinedStatsFormatter::class,
         ]);
-    }
-
-    protected function registerDefaultStats()
-    {
-        if (class_exists(\App\Models\User::class)) {
-            TimeSeriesStats::register([
-                'user_signups' => UserSignupsRepository::class,
-            ]);
-
-            if (class_exists(\Spatie\Activitylog\Models\Activity::class)) {
-                TimeSeriesStats::register([
-                    'user_logins' => UserLoginsRepository::class,
-                ]);
-            }
-        }
     }
 
     protected function registerMiddlewareAliases()
