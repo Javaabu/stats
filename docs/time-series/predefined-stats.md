@@ -3,7 +3,7 @@ title: Predefined stats
 sidebar_position: 7
 ---
 
-This package ships with several different predefined stats that might be useful.
+This package ships with several different predefined stats that might be useful. These stats would be included only if you have a `App\Model\User` class.
 
 # Available Predefined Stats
 
