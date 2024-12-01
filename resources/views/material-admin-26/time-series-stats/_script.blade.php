@@ -1,4 +1,4 @@
-<script src="{{ asset('vendors/chart.js/chart.min.js') }}"></script>
+<script src="{{ asset('vendors/chart.js/chart.umd.js') }}"></script>
 <script type="text/javascript">
     $(document).ready(function () {
         $([window, top.window]).blur(function() {

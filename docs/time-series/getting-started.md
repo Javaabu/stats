@@ -7,7 +7,7 @@ sidebar_position: 1
 
 Before getting started, you need to ensure the following JS libraries has been installed and copied to the `public/vendors` directory:
 
-- [`chart.js`](https://www.chartjs.org/)
+- [`chart.js v4`](https://www.chartjs.org/)
 - [`jquery-sparkline`](https://omnipotent.net/jquery.sparkline)
 - [`flot`](https://www.flotcharts.org/)
 - [`flot.curvedlines`](http://curvedlines.michaelzinsmaier.de/)
