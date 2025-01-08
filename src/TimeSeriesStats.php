@@ -305,7 +305,7 @@ class TimeSeriesStats
     public static function registerRoutes(
         string $url = '/stats/time-series',
         string $index_name = 'stats.time-series.index',
-        string $export_name = 'stats.time-series.index',
+        string $export_name = 'stats.time-series.export',
         array  $middleware = ['stats.view-time-series']
     )
     {
