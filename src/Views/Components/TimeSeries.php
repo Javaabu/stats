@@ -26,6 +26,7 @@ class TimeSeries extends Component
         string $url = '',
         string $apiUrl = '',
         array $filters = [],
+        array $metrics = [],
         ?Authorizable $user = null,
         string $framework = ''
     ) {
@@ -35,6 +36,6 @@ class TimeSeries extends Component
         $this->user = $user ?: auth()->user();
         $this->url = $url ?: action([TimeSeriesStatsController::class, 'export']);
         $this->apiUrl = $apiUrl ?: action([TimeSeriesStatsApiController::class, 'index']);
-        $this->metrics = TimeSeriesStats::getMetricNames($this->filters, $this->user);
+        $this->metrics = $metrics ?: TimeSeriesStats::getMetricNames($this->filters, $this->user);
     }
 }

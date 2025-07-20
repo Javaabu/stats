@@ -108,6 +108,7 @@ The `stats::time-series` component accepts the following attributes:
 - **`filters`**: Associative array of filter values.
 - **`api-url`**: The API url to call for generating the stats graph. Defaults to the route defined by `TimeSeriesStats::registerApiRoute`.
 - **`user`**: The user who you want to display the stats for. Defaults to the current user.
+- **`metrics`**: Key-Value array of metrics to show. Defaults to the metrics visible to the given user for the given filters.
 - **`framework`**: Which CSS framework to use. Defaults to framework defined in the package config.
 
 # Add links
