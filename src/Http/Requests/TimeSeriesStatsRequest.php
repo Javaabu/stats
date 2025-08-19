@@ -27,7 +27,7 @@ class TimeSeriesStatsRequest extends FormRequest
      */
     public function rules()
     {
-        $user = $this->user();
+        $user = request()->user();
         $filters = $this->input('filters', []);
 
         $rules = [
@@ -95,5 +95,59 @@ class TimeSeriesStatsRequest extends FormRequest
         ];
 
         return $rules;
+    }
+
+    public function bodyParameters()
+    {
+        return [
+            'mode' => [
+                'description' => 'Which date frequency to group the data by, like `hour`, `day`, etc.',
+                'example' => TimeSeriesModes::MONTH->value,
+            ],
+
+            'metric' => [
+                'description' => 'Which metric to use for the stat.',
+                'example' => TimeSeriesStats::allowedMetrics([], request()->user())[0] ?? '',
+            ],
+
+            'date_range' => [
+                'description' => 'Preset date range to filter results by.',
+                'example' => PresetDateRanges::THIS_YEAR->value,
+            ],
+
+            'date_from' => [
+                'description' => 'Custom starting date when not using a preset date range.',
+            ],
+
+            'date_to' => [
+                'description' => 'Custom ending date when not using a preset date range.',
+            ],
+
+            'compare' => [
+                'description' => 'Whether to compare the stat with the comparison date range.',
+                'example' => true,
+            ],
+
+            'compare_date_range' => [
+                'description' => 'Preset date range to compare results with. If not set, the previous date range will be compared.',
+                'example' => 'No-example'
+            ],
+
+            'compare_date_from' => [
+                'description' => 'Custom starting compare date when not using a preset compare date range.',
+            ],
+
+            'compare_date_to' => [
+                'description' => 'Custom ending compare date when not using a preset compare date range.',
+            ],
+
+            'format' => [
+                'description' => 'Which format to return the results in.',
+            ],
+
+            'filters' => [
+                'description' => 'Filters to apply to the stat.',
+            ],
+        ];
     }
 }

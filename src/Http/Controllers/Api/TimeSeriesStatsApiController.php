@@ -9,13 +9,17 @@ use Javaabu\Stats\Http\Requests\TimeSeriesStatsRequest;
 use Javaabu\Stats\Support\ExactDateRange;
 use Javaabu\Stats\TimeSeriesStats;
 
+/**
+ * @group Stats
+ *
+ * Endpoints for generating statistics.
+ */
 class TimeSeriesStatsApiController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Time series stats
      *
-     * @param TimeSeriesStatsRequest $request
-     * @return JsonResponse|Response
+     * Generate time series stats for given the metric in the given date range and comparison date range. Supports outputs in multiple formats.
      */
     public function index(TimeSeriesStatsRequest $request)
     {
