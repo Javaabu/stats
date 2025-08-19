@@ -106,7 +106,7 @@ class TimeSeriesStatsRequest extends FormRequest
             ],
 
             'metric' => [
-                'description' => 'Which metric to use for the stat.',
+                'description' => 'Which metric to use for the stat. The available metrics will depend on the user permissions and the filters used.',
                 'example' => TimeSeriesStats::allowedMetrics([], request()->user())[0] ?? '',
             ],
 
