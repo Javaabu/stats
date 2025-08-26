@@ -23,6 +23,8 @@ class PresetDateRangesTest extends TestCase
         $this->assertEquals('2024-06-25 00:00:00', PresetDateRanges::LAST_7_DAYS->getPreviousDateRange()->getDateFrom(), 'Incorrect previous start of LAST_7_DAYS');
         $this->assertEquals('2024-06-11 00:00:00', PresetDateRanges::LAST_14_DAYS->getPreviousDateRange()->getDateFrom(), 'Incorrect previous start of LAST_14_DAYS');
         $this->assertEquals('2024-05-10 00:00:00', PresetDateRanges::LAST_30_DAYS->getPreviousDateRange()->getDateFrom(), 'Incorrect previous start of LAST_30_DAYS');
+        $this->assertEquals('2015-01-01 00:00:00', PresetDateRanges::LAST_5_YEARS->getPreviousDateRange()->getDateFrom(), 'Incorrect previous start of LAST_5_YEARS');
+        $this->assertEquals('2005-01-01 00:00:00', PresetDateRanges::LAST_10_YEARS->getPreviousDateRange()->getDateFrom(), 'Incorrect previous start of LAST_10_YEARS');
         $this->assertEquals('2015-01-01 00:00:00', PresetDateRanges::LIFETIME->getPreviousDateRange()->getDateFrom(), 'Incorrect previous start of LIFETIME');
     }
 
@@ -42,6 +44,8 @@ class PresetDateRangesTest extends TestCase
         $this->assertEquals('2024-07-01 23:59:59', PresetDateRanges::LAST_7_DAYS->getPreviousDateRange()->getDateTo(), 'Incorrect previous end of LAST_7_DAYS');
         $this->assertEquals('2024-06-24 23:59:59', PresetDateRanges::LAST_14_DAYS->getPreviousDateRange()->getDateTo(), 'Incorrect previous end of LAST_14_DAYS');
         $this->assertEquals('2024-06-08 23:59:59', PresetDateRanges::LAST_30_DAYS->getPreviousDateRange()->getDateTo(), 'Incorrect previous end of LAST_30_DAYS');
+        $this->assertEquals('2019-12-31 23:59:59', PresetDateRanges::LAST_5_YEARS->getPreviousDateRange()->getDateTo(), 'Incorrect previous end of LAST_5_YEARS');
+        $this->assertEquals('2014-12-31 23:59:59', PresetDateRanges::LAST_10_YEARS->getPreviousDateRange()->getDateTo(), 'Incorrect previous end of LAST_10_YEARS');
         $this->assertEquals('2019-12-31 23:59:59', PresetDateRanges::LIFETIME->getPreviousDateRange()->getDateTo(), 'Incorrect previous end of LIFETIME');
     }
 
@@ -61,6 +65,8 @@ class PresetDateRangesTest extends TestCase
         $this->assertEquals('2024-07-02 00:00:00', PresetDateRanges::LAST_7_DAYS->getDateFrom(), 'Incorrect start of LAST_7_DAYS');
         $this->assertEquals('2024-06-25 00:00:00', PresetDateRanges::LAST_14_DAYS->getDateFrom(), 'Incorrect start of LAST_14_DAYS');
         $this->assertEquals('2024-06-09 00:00:00', PresetDateRanges::LAST_30_DAYS->getDateFrom(), 'Incorrect start of LAST_30_DAYS');
+        $this->assertEquals('2020-01-01 00:00:00', PresetDateRanges::LAST_5_YEARS->getDateFrom(), 'Incorrect start of LAST_5_YEARS');
+        $this->assertEquals('2015-01-01 00:00:00', PresetDateRanges::LAST_10_YEARS->getDateFrom(), 'Incorrect start of LAST_10_YEARS');
         $this->assertEquals('2020-01-01 00:00:00', PresetDateRanges::LIFETIME->getDateFrom(), 'Incorrect start of LIFETIME');
     }
 
@@ -80,6 +86,8 @@ class PresetDateRangesTest extends TestCase
         $this->assertEquals('2024-07-08 23:59:59', PresetDateRanges::LAST_7_DAYS->getDateTo(), 'Incorrect end of LAST_7_DAYS');
         $this->assertEquals('2024-07-08 23:59:59', PresetDateRanges::LAST_14_DAYS->getDateTo(), 'Incorrect end of LAST_14_DAYS');
         $this->assertEquals('2024-07-08 23:59:59', PresetDateRanges::LAST_30_DAYS->getDateTo(), 'Incorrect end of LAST_30_DAYS');
+        $this->assertEquals('2024-12-31 23:59:59', PresetDateRanges::LAST_5_YEARS->getDateTo(), 'Incorrect end of LAST_5_YEARS');
+        $this->assertEquals('2024-12-31 23:59:59', PresetDateRanges::LAST_10_YEARS->getDateTo(), 'Incorrect end of LAST_10_YEARS');
         $this->assertEquals('2024-07-08 22:07:00', PresetDateRanges::LIFETIME->getDateTo(), 'Incorrect end of LIFETIME');
     }
 }
