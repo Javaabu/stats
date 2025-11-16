@@ -9,6 +9,16 @@ use Javaabu\Stats\Tests\TestCase;
 class TimeSeriesModesTest extends TestCase
 {
     /** @test */
+    public function it_can_generate_the_correct_mysql_query_for_each_mode(): void
+    {
+        $this->assertEquals('DATE_FORMAT(created_at, \'%Y-%m-%d %H:00\')', TimeSeriesModes::HOUR->getSql('created_at'), 'Invalid mysql query for HOUR');
+        $this->assertEquals('DATE(created_at)', TimeSeriesModes::DAY->getSql('created_at'), 'Invalid mysql query for DAY');
+        $this->assertEquals('YEARWEEK(created_at, 6)', TimeSeriesModes::WEEK->getSql('created_at'), 'Invalid mysql query for WEEK');
+        $this->assertEquals('DATE_FORMAT(created_at, \'%Y, %m\')', TimeSeriesModes::MONTH->getSql('created_at'), 'Invalid mysql query for MONTH');
+        $this->assertEquals('YEAR(created_at)', TimeSeriesModes::YEAR->getSql('created_at'), 'Invalid mysql query for YEAR');
+    }
+
+    /** @test */
     public function it_can_get_the_date_format_for_the_time_series_mode(): void
     {
         $this->assertEquals('D MMM YY hh:mm A', TimeSeriesModes::HOUR->getDateFormat(), 'Invalid date format for HOUR');

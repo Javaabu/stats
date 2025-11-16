@@ -67,6 +67,17 @@ enum TimeSeriesModes: string implements IsEnum
         };
     }
 
+    public function getSql(string $date_field): string
+    {
+        return match ($this) {
+            self::HOUR => "DATE_FORMAT($date_field, '%Y-%m-%d %H:00')",
+            self::DAY => "DATE($date_field)",
+            self::WEEK => "YEARWEEK($date_field, " . TimeSeriesStats::weekMode() . ")",
+            self::MONTH => "DATE_FORMAT($date_field, '%Y, %m')",
+            self::YEAR => "YEAR($date_field)",
+        };
+    }
+
     public function increment(Carbon $date): Carbon
     {
         $date = $date->copy()->locale(TimeSeriesStats::dateLocale());

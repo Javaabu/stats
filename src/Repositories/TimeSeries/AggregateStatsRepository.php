@@ -7,6 +7,7 @@ namespace Javaabu\Stats\Repositories\TimeSeries;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
+use Javaabu\Stats\Enums\TimeSeriesModes;
 use Javaabu\Stats\TimeSeriesStats;
 
 abstract class AggregateStatsRepository extends AbstractTimeSeriesStatsRepository
@@ -20,6 +21,11 @@ abstract class AggregateStatsRepository extends AbstractTimeSeriesStatsRepositor
      * Get the aggregate sql expression for the repository
      */
     public abstract function getAggregateSql(): string;
+
+    public function getDateSqlForTimeMode(TimeSeriesModes $mode): string
+    {
+        return $mode->getSql($this->getDateField());
+    }
 
     /**
      * Get the date field name for the repository
@@ -44,8 +50,10 @@ abstract class AggregateStatsRepository extends AbstractTimeSeriesStatsRepositor
      */
     public function hour(): Builder
     {
+        $this->setCurrentMode(TimeSeriesModes::HOUR);
+
         return $this->filteredQuery()
-            ->select(DB::raw($this->getAggregateSql().", DATE_FORMAT(".$this->getDateField().", '%Y-%m-%d %H:00') as hour"))
+            ->select(DB::raw($this->getAggregateSql().", " . $this->getDateSqlForTimeMode(TimeSeriesModes::HOUR) . " as hour"))
             ->groupBy('hour')
             ->orderBy('hour', 'ASC');
     }
@@ -57,8 +65,10 @@ abstract class AggregateStatsRepository extends AbstractTimeSeriesStatsRepositor
      */
     public function day(): Builder
     {
+        $this->setCurrentMode(TimeSeriesModes::DAY);
+
         return $this->filteredQuery()
-            ->select(DB::raw($this->getAggregateSql().", DATE(".$this->getDateField().") as day"))
+            ->select(DB::raw($this->getAggregateSql().", " . $this->getDateSqlForTimeMode(TimeSeriesModes::DAY) . " as day"))
             ->groupBy('day')
             ->orderBy('day', 'ASC');
     }
@@ -70,11 +80,11 @@ abstract class AggregateStatsRepository extends AbstractTimeSeriesStatsRepositor
      */
     public function week(): Builder
     {
-        $week_mode = TimeSeriesStats::weekMode();
+        $this->setCurrentMode(TimeSeriesModes::WEEK);
 
         return $this->filteredQuery()
             //->select(DB::raw($this->getAggregateSql().", DATE_FORMAT(".$this->getDateField().", '%X, %V') as week"))
-            ->select(DB::raw($this->getAggregateSql().", YEARWEEK(".$this->getDateField().", $week_mode) as week"))
+            ->select(DB::raw($this->getAggregateSql().", " . $this->getDateSqlForTimeMode(TimeSeriesModes::WEEK) . " as week"))
             ->groupBy('week')
             ->orderBy('week', 'ASC');
     }
@@ -86,8 +96,10 @@ abstract class AggregateStatsRepository extends AbstractTimeSeriesStatsRepositor
      */
     public function month(): Builder
     {
+        $this->setCurrentMode(TimeSeriesModes::MONTH);
+
         return $this->filteredQuery()
-            ->select(DB::raw($this->getAggregateSql().", DATE_FORMAT(".$this->getDateField().", '%Y, %m') as month"))
+            ->select(DB::raw($this->getAggregateSql().", " . $this->getDateSqlForTimeMode(TimeSeriesModes::MONTH) . " as month"))
             ->groupBy('month')
             ->orderBy('month', 'ASC');
     }
@@ -99,8 +111,10 @@ abstract class AggregateStatsRepository extends AbstractTimeSeriesStatsRepositor
      */
     public function year(): Builder
     {
+        $this->setCurrentMode(TimeSeriesModes::YEAR);
+
         return $this->filteredQuery()
-            ->select(DB::raw($this->getAggregateSql().", YEAR(".$this->getDateField().") as year"))
+            ->select(DB::raw($this->getAggregateSql().", " . $this->getDateSqlForTimeMode(TimeSeriesModes::YEAR) . " as year"))
             ->groupBy('year')
             ->orderBy('year', 'ASC');
     }
@@ -110,6 +124,8 @@ abstract class AggregateStatsRepository extends AbstractTimeSeriesStatsRepositor
      */
     public function total(): float|int
     {
+        $this->setCurrentMode(null);
+
         $total = $this->filteredQuery()
                     ->select(DB::raw($this->getAggregateSql()))
                     ->value($this->getAggregateFieldName());

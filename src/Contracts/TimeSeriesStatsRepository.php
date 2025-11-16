@@ -12,6 +12,12 @@ interface TimeSeriesStatsRepository extends
     InteractsWithDateRange
 {
     /**
+     * Get which time series mode is being queried with
+     * Null means total
+     */
+    public function getCurrentMode(): ?TimeSeriesModes;
+
+    /**
      * Get the stats
      */
     public function results(TimeSeriesModes $mode): Collection;

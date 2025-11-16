@@ -22,6 +22,8 @@ abstract class AbstractTimeSeriesStatsRepository implements TimeSeriesStatsRepos
     use HasDateRange;
     use HasFilters;
 
+    protected ?TimeSeriesModes $current_mode = null;
+
     /**
      * Create a new stats repository instance.
      */
@@ -29,6 +31,16 @@ abstract class AbstractTimeSeriesStatsRepository implements TimeSeriesStatsRepos
     {
         $this->setDateRange($date_range);
         $this->setFilters($filters);
+    }
+
+    protected function setCurrentMode(?TimeSeriesModes $mode)
+    {
+        $this->current_mode = $mode;
+    }
+
+    public function getCurrentMode(): ?TimeSeriesModes
+    {
+        return $this->current_mode;
     }
 
     /**
