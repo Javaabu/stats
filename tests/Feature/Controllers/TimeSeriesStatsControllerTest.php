@@ -31,8 +31,7 @@ class TimeSeriesStatsControllerTest extends TestCase
         Activity::query()->delete();
     }
 
-    /** @test */
-    public function it_can_display_the_time_series_stats_generation_form(): void
+    public function test_it_can_display_the_time_series_stats_generation_form(): void
     {
         $this->withoutExceptionHandling();
 
@@ -73,8 +72,7 @@ class TimeSeriesStatsControllerTest extends TestCase
             ->assertSee('name="metric"', false);
     }
 
-    /** @test */
-    public function it_can_export_time_series_stats_with_preset_date_range(): void
+    public function test_it_can_export_time_series_stats_with_preset_date_range(): void
     {
         $this->withoutExceptionHandling();
 

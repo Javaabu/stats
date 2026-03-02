@@ -13,8 +13,7 @@ class SumStatsRepositoryTest extends TestCase
 {
     use MySQLRefreshDatabase;
 
-    /** @test */
-    public function it_can_get_can_get_the_hourly_sum(): void
+    public function test_it_can_get_can_get_the_hourly_sum(): void
     {
         $this->travelTo('2024-07-22 8:06 PM');
 
@@ -52,8 +51,7 @@ class SumStatsRepositoryTest extends TestCase
         ], $data);
     }
 
-    /** @test */
-    public function it_can_get_can_get_the_daily_sum(): void
+    public function test_it_can_get_can_get_the_daily_sum(): void
     {
         $this->travelTo('2024-07-04');
 
@@ -93,8 +91,7 @@ class SumStatsRepositoryTest extends TestCase
         ], $data);
     }
 
-    /** @test */
-    public function it_can_get_can_get_the_weekly_sum(): void
+    public function test_it_can_get_can_get_the_weekly_sum(): void
     {
         $this->travelTo('2024-07-22 8:06 PM');
 
@@ -132,8 +129,7 @@ class SumStatsRepositoryTest extends TestCase
         ], $data);
     }
 
-    /** @test */
-    public function it_can_get_can_get_the_monthly_sum(): void
+    public function test_it_can_get_can_get_the_monthly_sum(): void
     {
         $this->travelTo('2024-07-22 8:06 PM');
 
@@ -171,8 +167,7 @@ class SumStatsRepositoryTest extends TestCase
         ], $data);
     }
 
-    /** @test */
-    public function it_can_get_can_get_the_yearly_sum(): void
+    public function test_it_can_get_can_get_the_yearly_sum(): void
     {
         $this->travelTo('2024-07-22 8:06 PM');
 

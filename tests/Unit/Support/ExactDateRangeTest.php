@@ -7,8 +7,7 @@ use Javaabu\Stats\Tests\TestCase;
 
 class ExactDateRangeTest extends TestCase
 {
-    /** @test */
-    public function it_can_generate_correct_previous_date_range(): void
+    public function test_it_can_generate_correct_previous_date_range(): void
     {
         $date_range = new ExactDateRange('2024-07-08 10:07 PM', '2024-07-08 11:07 PM');
         $previous_date_range = $date_range->getPreviousDateRange();

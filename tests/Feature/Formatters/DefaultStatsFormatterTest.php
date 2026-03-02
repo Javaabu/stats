@@ -14,8 +14,7 @@ class DefaultStatsFormatterTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
-    public function it_can_format_with_the_default_formatter(): void
+    public function test_it_can_format_with_the_default_formatter(): void
     {
         $this->travelTo('2024-07-04');
 

@@ -14,8 +14,7 @@ class UserLoginsRepositoryTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
-    public function it_can_generate_user_login_stats(): void
+    public function test_it_can_generate_user_login_stats(): void
     {
         $this->travelTo('2024-07-04');
 
@@ -57,8 +56,7 @@ class UserLoginsRepositoryTest extends TestCase
         ], $data);
     }
 
-    /** @test */
-    public function it_can_filter_logins_by_user(): void
+    public function test_it_can_filter_logins_by_user(): void
     {
         $user_1 = User::factory()->create();
 

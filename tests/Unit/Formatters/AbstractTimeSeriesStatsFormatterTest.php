@@ -8,8 +8,7 @@ use Javaabu\Stats\TimeSeriesStats;
 
 class AbstractTimeSeriesStatsFormatterTest extends TestCase
 {
-    /** @test */
-    public function it_can_get_the_registered_format_name(): void
+    public function test_it_can_get_the_registered_format_name(): void
     {
         TimeSeriesStats::registerFormatters([
             'default' => DefaultStatsFormatter::class
@@ -20,8 +19,7 @@ class AbstractTimeSeriesStatsFormatterTest extends TestCase
         $this->assertEquals('default', $formatter->getName());
     }
 
-    /** @test */
-    public function it_returns_full_class_name_for_unregistered_formatters(): void
+    public function test_it_returns_full_class_name_for_unregistered_formatters(): void
     {
         TimeSeriesStats::registerFormatters([], false);
 

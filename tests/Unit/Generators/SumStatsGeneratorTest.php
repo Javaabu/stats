@@ -8,8 +8,7 @@ use Javaabu\Stats\Tests\TestSupport\Models\Payment;
 
 class SumStatsGeneratorTest extends TestCase
 {
-    /** @test */
-    public function it_can_generate_sum_stats_for_an_existing_model(): void
+    public function test_it_can_generate_sum_stats_for_an_existing_model(): void
     {
         $generator = new SumStatGenerator('PaymentsSum', Payment::class);
 

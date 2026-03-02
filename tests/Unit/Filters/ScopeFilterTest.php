@@ -15,8 +15,7 @@ class ScopeFilterTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
-    public function it_can_filter_using_name_scope(): void
+    public function test_it_can_filter_using_name_scope(): void
     {
         $user_1 = User::factory()->create(['name' => 'John Doe']);
         $user_2 = User::factory()->create(['name' => 'Apple Gate']);
@@ -30,8 +29,7 @@ class ScopeFilterTest extends TestCase
         $this->assertEquals('John Doe', $filter->apply($query, 'Doe', $stat)->first()->name);
     }
 
-    /** @test */
-    public function it_can_filter_using_internal_scope_name(): void
+    public function test_it_can_filter_using_internal_scope_name(): void
     {
         $user_1 = User::factory()->create(['name' => 'John Doe']);
         $user_2 = User::factory()->create(['name' => 'Apple Gate']);

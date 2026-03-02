@@ -14,8 +14,7 @@ class ChartjsStatsFormatterTest extends TestCase
 {
     use MySQLRefreshDatabase;
 
-    /** @test */
-    public function it_can_format_with_the_chartjs_formatter(): void
+    public function test_it_can_format_with_the_chartjs_formatter(): void
     {
         $this->travelTo('2024-07-04');
 
@@ -85,8 +84,7 @@ class ChartjsStatsFormatterTest extends TestCase
         ], $compare_data);
     }
 
-    /** @test */
-    public function it_can_format_with_the_chartjs_formatter_for_weekly_stats(): void
+    public function test_it_can_format_with_the_chartjs_formatter_for_weekly_stats(): void
     {
         $this->travelTo('2024-07-22');
 

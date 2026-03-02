@@ -22,8 +22,7 @@ class AbortIfCannotViewAnyTimeSeriesStatsTest extends TestCase
         TimeSeriesStats::registerApiRoute();
     }
 
-    /** @test */
-    public function it_aborts_if_the_user_cannot_view_any_time_series_stats(): void
+    public function test_it_aborts_if_the_user_cannot_view_any_time_series_stats(): void
     {
         $user = User::factory()->make();
 
@@ -52,8 +51,7 @@ class AbortIfCannotViewAnyTimeSeriesStatsTest extends TestCase
             ->assertForbidden();
     }
 
-    /** @test */
-    public function it_allows_the_api_request_if_the_user_can_view_any_time_series_stats(): void
+    public function test_it_allows_the_api_request_if_the_user_can_view_any_time_series_stats(): void
     {
         $this->withoutExceptionHandling();
 

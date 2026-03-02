@@ -8,8 +8,7 @@ use Javaabu\Stats\Tests\TestCase;
 
 class TimeSeriesModesTest extends TestCase
 {
-    /** @test */
-    public function it_can_generate_the_correct_mysql_query_for_each_mode(): void
+    public function test_it_can_generate_the_correct_mysql_query_for_each_mode(): void
     {
         $this->assertEquals('DATE_FORMAT(created_at, \'%Y-%m-%d %H:00\')', TimeSeriesModes::HOUR->getSql('created_at'), 'Invalid mysql query for HOUR');
         $this->assertEquals('DATE(created_at)', TimeSeriesModes::DAY->getSql('created_at'), 'Invalid mysql query for DAY');
@@ -18,8 +17,7 @@ class TimeSeriesModesTest extends TestCase
         $this->assertEquals('YEAR(created_at)', TimeSeriesModes::YEAR->getSql('created_at'), 'Invalid mysql query for YEAR');
     }
 
-    /** @test */
-    public function it_can_get_the_date_format_for_the_time_series_mode(): void
+    public function test_it_can_get_the_date_format_for_the_time_series_mode(): void
     {
         $this->assertEquals('D MMM YY hh:mm A', TimeSeriesModes::HOUR->getDateFormat(), 'Invalid date format for HOUR');
         $this->assertEquals('D MMM YY', TimeSeriesModes::DAY->getDateFormat(), 'Invalid date format for DAY');
@@ -28,8 +26,7 @@ class TimeSeriesModesTest extends TestCase
         $this->assertEquals('YYYY', TimeSeriesModes::YEAR->getDateFormat(), 'Invalid date format for YEAR');
     }
 
-    /** @test */
-    public function it_can_correctly_format_the_date_for_display_for_each_time_series_mode(): void
+    public function test_it_can_correctly_format_the_date_for_display_for_each_time_series_mode(): void
     {
         $date = Carbon::parse('2024-07-16 11:51 AM');
 
@@ -40,8 +37,7 @@ class TimeSeriesModesTest extends TestCase
         $this->assertEquals('2024', TimeSeriesModes::YEAR->formatDate($date), 'Invalid formatted date for YEAR');
     }
 
-    /** @test */
-    public function it_can_correctly_format_the_date_for_internal_use_for_each_time_series_mode(): void
+    public function test_it_can_correctly_format_the_date_for_internal_use_for_each_time_series_mode(): void
     {
         $date = Carbon::parse('2024-07-16 11:51 AM');
 
@@ -52,8 +48,7 @@ class TimeSeriesModesTest extends TestCase
         $this->assertEquals('2024', TimeSeriesModes::YEAR->formatDate($date, false), 'Invalid internal formatted date for YEAR');
     }
 
-    /** @test */
-    public function it_can_generate_the_correct_diff_method_name_for_time_series_modes(): void
+    public function test_it_can_generate_the_correct_diff_method_name_for_time_series_modes(): void
     {
         $this->assertEquals('diffInHours', TimeSeriesModes::HOUR->diffMethodName(), 'Invalid diff method name for HOUR');
         $this->assertEquals('diffInDays', TimeSeriesModes::DAY->diffMethodName(), 'Invalid diff method name for DAY');
@@ -62,8 +57,7 @@ class TimeSeriesModesTest extends TestCase
         $this->assertEquals('diffInYears', TimeSeriesModes::YEAR->diffMethodName(), 'Invalid diff method name for YEAR');
     }
 
-    /** @test */
-    public function it_can_generate_the_correct_increment_method_name_for_time_series_modes(): void
+    public function test_it_can_generate_the_correct_increment_method_name_for_time_series_modes(): void
     {
         $this->assertEquals('addHour', TimeSeriesModes::HOUR->incrementMethodName(), 'Invalid increment method name for HOUR');
         $this->assertEquals('addDay', TimeSeriesModes::DAY->incrementMethodName(), 'Invalid increment method name for DAY');
@@ -72,8 +66,7 @@ class TimeSeriesModesTest extends TestCase
         $this->assertEquals('addYear', TimeSeriesModes::YEAR->incrementMethodName(), 'Invalid increment method name for YEAR');
     }
 
-    /** @test */
-    public function it_can_generate_the_correct_interval_for_time_series_modes(): void
+    public function test_it_can_generate_the_correct_interval_for_time_series_modes(): void
     {
         $date_from = Carbon::parse('2024-07-09 18:34:00');
         $date_to = Carbon::parse('2025-07-09 18:34:00');
@@ -85,8 +78,7 @@ class TimeSeriesModesTest extends TestCase
         $this->assertEquals(1, TimeSeriesModes::YEAR->interval($date_from, $date_to), 'Invalid interval for YEAR');
     }
 
-    /** @test */
-    public function it_can_correctly_increment_the_date_for_each_time_series_mode(): void
+    public function test_it_can_correctly_increment_the_date_for_each_time_series_mode(): void
     {
         $date = Carbon::parse('2024-07-16 11:51 AM');
 

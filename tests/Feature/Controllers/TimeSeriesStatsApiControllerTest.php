@@ -26,8 +26,7 @@ class TimeSeriesStatsApiControllerTest extends TestCase
         Activity::query()->delete();
     }
 
-    /** @test */
-    public function it_can_generate_time_series_stats_with_filters(): void
+    public function test_it_can_generate_time_series_stats_with_filters(): void
     {
         $this->travelTo('2024-07-04');
 
@@ -120,8 +119,7 @@ class TimeSeriesStatsApiControllerTest extends TestCase
             ]);
     }
 
-    /** @test */
-    public function it_can_generate_time_series_stats_from_api_with_preset_date_range(): void
+    public function test_it_can_generate_time_series_stats_from_api_with_preset_date_range(): void
     {
         $this->travelTo('2024-07-04');
 
@@ -224,8 +222,7 @@ class TimeSeriesStatsApiControllerTest extends TestCase
             ]);
     }
 
-    /** @test */
-    public function it_can_generate_time_series_stats_from_api_with_custom_date_range(): void
+    public function test_it_can_generate_time_series_stats_from_api_with_custom_date_range(): void
     {
         $this->travelTo('2024-07-04');
 
@@ -320,8 +317,7 @@ class TimeSeriesStatsApiControllerTest extends TestCase
             ]);
     }
 
-    /** @test */
-    public function it_can_generate_time_series_stats_from_api_with_preset_previous_date_range(): void
+    public function test_it_can_generate_time_series_stats_from_api_with_preset_previous_date_range(): void
     {
         $this->travelTo('2024-07-04');
 
@@ -427,8 +423,7 @@ class TimeSeriesStatsApiControllerTest extends TestCase
             ]);
     }
 
-    /** @test */
-    public function it_can_generate_time_series_stats_from_api_with_custom_previous_date_range(): void
+    public function test_it_can_generate_time_series_stats_from_api_with_custom_previous_date_range(): void
     {
         $this->travelTo('2024-07-04');
 

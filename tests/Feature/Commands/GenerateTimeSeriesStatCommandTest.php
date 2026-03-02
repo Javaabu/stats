@@ -34,8 +34,7 @@ class GenerateTimeSeriesStatCommandTest extends TestCase
         parent::tearDown();
     }
 
-    /** @test */
-    public function it_can_generate_a_new_sum_stat_file(): void
+    public function test_it_can_generate_a_new_sum_stat_file(): void
     {
         $expected_path = $this->app->path('Stats/TimeSeries/PaymentsSum.php');
         $expected_content = $this->getTestStubContents('Stats/TimeSeries/PaymentsSum.php');
@@ -49,8 +48,7 @@ class GenerateTimeSeriesStatCommandTest extends TestCase
         $this->assertEquals($expected_content, $actual_content);
     }
 
-    /** @test */
-    public function it_can_generate_a_new_count_stat_file(): void
+    public function test_it_can_generate_a_new_count_stat_file(): void
     {
         $expected_path = $this->app->path('Stats/TimeSeries/PaymentsCount.php');
         $expected_content = $this->getTestStubContents('Stats/TimeSeries/PaymentsCount.php');
@@ -64,8 +62,7 @@ class GenerateTimeSeriesStatCommandTest extends TestCase
         $this->assertEquals($expected_content, $actual_content);
     }
 
-    /** @test */
-    public function it_registers_stats_maps(): void
+    public function test_it_registers_stats_maps(): void
     {
         $expected_path = $this->app->path('Stats/TimeSeries/PaymentsCount.php');
         $expected_content = $this->getTestStubContents('Stats/TimeSeries/PaymentsCount.php');

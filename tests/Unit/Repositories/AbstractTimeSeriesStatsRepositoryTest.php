@@ -13,8 +13,7 @@ class AbstractTimeSeriesStatsRepositoryTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
-    public function it_can_get_the_registered_metric_name(): void
+    public function test_it_can_get_the_registered_metric_name(): void
     {
         TimeSeriesStats::register([
             'user_logouts' => UserLogoutsRepository::class
@@ -25,24 +24,21 @@ class AbstractTimeSeriesStatsRepositoryTest extends TestCase
         $this->assertEquals('user_logouts', $stat->metric());
     }
 
-    /** @test */
-    public function it_returns_full_class_name_for_unregistered_metrics(): void
+    public function test_it_returns_full_class_name_for_unregistered_metrics(): void
     {
         $stat = new UserLogoutsUnregistered();
 
         $this->assertEquals(UserLogoutsUnregistered::class, $stat->metric());
     }
 
-    /** @test */
-    public function it_can_generate_the_metric_name(): void
+    public function test_it_can_generate_the_metric_name(): void
     {
         $stat = new UserLogoutsRepository();
 
         $this->assertEquals('User Logouts', $stat->getName());
     }
 
-    /** @test */
-    public function it_can_check_if_a_given_user_can_view_the_stats(): void
+    public function test_it_can_check_if_a_given_user_can_view_the_stats(): void
     {
         $stat = new UserLogoutsRepository();
 
@@ -53,8 +49,7 @@ class AbstractTimeSeriesStatsRepositoryTest extends TestCase
         $this->assertFalse($stat->canView());
     }
 
-    /** @test */
-    public function it_can_generate_the_aggregate_field_label(): void
+    public function test_it_can_generate_the_aggregate_field_label(): void
     {
         $stat = new UserLogoutsRepository();
 

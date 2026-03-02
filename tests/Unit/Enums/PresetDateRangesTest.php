@@ -7,8 +7,7 @@ use Javaabu\Stats\Tests\TestCase;
 
 class PresetDateRangesTest extends TestCase
 {
-    /** @test */
-    public function it_can_generate_correct_previous_start_date(): void
+    public function test_it_can_generate_correct_previous_start_date(): void
     {
         $this->travelTo('2024-07-08 10:07 PM');
 
@@ -28,8 +27,7 @@ class PresetDateRangesTest extends TestCase
         $this->assertEquals('2015-01-01 00:00:00', PresetDateRanges::LIFETIME->getPreviousDateRange()->getDateFrom(), 'Incorrect previous start of LIFETIME');
     }
 
-    /** @test */
-    public function it_can_generate_correct_previous_end_date(): void
+    public function test_it_can_generate_correct_previous_end_date(): void
     {
         $this->travelTo('2024-07-08 10:07 PM');
 
@@ -49,8 +47,7 @@ class PresetDateRangesTest extends TestCase
         $this->assertEquals('2019-12-31 23:59:59', PresetDateRanges::LIFETIME->getPreviousDateRange()->getDateTo(), 'Incorrect previous end of LIFETIME');
     }
 
-    /** @test */
-    public function it_can_generate_correct_start_date(): void
+    public function test_it_can_generate_correct_start_date(): void
     {
         $this->travelTo('2024-07-08 10:07 PM');
 
@@ -70,8 +67,7 @@ class PresetDateRangesTest extends TestCase
         $this->assertEquals('2020-01-01 00:00:00', PresetDateRanges::LIFETIME->getDateFrom(), 'Incorrect start of LIFETIME');
     }
 
-    /** @test */
-    public function it_can_generate_correct_end_date(): void
+    public function test_it_can_generate_correct_end_date(): void
     {
         $this->travelTo('2024-07-08 10:07 PM');
 

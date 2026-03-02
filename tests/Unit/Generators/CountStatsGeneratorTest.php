@@ -9,8 +9,7 @@ use Javaabu\Stats\Tests\TestSupport\Models\Payment;
 
 class CountStatsGeneratorTest extends TestCase
 {
-    /** @test */
-    public function it_can_generate_count_stats_for_an_existing_model(): void
+    public function test_it_can_generate_count_stats_for_an_existing_model(): void
     {
         $generator = new CountStatGenerator('PaymentsCount', Payment::class);
 

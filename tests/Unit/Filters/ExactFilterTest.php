@@ -15,8 +15,7 @@ class ExactFilterTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
-    public function it_can_filter_using_name(): void
+    public function test_it_can_filter_using_name(): void
     {
         $user_1 = User::factory()->create(['name' => 'User 1']);
         $user_2 = User::factory()->create(['name' => 'User 2']);
@@ -30,8 +29,7 @@ class ExactFilterTest extends TestCase
         $this->assertEquals('User 1', $filter->apply($query, 'User 1', $stat)->first()->name);
     }
 
-    /** @test */
-    public function it_can_filter_using_internal_name(): void
+    public function test_it_can_filter_using_internal_name(): void
     {
         $user_1 = User::factory()->create(['name' => 'User 1']);
         $user_2 = User::factory()->create(['name' => 'User 2']);

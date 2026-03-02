@@ -13,8 +13,7 @@ class CountStatsRepositoryTest extends TestCase
 {
     use MySQLRefreshDatabase;
 
-    /** @test */
-    public function it_can_get_can_get_the_hourly_count(): void
+    public function test_it_can_get_can_get_the_hourly_count(): void
     {
         $this->travelTo('2024-07-22 8:06 PM');
 
@@ -50,8 +49,7 @@ class CountStatsRepositoryTest extends TestCase
         ], $data);
     }
 
-    /** @test */
-    public function it_can_get_can_get_the_daily_count(): void
+    public function test_it_can_get_can_get_the_daily_count(): void
     {
         $this->travelTo('2024-07-04');
 
@@ -89,8 +87,7 @@ class CountStatsRepositoryTest extends TestCase
         ], $data);
     }
 
-    /** @test */
-    public function it_can_get_can_get_the_weekly_count(): void
+    public function test_it_can_get_can_get_the_weekly_count(): void
     {
         $this->travelTo('2024-07-22 8:06 PM');
 
@@ -126,8 +123,7 @@ class CountStatsRepositoryTest extends TestCase
         ], $data);
     }
 
-    /** @test */
-    public function it_can_get_can_get_the_monthly_count(): void
+    public function test_it_can_get_can_get_the_monthly_count(): void
     {
         $this->travelTo('2024-07-22 8:06 PM');
 
@@ -163,8 +159,7 @@ class CountStatsRepositoryTest extends TestCase
         ], $data);
     }
 
-    /** @test */
-    public function it_can_get_can_get_the_yearly_count(): void
+    public function test_it_can_get_can_get_the_yearly_count(): void
     {
         $this->travelTo('2024-07-22 8:06 PM');
 
@@ -200,8 +195,7 @@ class CountStatsRepositoryTest extends TestCase
         ], $data);
     }
 
-    /** @test */
-    public function it_can_get_the_total_count(): void
+    public function test_it_can_get_the_total_count(): void
     {
         $this->travelTo('2024-07-22 8:06 PM');
 

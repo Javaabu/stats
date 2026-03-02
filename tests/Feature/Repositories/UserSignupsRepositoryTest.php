@@ -15,8 +15,7 @@ class UserSignupsRepositoryTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
-    public function it_can_generate_user_signup_stats(): void
+    public function test_it_can_generate_user_signup_stats(): void
     {
         $this->travelTo('2024-07-04');
 

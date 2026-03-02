@@ -15,40 +15,35 @@ class HasFiltersTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
-    public function it_can_get_filters(): void
+    public function test_it_can_get_filters(): void
     {
         $stat = new UserLogoutsRepository(PresetDateRanges::LAST_7_DAYS, ['user' => 1]);
 
         $this->assertEquals(['user' => 1], $stat->getFilters());
     }
 
-    /** @test */
-    public function it_can_get_single_filter_value(): void
+    public function test_it_can_get_single_filter_value(): void
     {
         $stat = new UserLogoutsRepository(PresetDateRanges::LAST_7_DAYS, ['user' => 1]);
 
         $this->assertEquals(1, $stat->getFilter('user'));
     }
 
-    /** @test */
-    public function it_can_get_non_existing_filter_value(): void
+    public function test_it_can_get_non_existing_filter_value(): void
     {
         $stat = new UserLogoutsRepository(PresetDateRanges::LAST_7_DAYS);
 
         $this->assertNull($stat->getFilter('user'));
     }
 
-    /** @test */
-    public function it_can_get_default_value_for_non_existing_filter_value(): void
+    public function test_it_can_get_default_value_for_non_existing_filter_value(): void
     {
         $stat = new UserLogoutsRepository(PresetDateRanges::LAST_7_DAYS);
 
         $this->assertEquals(2, $stat->getFilter('user', 2));
     }
 
-    /** @test */
-    public function it_can_get_filtered_query(): void
+    public function test_it_can_get_filtered_query(): void
     {
         $user_1 = User::factory()->create();
 
@@ -75,8 +70,7 @@ class HasFiltersTest extends TestCase
         $this->assertEquals('2024-07-07 00:00:00', $first_log->created_at->toDateTimeString());
     }
 
-    /** @test */
-    public function it_can_set_filters(): void
+    public function test_it_can_set_filters(): void
     {
         $stat = new UserLogoutsRepository(PresetDateRanges::LAST_7_DAYS);
 
@@ -87,16 +81,14 @@ class HasFiltersTest extends TestCase
         $this->assertEquals(1, $stat->getFilter('user'));
     }
 
-    /** @test */
-    public function it_does_not_allow_setting_disallowed_filters(): void
+    public function test_it_does_not_allow_setting_disallowed_filters(): void
     {
         $this->expectException(InvalidFiltersException::class);
 
         $stat = new UserLogoutsRepository(PresetDateRanges::LAST_7_DAYS, ['user' => 1, 'admin' => 2]);
     }
 
-    /** @test */
-    public function it_can_check_allowed_filters_for_associative_arrays(): void
+    public function test_it_can_check_allowed_filters_for_associative_arrays(): void
     {
         $stat = new UserLogoutsRepository(PresetDateRanges::LAST_7_DAYS);
 
@@ -104,8 +96,7 @@ class HasFiltersTest extends TestCase
         $this->assertFalse($stat->ensureAllFiltersAllowed(['user' => 1, 'admin' => 2]));
     }
 
-    /** @test */
-    public function it_can_check_allowed_filters_for_list_arrays(): void
+    public function test_it_can_check_allowed_filters_for_list_arrays(): void
     {
         $stat = new UserLogoutsRepository(PresetDateRanges::LAST_7_DAYS);
 
@@ -113,16 +104,14 @@ class HasFiltersTest extends TestCase
         $this->assertFalse($stat->ensureAllFiltersAllowed(['user', 'admin']));
     }
 
-    /** @test */
-    public function it_can_get_the_allowed_filters(): void
+    public function test_it_can_get_the_allowed_filters(): void
     {
         $stat = new UserLogoutsRepository(PresetDateRanges::LAST_7_DAYS);
 
         $this->assertEquals([StatsFilter::exact('user', 'causer_id')], $stat->allowedFilters());
     }
 
-    /** @test */
-    public function it_can_apply_filters(): void
+    public function test_it_can_apply_filters(): void
     {
         $user_1 = User::factory()->create();
 
@@ -149,8 +138,7 @@ class HasFiltersTest extends TestCase
         $this->assertEquals('2024-07-04 00:00:00', $first_log->created_at->toDateTimeString());
     }
 
-    /** @test */
-    public function it_can_check_for_allowed_filters(): void
+    public function test_it_can_check_for_allowed_filters(): void
     {
         $stat = new UserLogoutsRepository(PresetDateRanges::LAST_7_DAYS);
 

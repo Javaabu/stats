@@ -12,8 +12,7 @@ class ClosureFilterTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
-    public function it_can_filter_using_closure(): void
+    public function test_it_can_filter_using_closure(): void
     {
         $user_1 = User::factory()->create(['name' => 'John Doe']);
         $user_2 = User::factory()->create(['name' => 'Apple Gate']);
