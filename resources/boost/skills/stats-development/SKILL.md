@@ -1,13 +1,13 @@
 ---
 name: stats-development
-description: Use when creating stat classes, registering metrics, adding filters, setting up stats routes, or refactoring existing stats code with javaabu/stats.
+description: Use when creating stat classes, registering metrics, adding filters, setting up stats routes, or refactoring existing stats code with javaabu/stats. Always writes a PHPUnit test alongside each new stat.
 ---
 
 # Stats Development
 
 ## When to use this skill
 
-Use when creating stat repositories, registering metrics, adding filters, or setting up stats routes with `javaabu/stats`.
+Use when creating stat repositories, registering metrics, adding filters, or setting up stats routes with `javaabu/stats`. Every new stat ships with a matching PHPUnit test file.
 
 ## Core Principle: Use What Exists
 
@@ -130,6 +130,54 @@ TimeSeriesStats::registerRoutes('/stats/time-series', 'stats.index', 'stats.expo
 
 The `stats.view-time-series` middleware alias is auto-registered by the package.
 
+## Testing the Stat
+
+The Artisan generator does not create a test — add one as a follow-up step right after the stat is generated.
+
+- **Location:** `tests/Feature/Stats/TimeSeries/{StatName}Test.php` — mirrors `app/Stats/TimeSeries/`
+- **Namespace:** `Tests\Feature\Stats\TimeSeries`
+- **Base class:** extend `Tests\TestCase` and `use Illuminate\Foundation\Testing\RefreshDatabase`
+- **Minimum coverage per stat:** one daily-mode test asserting the exact aggregated array; one filter test per entry in `allowedFilters()`
+
+Template for a Count stat (matching the `OrdersCount` example above):
+
+```php
+namespace Tests\Feature\Stats\TimeSeries;
+
+use App\Models\Order;
+use App\Stats\TimeSeries\OrdersCount;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Javaabu\Stats\Enums\PresetDateRanges;
+use Javaabu\Stats\Enums\TimeSeriesModes;
+use Tests\TestCase;
+
+class OrdersCountTest extends TestCase
+{
+    use RefreshDatabase;
+
+    public function test_it_returns_daily_counts(): void
+    {
+        $this->travelTo('2024-07-04');
+
+        Order::factory()->count(5)->create(['created_at' => '2024-07-03']);
+        Order::factory()->count(2)->create(['created_at' => '2024-07-04']);
+
+        $data = (new OrdersCount(PresetDateRanges::LAST_7_DAYS))
+            ->results(TimeSeriesModes::DAY)
+            ->toArray();
+
+        $this->assertEquals([
+            ['count' => 5, 'day' => '2024-07-03'],
+            ['count' => 2, 'day' => '2024-07-04'],
+        ], $data);
+    }
+}
+```
+
+For Sum stats, assert on `'total'` (not `'count'`) and seed the field named in `getFieldToSum()` (e.g. `'amount' => 10`) on factory rows.
+
+See `references/testing.md` for hour/week/month/year variants, filter tests, authorization tests, and common pitfalls.
+
 ## Quick Reference
 
 | What | How |
@@ -145,8 +193,9 @@ The `stats.view-time-series` middleware alias is auto-registered by the package.
 | Get total | `$stat->total()` |
 | Custom date col | Override `getDateFieldName()` (default: `created_at`) |
 | Authorization | Override `canView(?Authorizable $user)` (default: `view_stats` permission) |
+| Test file | `tests/Feature/Stats/TimeSeries/{Name}Test.php` (extends `Tests\TestCase`, uses `RefreshDatabase`) |
 
-See `references/` for formatters, export, authorization, and advanced features.
+See `references/` for formatters, export, authorization, testing, and advanced features.
 
 ## Verify Against Live State
 
