@@ -56,6 +56,8 @@ class StatsServiceProvider extends ServiceProvider
         if (! TimeSeriesStats::shouldExcludeDefaultStats()) {
             TimeSeriesStats::registerDefaultStats();
         }
+
+        $this->registerMcpTools();
     }
 
     /**
@@ -78,6 +80,31 @@ class StatsServiceProvider extends ServiceProvider
             'flot' => FlotStatsFormatter::class,
             'combined' => CombinedStatsFormatter::class,
         ]);
+    }
+
+    protected function registerMcpTools()
+    {
+        if (! class_exists(\Laravel\Mcp\Server\Tool::class)) {
+            return;
+        }
+
+        if (class_exists(\Laravel\Mcp\Facades\Mcp::class)) {
+            \Laravel\Mcp\Facades\Mcp::local('stats', \Javaabu\Stats\Mcp\StatsMcpServer::class);
+        }
+
+        $this->mergeBoostToolsConfig();
+    }
+
+    protected function mergeBoostToolsConfig()
+    {
+        if (! $this->app->configurationIsCached()) {
+            $existing = $this->app['config']->get('boost.mcp.tools.include', []);
+
+            $this->app['config']->set(
+                'boost.mcp.tools.include',
+                array_merge($existing, \Javaabu\Stats\Mcp\StatsMcpServer::toolClasses())
+            );
+        }
     }
 
     protected function registerMiddlewareAliases()
