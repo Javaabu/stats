@@ -110,8 +110,8 @@ abstract class AbstractCategoricalStatsRepository implements CategoricalStatsRep
             ->select(DB::raw(
                 $this->getCategoryField().' as '.$category_field_alias.', '.$this->getAggregateSql()
             ))
-            ->groupBy($this->getCategoryField())
-            ->orderBy($this->getCategoryField());
+            ->groupBy(DB::raw($this->getCategoryField()))
+            ->orderBy(DB::raw($this->getCategoryField()));
     }
 
     /** @return Collection<int, Model> */

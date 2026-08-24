@@ -94,7 +94,7 @@ class PaymentsByCustomer extends CountCategoricalStatsRepository
 }
 ```
 
-`query()` may contain joins, scopes, or base constraints. `getCategoryField()` must return the database field whose values match the IDs supplied by `categoryProvider()`. `getCategoryFieldAlias()` controls the category ID attribute on grouped and formatted results and defaults to `category`.
+`query()` may contain joins, scopes, or base constraints. `getCategoryField()` must return the database field whose values match the IDs supplied by `categoryProvider()`. It may also return a trusted SQL expression, such as `COALESCE(payments.customer_id, 0)` or a `CASE` expression; the repository uses the expression for selecting, grouping, and ordering. Do not build this value from request or other user-controlled input. `getCategoryFieldAlias()` controls the category ID attribute on grouped and formatted results and defaults to `category`.
 
 The corresponding category-name attribute defaults to `<category field alias>_name`. Override it independently when needed:
 
