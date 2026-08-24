@@ -78,12 +78,38 @@ class GenerateCategoricalStatCommandTest extends TestCase
             'model' => Payment::class,
             'category_model' => User::class,
             'category_id_field' => 'user_id',
-        ])->assertSuccessful();
+        ])
+            ->expectsOutput('PaymentsByUser stat registered!')
+            ->assertSuccessful();
 
         $expected_content = $this->getTestStubContents('Providers/CategoricalStatsAppServiceProvider.php');
         $actual_content = $this->getGeneratedFileContents($this->app->path('Providers/AppServiceProvider.php'));
 
         $this->assertEquals($expected_content, $actual_content);
+    }
+
+    public function test_it_shows_manual_registration_instructions_when_the_stat_cannot_be_registered(): void
+    {
+        $this->copyFile(
+            $this->getTestStubPath('Providers/AppServiceProvider.php'),
+            $this->app->path('Providers/AppServiceProvider.php')
+        );
+
+        $this->artisan('stats:categorical', [
+            'name' => 'PaymentsByUser',
+            'model' => Payment::class,
+            'category_model' => User::class,
+            'category_id_field' => 'user_id',
+        ])
+            ->doesntExpectOutput('PaymentsByUser stat registered!')
+            ->expectsOutput('The generated stat could not be registered automatically.')
+            ->expectsOutput('Add the following import and registration call to App\Providers\AppServiceProvider:')
+            ->expectsOutput('use Javaabu\Stats\CategoricalStats;')
+            ->expectsOutput('// In the boot() method:')
+            ->expectsOutput('CategoricalStats::register([')
+            ->expectsOutput("    'payments_by_user' => \\App\\Stats\\Categorical\\PaymentsByUser::class,")
+            ->expectsOutput(']);')
+            ->assertSuccessful();
     }
 
     public function test_it_rejects_an_invalid_categorical_stat_type(): void

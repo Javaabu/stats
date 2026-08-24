@@ -106,17 +106,73 @@ class GenerateCategoricalStatCommand extends Command
         $metric = $generator->getMetric();
         $class_name = $generator->getFullClassName();
         $name = $generator->getName();
+        $line_ending = $this->getLineEnding($file_path);
 
         $replacements = [
             [
-                'search' => "CategoricalStats::register([\n",
+                'search' => 'CategoricalStats::register([',
                 'keep_search' => true,
-                'content' => $this->getRenderer()->addIndentation("'{$metric}' => {$class_name}::class,\n", 3),
+                'content' => $line_ending.$this->getRenderer()->addIndentation("'{$metric}' => {$class_name}::class,", 3),
             ],
         ];
 
-        if ($this->appendContent($file_path, $replacements)) {
+        $this->appendContent($file_path, $replacements);
+
+        if ($this->isStatRegistered($file_path, $metric, $class_name)) {
             $this->info("{$name} stat registered!");
+
+            return;
         }
+
+        $this->showManualRegistrationInstructions($metric, $class_name);
+    }
+
+    protected function isStatRegistered(string $file_path, string $metric, string $class_name): bool
+    {
+        if (! $this->getFilesystem()->exists($file_path)) {
+            return false;
+        }
+
+        $contents = $this->getFilesystem()->get($file_path);
+        $registration_pattern = '/CategoricalStats::register\(\s*\[(.*?)\]\s*(?:,\s*[^)]*)?\);/s';
+
+        if (! preg_match_all($registration_pattern, $contents, $registration_matches)) {
+            return false;
+        }
+
+        $expected_mapping = preg_replace('/\s+/', '', "'{$metric}' => {$class_name}::class");
+
+        foreach ($registration_matches[1] as $registered_stats) {
+            $normalized_stats = preg_replace('/\s+/', '', $registered_stats);
+
+            if (str_contains($normalized_stats, $expected_mapping)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    protected function getLineEnding(string $file_path): string
+    {
+        if ($this->getFilesystem()->exists($file_path)
+            && str_contains($this->getFilesystem()->get($file_path), "\r\n")) {
+            return "\r\n";
+        }
+
+        return "\n";
+    }
+
+    protected function showManualRegistrationInstructions(string $metric, string $class_name): void
+    {
+        $this->warn('The generated stat could not be registered automatically.');
+        $this->line('Add the following import and registration call to App\\Providers\\AppServiceProvider:');
+        $this->newLine();
+        $this->line('use Javaabu\\Stats\\CategoricalStats;');
+        $this->newLine();
+        $this->line('// In the boot() method:');
+        $this->line('CategoricalStats::register([');
+        $this->line("    '{$metric}' => {$class_name}::class,");
+        $this->line(']);');
     }
 }

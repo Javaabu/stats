@@ -35,7 +35,19 @@ class CategoricalStatsControllerTest extends TestCase
             ->get('/stats/categorical')
             ->assertSuccessful()
             ->assertSee('name="metric"', false)
-            ->assertSee('name="categorical_values[]"', false);
+            ->assertSee('name="categorical_values[]"', false)
+            ->assertSee('id="categorical-metric"', false)
+            ->assertSee('id="categorical-mode"', false)
+            ->assertSee('id="categorical-values"', false)
+            ->assertSee('id="categorical-custom-date-range"', false)
+            ->assertSee('id="categorical-generate-graph"', false)
+            ->assertSee('id="categorical-download-stats"', false)
+            ->assertSee("$('#categorical-generate-graph')", false)
+            ->assertSee("$('#categorical-download-stats')", false)
+            ->assertDontSee('id="generate-graph"', false)
+            ->assertDontSee('id="btn-download-stats"', false)
+            ->assertDontSee("$('#generate-graph')", false)
+            ->assertDontSee("$('#btn-download-stats')", false);
     }
 
     public function test_it_can_export_categorical_stats(): void

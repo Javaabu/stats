@@ -5,7 +5,7 @@
 </x-forms::card>
 
 <div class="card">
-    <div class="card-body position-relative" style="height: 500px;">
+    <div class="card-body position-relative" style="height: 600px;">
         <canvas id="categorical-chart"></canvas>
     </div>
 </div>

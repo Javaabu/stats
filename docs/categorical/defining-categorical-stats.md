@@ -7,7 +7,7 @@ A categorical stat repository supplies the records to aggregate, the field to gr
 
 ## Generate a stat
 
-The generator creates the repository and adds it to an existing `CategoricalStats::register()` map in `AppServiceProvider`.
+The generator creates the repository and adds it to an existing `CategoricalStats::register()` map in `AppServiceProvider`. It verifies the generated metric-to-class mapping before reporting that registration succeeded. If the provider cannot be updated automatically, the command prints the import and registration snippet to add manually.
 
 ```bash
 php artisan stats:categorical PaymentsByCustomer Payment Customer customer_id

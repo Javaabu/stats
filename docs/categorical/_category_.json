@@ -1,4 +1,11 @@
 {
+    "position": 1.4,
     "label": "Categorical Stats",
-    "position": 3
+    "collapsible": true,
+    "collapsed": false,
+    "link": {
+        "type": "generated-index",
+        "slug": "/stats/_categories/categorical",
+        "description": "How to define and use categorical statistics"
+    }
 }
