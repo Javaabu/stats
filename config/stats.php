@@ -57,6 +57,25 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Default categorical mode
+    |--------------------------------------------------------------------------
+    */
+
+    'default_categorical_mode' => \Javaabu\Stats\Enums\CategoricalModes::NON_EMPTY,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Categorical items per page
+    |--------------------------------------------------------------------------
+    |
+    | Default page size for the categorical provider search endpoint.
+    |
+    */
+
+    'categorical_items_per_page' => 15,
+
+    /*
+    |--------------------------------------------------------------------------
     | Default date range
     |--------------------------------------------------------------------------
     |
@@ -112,4 +131,12 @@ return [
    */
 
     'time_series_stats_view' => 'stats::material-admin-26.time-series-stats.index',
+
+    /*
+    |--------------------------------------------------------------------------
+    | View for categorical stats
+    |--------------------------------------------------------------------------
+    */
+
+    'categorical_stats_view' => 'stats::material-admin-26.categorical-stats.index',
 ];

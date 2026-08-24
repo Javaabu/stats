@@ -77,6 +77,10 @@ return [
 
     'default_time_series_mode' => \Javaabu\Stats\Enums\TimeSeriesModes::DAY,
 
+    'default_categorical_mode' => \Javaabu\Stats\Enums\CategoricalModes::NON_EMPTY,
+
+    'categorical_items_per_page' => 15,
+
     /*
     |--------------------------------------------------------------------------
     | Default date range
@@ -134,6 +138,8 @@ return [
    */
 
     'time_series_stats_view' => 'stats::material-admin-26.time-series-stats.index',
+
+    'categorical_stats_view' => 'stats::material-admin-26.categorical-stats.index',
 ];
 
 ```

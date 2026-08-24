@@ -24,6 +24,16 @@ class User extends Authenticatable
         return $query->where('name', 'like', '%' . $search . '%');
     }
 
+    public function getAdminLinkNameAttribute(): string
+    {
+        return $this->name;
+    }
+
+    public function scopeCategoricalStatsSearch($query, $search)
+    {
+        return $query->where('name', 'like', '%' . $search . '%');
+    }
+
     public function getMorphClass()
     {
         return 'user';

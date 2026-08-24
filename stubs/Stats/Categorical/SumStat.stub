@@ -1,0 +1,53 @@
+<?php
+
+namespace App\Stats\Categorical;
+
+use {{CategoryModelClass}};
+use {{ModelClass}};
+use Illuminate\Database\Eloquent\Builder;
+use Javaabu\Stats\Repositories\Categorical\SumCategoricalStatsRepository;
+
+class {{StatName}} extends SumCategoricalStatsRepository
+{
+    public function query(): Builder
+    {
+        return {{Model}}::query();
+    }
+
+    public function categoryProvider(): mixed
+    {
+        return {{CategoryModel}}::class;
+    }
+
+    public function allowedFilters(): array
+    {
+        return [
+            // define your filters here
+        ];
+    }
+
+    public function getCategoryField(): string
+    {
+        return '{{categoryField}}';
+    }
+
+    public function getCategoryFieldAlias(): string
+    {
+        return '{{categoryFieldAlias}}';
+    }
+
+    public function getDateField(): string
+    {
+        return '{{dateField}}';
+    }
+
+    public function getFieldToSum(): string
+    {
+        // TODO: return the field to sum
+    }
+
+    public function getAggregateFieldName(): string
+    {
+        return 'total';
+    }
+}

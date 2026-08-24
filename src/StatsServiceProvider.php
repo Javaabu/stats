@@ -5,12 +5,17 @@ namespace Javaabu\Stats;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Javaabu\GeneratorHelpers\StubRenderer;
+use Javaabu\Stats\Commands\GenerateCategoricalStatCommand;
 use Javaabu\Stats\Commands\GenerateTimeSeriesStatCommand;
+use Javaabu\Stats\Formatters\Categorical\ChartjsCategoricalStatsFormatter;
+use Javaabu\Stats\Formatters\Categorical\CombinedCategoricalStatsFormatter;
+use Javaabu\Stats\Formatters\Categorical\DefaultCategoricalStatsFormatter;
 use Javaabu\Stats\Formatters\TimeSeries\ChartjsStatsFormatter;
 use Javaabu\Stats\Formatters\TimeSeries\CombinedStatsFormatter;
 use Javaabu\Stats\Formatters\TimeSeries\DefaultStatsFormatter;
 use Javaabu\Stats\Formatters\TimeSeries\FlotStatsFormatter;
 use Javaabu\Stats\Formatters\TimeSeries\SparklineChartsStatsFormatter;
+use Javaabu\Stats\Http\Middleware\AbortIfCannotViewAnyCategoricalStats;
 use Javaabu\Stats\Http\Middleware\AbortIfCannotViewAnyTimeSeriesStats;
 use Javaabu\Stats\Repositories\TimeSeries\UserLoginsRepository;
 use Javaabu\Stats\Repositories\TimeSeries\UserSignupsRepository;
@@ -37,6 +42,7 @@ class StatsServiceProvider extends ServiceProvider
             ], 'stats-stubs');
 
             $this->commands([
+                GenerateCategoricalStatCommand::class,
                 GenerateTimeSeriesStatCommand::class,
             ]);
         }
@@ -78,10 +84,17 @@ class StatsServiceProvider extends ServiceProvider
             'flot' => FlotStatsFormatter::class,
             'combined' => CombinedStatsFormatter::class,
         ]);
+
+        CategoricalStats::registerFormatters([
+            'default' => DefaultCategoricalStatsFormatter::class,
+            'chartjs' => ChartjsCategoricalStatsFormatter::class,
+            'combined' => CombinedCategoricalStatsFormatter::class,
+        ]);
     }
 
     protected function registerMiddlewareAliases()
     {
         app('router')->aliasMiddleware('stats.view-time-series', AbortIfCannotViewAnyTimeSeriesStats::class);
+        app('router')->aliasMiddleware('stats.view-categorical', AbortIfCannotViewAnyCategoricalStats::class);
     }
 }
