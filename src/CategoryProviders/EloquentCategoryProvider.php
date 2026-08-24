@@ -72,10 +72,10 @@ class EloquentCategoryProvider implements CategoryProvider
 
         if ($label_field) {
             $this->label_field = $label_field;
-        } elseif ($model->hasGetMutator('admin_link_name') || $model->hasAttributeGetMutator('admin_link_name')) {
-            $this->label_field = 'admin_link_name';
         } elseif (method_exists($model, 'getCategoricalStatsLabelField')) {
             $this->label_field = $model->getCategoricalStatsLabelField();
+        } elseif ($model->hasGetMutator('admin_link_name') || $model->hasAttributeGetMutator('admin_link_name')) {
+            $this->label_field = 'admin_link_name';
         } else {
             $this->label_field = 'name';
         }

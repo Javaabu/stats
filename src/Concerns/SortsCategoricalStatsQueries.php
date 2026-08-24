@@ -46,11 +46,43 @@ trait SortsCategoricalStatsQueries
     {
         if ($this->categorical_stats_sort_query) {
             ($this->categorical_stats_sort_query)($query);
-        } elseif ($this->categorical_stats_sort_field) {
-            $query->reorder($this->categorical_stats_sort_field, $this->categorical_stats_sort_direction);
-        } elseif (empty($query->getQuery()->orders)) {
-            $query->orderBy($default_sort_field);
+
+            return;
         }
+
+        if ($this->categorical_stats_sort_field) {
+            $query->reorder($this->categorical_stats_sort_field, $this->categorical_stats_sort_direction);
+
+            return;
+        }
+
+        if (! empty($query->getQuery()->orders)) {
+            return;
+        }
+
+        $model = $query->getModel();
+
+        if ($model->hasNamedScope('categoricalStatsSort')) {
+            $query->categoricalStatsSort();
+
+            return;
+        }
+
+        $sort_field = method_exists($model, 'getCategoricalStatsSortField')
+            ? $model->getCategoricalStatsSortField()
+            : '';
+
+        if ($sort_field) {
+            $sort_direction = method_exists($model, 'getCategoricalStatsSortDirection')
+                ? $model->getCategoricalStatsSortDirection()
+                : 'asc';
+
+            $query->orderBy($sort_field, $this->validateCategoricalStatsSortDirection($sort_direction));
+
+            return;
+        }
+
+        $query->orderBy($default_sort_field);
     }
 
     protected function validateCategoricalStatsSortDirection(string $direction): string

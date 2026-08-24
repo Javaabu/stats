@@ -85,6 +85,28 @@ class CategoryProviderTest extends TestCase
         $this->assertEquals(['Alice'], $provider->searchCategoricalStatsItems('special')->getCollection()->pluck('label')->all());
     }
 
+    public function test_the_categorical_stats_label_field_takes_precedence_over_admin_link_name(): void
+    {
+        User::factory()->create(['name' => 'Alice', 'email' => 'alice@example.com']);
+
+        $model = new class extends User
+        {
+            protected $table = 'users';
+
+            public function getCategoricalStatsLabelField(): string
+            {
+                return 'email';
+            }
+        };
+
+        $provider = CategoryProviderFactory::make($model);
+
+        $this->assertEquals(
+            ['alice@example.com'],
+            $provider->getCategoricalStatsItems()->pluck('label')->all()
+        );
+    }
+
     public function test_an_eloquent_model_can_use_the_prefixed_provider_trait(): void
     {
         User::factory()->create(['name' => 'Alice', 'email' => 'special@example.com']);
@@ -211,6 +233,69 @@ class CategoryProviderTest extends TestCase
                 ->getCategoricalStatsItems()
                 ->pluck('label')
                 ->all()
+        );
+    }
+
+    public function test_it_can_sort_an_eloquent_provider_using_model_methods(): void
+    {
+        User::factory()->create(['name' => 'Alice']);
+        User::factory()->create(['name' => 'Charlie']);
+        User::factory()->create(['name' => 'Bob']);
+
+        $model = new class extends User
+        {
+            protected $table = 'users';
+
+            public function getCategoricalStatsSortField(): string
+            {
+                return 'name';
+            }
+
+            public function getCategoricalStatsSortDirection(): string
+            {
+                return 'desc';
+            }
+        };
+
+        $provider = CategoryProviderFactory::make($model);
+
+        $this->assertEquals(
+            ['Charlie', 'Bob', 'Alice'],
+            $provider->getCategoricalStatsItems()->pluck('label')->all()
+        );
+    }
+
+    public function test_the_categorical_stats_sort_scope_takes_precedence_over_model_sort_methods(): void
+    {
+        User::factory()->create(['name' => 'Alice']);
+        User::factory()->create(['name' => 'Charlie']);
+        User::factory()->create(['name' => 'Bob']);
+
+        $model = new class extends User
+        {
+            protected $table = 'users';
+
+            public function getCategoricalStatsSortField(): string
+            {
+                return 'name';
+            }
+
+            public function getCategoricalStatsSortDirection(): string
+            {
+                return 'desc';
+            }
+
+            public function scopeCategoricalStatsSort($query)
+            {
+                return $query->orderBy('name');
+            }
+        };
+
+        $provider = CategoryProviderFactory::make($model);
+
+        $this->assertEquals(
+            ['Alice', 'Bob', 'Charlie'],
+            $provider->getCategoricalStatsItems()->pluck('label')->all()
         );
     }
 
