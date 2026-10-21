@@ -31,6 +31,8 @@
         "plannr/laravel-fast-refresh-database": "^1.2"
     },
     "suggest": {
+        "laravel/boost": "Required for AI-assisted development guidelines and skills",
+        "laravel/mcp": "Required for MCP server tools integration",
         "spatie/laravel-activitylog": "Required for included activity log based stats"
     },
     "autoload": {
