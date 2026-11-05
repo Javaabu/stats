@@ -1,0 +1,11 @@
+{
+    "position": 1.4,
+    "label": "Advanced Usage",
+    "collapsible": true,
+    "collapsed": false,
+    "link": {
+        "type": "generated-index",
+        "slug": "/stats/_categories/advanced-usage",
+        "description": "Caching, configuration, permissions, overrides, the JSON API, formatters, databases, commands and every class."
+    }
+}

@@ -80,6 +80,7 @@ In v1 a stat's `canView()` checked `$user->can('view_stats')`. In v2 it asks the
 - `view_stats` is now registered with javaabu/permissions (group "Stats"). Run your permission sync so the permission and its Dhivehi description exist. Turn this off with `stats.register_permissions`.
 - Replace the policy with `config('stats.policy')`, `config('permissions.policies')` or `Gate::policy(TimeSeriesStatsRepository::class, ...)`.
 - Stats that override `canView()` keep working as they are.
+- Downloads also check the policy's `export` ability, which by default allows whoever the stat's `canView()` allows.
 
 ## Built-in stats
 
@@ -124,6 +125,10 @@ The requests also accept:
 | `CategoricalModes` had no labels | "Categories with data", "All categories", "Specific categories" |
 | — | `options()` on each enum: `[['value' => ..., 'label' => ...], ...]` |
 | — | `TimeSeriesModes::startOfStep()`, `displayDate()`, `toIsoDate()`, `chartInterval()` |
+
+## Filter values
+
+v1 skipped a filter whose value was falsy, so `['user' => 0]` returned everything. v2 skips only missing values (`null`, `''`, `[]`); `0`, `'0'` and `false` are applied.
 
 ## Category search
 
