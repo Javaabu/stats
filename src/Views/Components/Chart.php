@@ -2,7 +2,6 @@
 
 namespace Javaabu\Stats\Views\Components;
 
-use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 use Javaabu\Manifest\Facades\Manifest;
@@ -108,7 +107,7 @@ class Chart extends Component
             }
 
             if ($comparison) {
-                $cells[] = $this->deltaText(static::delta($row[array_key_first($config)] ?? null, $row[$comparison['previousKey']] ?? null));
+                $cells[] = $this->deltaText(static::changeRatio($row[array_key_first($config)] ?? null, $row[$comparison['previousKey']] ?? null));
             }
 
             $table[] = ['label' => (string) ($labels[$i] ?? ''), 'cells' => $cells];
@@ -146,7 +145,7 @@ class Chart extends Component
             'previous_label' => $comparison['previousLabel'] ?? __('Previous period'),
             'current' => $this->format($current),
             'previous' => $this->format($previous),
-            'delta' => $this->deltaModel(static::delta($current, $previous), (bool) ($comparison['positiveIsGood'] ?? true)),
+            'delta' => $this->deltaModel(static::changeRatio($current, $previous), (bool) ($comparison['positiveIsGood'] ?? true)),
         ];
     }
 
@@ -270,7 +269,7 @@ class Chart extends Component
      *
      * @param  list<int|float|null>  $values
      */
-    public static function sparklineSummary(string $label, array $values, callable $format): string
+    protected static function sparklineSummary(string $label, array $values, callable $format): string
     {
         $numbers = array_values(array_filter($values, fn ($value) => $value !== null));
 
@@ -304,7 +303,7 @@ class Chart extends Component
             'label' => $label,
             'value' => is_numeric($value) ? $this->format($value + 0) : (string) ($value ?? '—'),
             'delta' => $previous !== null && is_numeric($value)
-                ? $this->deltaModel(static::delta($value + 0, $previous + 0), (bool) ($data['positiveIsGood'] ?? true))
+                ? $this->deltaModel(static::changeRatio($value + 0, $previous + 0), (bool) ($data['positiveIsGood'] ?? true))
                 : null,
             'delta_context' => $data['deltaContext'] ?? null,
             'icon' => $data['icon'] ?? null,
@@ -321,7 +320,7 @@ class Chart extends Component
     /**
      * The change as a ratio, or null when there's nothing to compare with
      */
-    public static function delta(int|float|string|null $current, int|float|string|null $previous): ?float
+    protected static function changeRatio(int|float|string|null $current, int|float|string|null $previous): ?float
     {
         if (! is_numeric($current) || ! is_numeric($previous) || (float) $previous == 0.0) {
             return null;
@@ -368,13 +367,5 @@ class Chart extends Component
         $model = $this->deltaModel($delta);
 
         return $model ? $model['text'] : '—';
-    }
-
-    /**
-     * Dates for display in the current locale
-     */
-    public static function date(Carbon $date, string $format): string
-    {
-        return $date->copy()->locale(app()->getLocale())->isoFormat($format);
     }
 }

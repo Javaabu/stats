@@ -16,6 +16,9 @@ class TestServiceProvider extends ServiceProvider
         ]);
 
         $this->loadViewsFrom(__DIR__ . '/../views', 'test');
+
+        // The Inertia root view, `app`
+        $this->app['view']->addLocation(__DIR__ . '/../views');
     }
 
     /**

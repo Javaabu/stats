@@ -55,16 +55,28 @@ trait RendersStatsPage
         return [$stats_request, $validator];
     }
 
+    protected ?MessageBag $page_errors = null;
+
     /**
      * Share the validator's errors with the views, as a failed form request would
      */
     protected function shareErrors(ValidatorContract $validator): MessageBag
     {
-        $errors = $validator->errors();
+        $this->page_errors = $validator->errors();
 
-        view()->share('errors', (new ViewErrorBag)->put('default', $errors));
+        view()->share('errors', (new ViewErrorBag)->put('default', $this->page_errors));
 
-        return $errors;
+        return $this->page_errors;
+    }
+
+    /**
+     * The first error of each field, as Inertia sends errors
+     *
+     * @return array<string, string>
+     */
+    protected function errorMessages(): array
+    {
+        return array_map(fn (array $messages) => $messages[0], $this->page_errors?->toArray() ?? []);
     }
 
     /**

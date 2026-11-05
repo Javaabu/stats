@@ -197,7 +197,7 @@ class TimeSeriesChart extends Chart
             }
 
             $rows[] = $row;
-            $labels[] = $mode->formatDate($step['date']);
+            $labels[] = $mode->displayDate($step['date']);
         }
 
         $config = [];

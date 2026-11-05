@@ -177,6 +177,23 @@ enum TimeSeriesModes: string
     }
 
     /**
+     * A step's label in the app's locale (Dhivehi month names in `dv`), for
+     * charts. Weeks read "Week 29, 2024", numbered by `stats.date_locale`.
+     */
+    public function displayDate(Carbon $date, ?string $locale = null): string
+    {
+        $locale ??= app()->getLocale();
+
+        if ($this === self::WEEK) {
+            $week = $date->copy()->locale(TimeSeriesStats::dateLocale());
+
+            return __('Week :week, :year', ['week' => $week->isoFormat('w'), 'year' => $week->isoFormat('gggg')]);
+        }
+
+        return $date->copy()->locale($locale)->isoFormat($this->getDateFormat());
+    }
+
+    /**
      * The step as an ISO 8601 date, for charts with a time axis
      */
     public function toIsoDate(Carbon $date): string

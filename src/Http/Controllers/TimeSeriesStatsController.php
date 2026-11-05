@@ -108,10 +108,12 @@ class TimeSeriesStatsController extends Controller
             'export' => $chart ? [
                 'url' => route(StatsRoutes::namePrefix($request) . '.time-series.export'),
                 'params' => $stats_request->all(),
+                'token' => $inertia ? csrf_token() : null,
             ] : null,
             'strings' => $this->pageStrings(__('Time Series Stats')),
             'layout' => config('stats.layout', 'layouts.app'),
             'layout_section' => config('stats.layout_section', 'content'),
+            ...($inertia ? ['errors' => $this->errorMessages()] : []),
         ];
     }
 
