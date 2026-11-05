@@ -12,7 +12,7 @@ use Javaabu\Stats\Contracts\TimeSeriesStatsRepository;
  * | Ability  | Permission              |
  * | -------- | ----------------------- |
  * | view     | view_stats              |
- * | export   | what view needs         |
+ * | export   | the stat's canView()    |
  *
  * A stat can still decide for itself by overriding `canView()`. Replace the
  * policy with `config('stats.policy')`, `config('permissions.policies')` or
@@ -27,8 +27,12 @@ class StatsPolicy
         return $user->can(self::VIEW);
     }
 
+    /**
+     * Whoever can see a stat can download it. The stat's own canView() decides,
+     * so stats that override it keep working; restrict exports in your policy.
+     */
     public function export(Authorizable $user, TimeSeriesStatsRepository|CategoricalStatsRepository $stat): bool
     {
-        return $this->view($user, $stat);
+        return $stat->canView($user);
     }
 }

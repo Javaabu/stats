@@ -58,6 +58,8 @@ abstract class Chart implements Arrayable, Htmlable, JsonSerializable
     /** @var array<string, mixed>|null */
     protected ?array $computed = null;
 
+    protected ?string $computed_for = null;
+
     /**
      * The chart's type, as the React and Blade renderers know it
      */
@@ -223,9 +225,13 @@ abstract class Chart implements Arrayable, Htmlable, JsonSerializable
      */
     public function data(): array
     {
-        if ($this->computed !== null) {
+        $signature = $this->signature();
+
+        if ($this->computed !== null && $this->computed_for === $signature) {
             return $this->computed;
         }
+
+        $this->computed_for = $signature;
 
         if (! $this->cache_enabled) {
             return $this->computed = $this->compute();
@@ -247,6 +253,8 @@ abstract class Chart implements Arrayable, Htmlable, JsonSerializable
      */
     public function refresh(): array
     {
+        $this->computed_for = $this->signature();
+
         if (! $this->cache_enabled) {
             return $this->computed = $this->compute();
         }
@@ -258,6 +266,15 @@ abstract class Chart implements Arrayable, Htmlable, JsonSerializable
             $this->cache_ttl,
             $this->endsAt(),
         );
+    }
+
+    /**
+     * What the computed data was computed for, so changing any option after
+     * reading the data computes it again
+     */
+    protected function signature(): string
+    {
+        return md5(serialize([$this->fullCacheKey(), $this->metrics(), $this->cache_enabled, $this->cache_ttl]));
     }
 
     /**

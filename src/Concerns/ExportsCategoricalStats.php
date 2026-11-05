@@ -2,6 +2,7 @@
 
 namespace Javaabu\Stats\Concerns;
 
+use Illuminate\Support\Facades\Gate;
 use Javaabu\Stats\CategoricalStats;
 use Javaabu\Stats\Exports\CategoricalStatsExport;
 use Javaabu\Stats\Http\Requests\CategoricalStatsRequest;
@@ -29,6 +30,10 @@ trait ExportsCategoricalStats
             $stats->setFilters(array_merge($stats->getFilters(), $filters));
             $compare?->setFilters(array_merge($compare->getFilters(), $filters));
         }
+
+        $user = $request->statsUser();
+
+        abort_unless($user && Gate::forUser($user)->allows('export', $stats), 403);
 
         $exporter = new CategoricalStatsExport($stats, $compare, $request->mode(), $request->categoricalValues());
 

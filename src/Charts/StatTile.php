@@ -163,7 +163,7 @@ class StatTile extends Chart
         $series = $this->series[0] ?? null;
 
         if (! $series) {
-            return ['value' => null];
+            return ['value' => null, 'previousValue' => null, 'sparkline' => null, 'period' => null];
         }
 
         $stat = $this->makeStat($series['metric'], $this->getRange(), $series['filters']);
@@ -176,15 +176,9 @@ class StatTile extends Chart
         }
 
         return [
-            'label' => $this->getTitle(),
             'value' => $stat->total(),
             'previousValue' => $previous,
-            'deltaContext' => $compare_range ? ($this->delta_context ?? __('vs previous period')) : null,
-            'positiveIsGood' => $this->positive_is_good,
             'sparkline' => $sparkline,
-            'icon' => $this->icon,
-            'href' => $this->href,
-            'footer' => $this->footer,
             'period' => TimeSeriesSteps::rangeLabel($this->getRange(), $stat->getDateFrom(), $stat->getDateTo()),
         ];
     }
@@ -198,11 +192,26 @@ class StatTile extends Chart
             'range' => static::rangeKey($this->getRange()),
             'compare' => $compare ? static::rangeKey($compare) : null,
             'sparkline' => $this->has_sparkline ? ($this->sparkline_mode ?? TimeSeriesStats::defaultMode())->value : null,
-            'title' => $this->title,
+        ];
+    }
+
+    /**
+     * The cached numbers, with the tile's label, link, icon and texts, which
+     * aren't part of the cache key
+     *
+     * @return array<string, mixed>
+     */
+    public function toArray(): array
+    {
+        $compare = $this->getCompareRange() !== null;
+
+        return [
+            ...parent::toArray(),
+            'label' => $this->getTitle(),
+            'deltaContext' => $compare ? ($this->delta_context ?? __('vs previous period')) : null,
+            'positiveIsGood' => $this->positive_is_good,
             'icon' => $this->icon,
             'href' => $this->href,
-            'positive_is_good' => $this->positive_is_good,
-            'delta_context' => $this->delta_context,
             'footer' => $this->footer,
         ];
     }

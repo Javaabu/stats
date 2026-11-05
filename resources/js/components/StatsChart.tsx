@@ -118,7 +118,8 @@ export function StatsTile({ tile, ...props }: StatsTileProps) {
     ...(tile.deltaContext ? { deltaContext: tile.deltaContext } : {}),
     ...(tile.sparkline ? { sparkline: tile.sparkline } : {}),
     ...(tile.icon ? { icon: tile.icon } : {}),
-    ...(tile.footer ? { footer: tile.footer } : {}),
+    // Without a change to show, the period goes in the footer, as in Blade
+    ...(tile.footer || (tile.previousValue === null && tile.period) ? { footer: tile.footer ?? tile.period } : {}),
     ...props,
   } as ComponentProps<typeof StatTile>
 

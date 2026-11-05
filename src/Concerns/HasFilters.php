@@ -89,9 +89,14 @@ trait HasFilters
     {
         collect($this->allowedFilters())
             ->each(function (Filter $filter) use ($query) {
-                if ($value = $this->getFilter($filter->getName())) {
-                    $filter->apply($query, $value, $this);
+                $value = $this->getFilter($filter->getName());
+
+                // 0, '0' and false are values; only missing ones are skipped
+                if ($value === null || $value === '' || $value === []) {
+                    return;
                 }
+
+                $filter->apply($query, $value, $this);
             });
 
         return $query;

@@ -42,6 +42,6 @@ class CategoryProviderApiController extends Controller
         $per_page = $per_page < 1 ? 100 : $per_page;
         $provider = CategoricalStats::createFromMetric($metric, filters: $filters)->getCategoryProvider();
 
-        return new JsonResponse($provider->searchCategoricalStatsItems($search, $per_page));
+        return new JsonResponse($provider->searchCategoricalStatsItems($search, $per_page)->appends($request->query()));
     }
 }

@@ -66,7 +66,7 @@ trait ResolvesStats
     public function filtersFor(InteractsWithFilters $stat): array
     {
         $filters = $this->fixedFilters();
-        $input = $this->query();
+        $input = $this->all();
 
         foreach ($stat->allowedFilters() as $filter) {
             if (! $filter instanceof HasFields || array_key_exists($filter->getName(), $filters)) {

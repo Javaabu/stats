@@ -106,7 +106,7 @@ class TimeSeriesStatsController extends Controller
             'form' => $inertia ? $form->render('json') : $form,
             'chart' => $chart?->toArray(),
             'export' => $chart ? [
-                'url' => route(StatsRoutes::namePrefix($request) . '.time-series.export'),
+                'url' => route(StatsRoutes::namePrefix($request) . '.time-series.export', $request->route()?->parameters() ?? []),
                 'params' => $stats_request->all(),
                 'token' => $inertia ? csrf_token() : null,
             ] : null,

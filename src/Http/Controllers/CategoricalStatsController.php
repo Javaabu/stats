@@ -65,7 +65,7 @@ class CategoricalStatsController extends Controller
             ->with([
                 'metrics' => $metrics,
                 'filters' => $filters,
-                'categories_url' => route(StatsRoutes::namePrefix($request) . '.categorical.categories'),
+                'categories_url' => route(StatsRoutes::namePrefix($request) . '.categorical.categories', $request->route()?->parameters() ?? []),
             ])
             ->model($stats_request->all())
             ->action($request->url());
@@ -124,7 +124,7 @@ class CategoricalStatsController extends Controller
             'form' => $inertia ? $form->render('json') : $form,
             'chart' => $chart?->toArray(),
             'export' => $chart ? [
-                'url' => route(StatsRoutes::namePrefix($request) . '.categorical.export'),
+                'url' => route(StatsRoutes::namePrefix($request) . '.categorical.export', $request->route()?->parameters() ?? []),
                 'params' => $stats_request->all(),
                 'token' => $inertia ? csrf_token() : null,
             ] : null,
