@@ -23,7 +23,6 @@ interface InteractsWithDateRange
      */
     public function getDateRange(): DateRange;
 
-
     /**
      * Get the formatted date from to
      */
@@ -68,7 +67,6 @@ interface InteractsWithDateRange
      * Apply the date filters
      */
     public function applyDateFilters(Builder $query): Builder;
-
 
     /**
      * Get the filtered query without date filters

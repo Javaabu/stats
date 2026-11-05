@@ -1,12 +1,11 @@
-<?php namespace Javaabu\Stats\Http\Controllers\Api;
+<?php
+
+namespace Javaabu\Stats\Http\Controllers\Api;
 
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
-use Javaabu\Helpers\Http\Controllers\Controller;
-use Javaabu\Stats\Enums\PresetDateRanges;
-use Javaabu\Stats\Enums\TimeSeriesModes;
+use Illuminate\Routing\Controller;
+use Javaabu\Stats\Contracts\InteractsWithDateRange;
 use Javaabu\Stats\Http\Requests\TimeSeriesStatsRequest;
-use Javaabu\Stats\Support\ExactDateRange;
 use Javaabu\Stats\TimeSeriesStats;
 
 /**
@@ -19,96 +18,44 @@ class TimeSeriesStatsApiController extends Controller
     /**
      * Time series stats
      *
-     * Generate time series stats for given the metric in the given date range and comparison date range. Supports outputs in multiple formats.
+     * Generate time series stats for the given metric in the given date range and comparison date range. Supports outputs in multiple formats.
      */
-    public function index(TimeSeriesStatsRequest $request)
+    public function index(TimeSeriesStatsRequest $request): JsonResponse
     {
-        $metric = $request->input('metric');
-        $mode = TimeSeriesModes::from($request->input('mode'));
-        $filters = $request->input('filters', []);
-        $metric_name = TimeSeriesStats::getMetricName($metric);
+        abort_unless(TimeSeriesStats::canViewAny($request->statsUser()), 403);
 
-        if ($request->filled('date_range')) {
-            $range = PresetDateRanges::from($request->input('date_range'));
-        } else {
-            $range = new ExactDateRange(
-                $request->input('date_from'),
-                $request->input('date_to'),
-            );
-        }
-
-        $compare_range = null;
-        $compare_date_range = 'custom';
-
-        if ($request->filled('compare_date_range')) {
-            $compare_range = PresetDateRanges::from($request->input('compare_date_range'));
-            $compare_date_range = $compare_range->value;
-        } elseif ($request->filled('compare_date_from')) {
-            $compare_range = new ExactDateRange(
-                $request->input('compare_date_from'),
-                $request->input('compare_date_to'),
-            );
-        } elseif ($request->input('compare')) {
-            $compare_date_range = 'previous';
-            $compare_range = $range->getPreviousDateRange();
-        }
-
-        $stats = TimeSeriesStats::createFromMetric($metric, $range, $filters);
-        $date_range = $stats->getDateRange()->getName();
-        $date_from = $stats->getDateFrom()->toDateTimeString();
-        $date_to = $stats->getDateTo()->toDateTimeString();
-        $aggregate_field = $stats->getAggregateFieldName();
-        $aggregate_field_label = $stats->getAggregateFieldLabel();
-
-        if ($compare_range) {
-            $compare = TimeSeriesStats::createFromMetric($metric, $compare_range, $filters);
-            $compare_date_from = $compare->getDateFrom()->toDateTimeString();
-            $compare_date_to = $compare->getDateTo()->toDateTimeString();
-        } else {
-            $compare = null;
-            $compare_date_range = null;
-            $compare_date_from = null;
-            $compare_date_to = null;
-        }
-
+        $mode = $request->mode();
+        $stats = $request->stats();
+        $compare = $request->compareStats();
         $format = $request->input('format', 'default');
-        $formatter = TimeSeriesStats::createFromFormat($format);
-        $result = $formatter->format($mode, $stats, $compare);
 
-        $date_range_title = __('Primary Period - :date_from - :date_to', [
-            'date_from' => $stats->getDateFrom()->isoFormat('MMM D, YYYY'),
-            'date_to' => $stats->getDateTo()->isoFormat('MMM D, YYYY')
+        $result = TimeSeriesStats::createFromFormat($format)->format($mode, $stats, $compare);
+
+        return new JsonResponse([
+            'metric' => $request->metric(),
+            'metric_name' => $stats->getName(),
+            'mode' => $mode,
+            'aggregate_field' => $stats->getAggregateFieldName(),
+            'aggregate_field_label' => $stats->getAggregateFieldLabel(),
+            'date_range_title' => $this->periodTitle('Primary Period - :date_from - :date_to', $stats),
+            'date_range' => $stats->getDateRange()->getName(),
+            'date_from' => $stats->getDateFrom()->toDateTimeString(),
+            'date_to' => $stats->getDateTo()->toDateTimeString(),
+            'compare_date_range_title' => $compare ? $this->periodTitle('Comparison Period - :date_from - :date_to', $compare) : null,
+            'compare_date_range' => $compare ? $request->compareDateRangeName() : null,
+            'compare_date_from' => $compare?->getDateFrom()->toDateTimeString(),
+            'compare_date_to' => $compare?->getDateTo()->toDateTimeString(),
+            'format' => $format,
+            'result' => $result,
+            'filters' => $stats->getFilters(),
         ]);
+    }
 
-        $compare_date_range_title = null;
-
-        if ($compare) {
-            $compare_date_range_title = __('Comparison Period - :date_from - :date_to', [
-                'date_from' => $compare->getDateFrom()->isoFormat('MMM D, YYYY'),
-                'date_to' => $compare->getDateTo()->isoFormat('MMM D, YYYY')
-            ]);
-        }
-
-
-        return response()->json(
-            compact(
-                'metric',
-                'metric_name',
-                'mode',
-                'aggregate_field',
-                'aggregate_field_label',
-                'date_range_title',
-                'date_range',
-                'date_from',
-                'date_to',
-                'compare_date_range_title',
-                'compare_date_range',
-                'compare_date_from',
-                'compare_date_to',
-                'format',
-                'result',
-                'filters'
-            )
-        );
+    protected function periodTitle(string $key, InteractsWithDateRange $stats): string
+    {
+        return __($key, [
+            'date_from' => $stats->getDateFrom()->isoFormat('MMM D, YYYY'),
+            'date_to' => $stats->getDateTo()->isoFormat('MMM D, YYYY'),
+        ]);
     }
 }

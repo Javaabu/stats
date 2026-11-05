@@ -64,7 +64,7 @@ class GenerateCategoricalStatCommand extends Command
         );
 
         $path = $this->getPath(app_path('Stats/Categorical'), $path);
-        $file_name = $generator->getName().'.php';
+        $file_name = $generator->getName() . '.php';
         $file_path = $this->getFullFilePath($path, $file_name);
         $output = $generator->render();
 
@@ -112,7 +112,7 @@ class GenerateCategoricalStatCommand extends Command
             [
                 'search' => 'CategoricalStats::register([',
                 'keep_search' => true,
-                'content' => $line_ending.$this->getRenderer()->addIndentation("'{$metric}' => {$class_name}::class,", 3),
+                'content' => $line_ending . $this->getRenderer()->addIndentation("'{$metric}' => {$class_name}::class,", 3),
             ],
         ];
 

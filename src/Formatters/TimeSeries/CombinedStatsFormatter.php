@@ -1,14 +1,13 @@
 <?php
+
 /**
  * Combined stats formatter
  */
 
 namespace Javaabu\Stats\Formatters\TimeSeries;
 
-use Illuminate\Support\Str;
 use Javaabu\Stats\Contracts\TimeSeriesStatsRepository;
 use Javaabu\Stats\Enums\TimeSeriesModes;
-use Javaabu\Stats\StatsRepository;
 
 class CombinedStatsFormatter extends AbstractTimeSeriesStatsFormatter
 {
@@ -21,7 +20,7 @@ class CombinedStatsFormatter extends AbstractTimeSeriesStatsFormatter
         $compare_repo = $compare;
 
         $stats_interval = $stats_repo->interval($mode);
-        //dd($stats_interval);
+        // dd($stats_interval);
         $compare_interval = $compare_repo ? $compare_repo->interval($mode) : 0;
         $max_interval = max($stats_interval, $compare_interval);
 

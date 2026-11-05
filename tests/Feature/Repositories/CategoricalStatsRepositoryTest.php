@@ -12,12 +12,14 @@ use Javaabu\Stats\Tests\TestSupport\Factories\PaymentFactory;
 use Javaabu\Stats\Tests\TestSupport\Models\User;
 use Javaabu\Stats\Tests\TestSupport\Stats\Categorical\PaymentAmountsByUser;
 use Javaabu\Stats\Tests\TestSupport\Stats\Categorical\PaymentsByUser;
+use PHPUnit\Framework\Attributes\Test;
 
 class CategoricalStatsRepositoryTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_it_groups_results_by_category_and_applies_dates_and_filters(): void
+    #[Test]
+    public function it_groups_results_by_category_and_applies_dates_and_filters(): void
     {
         $alice = User::factory()->create(['name' => 'Alice']);
         $bob = User::factory()->create(['name' => 'Bob']);
@@ -36,7 +38,8 @@ class CategoricalStatsRepositoryTest extends TestCase
         ], $stats->resultsToArray($stats->results()));
     }
 
-    public function test_all_mode_includes_categories_without_results(): void
+    #[Test]
+    public function it_all_mode_includes_categories_without_results(): void
     {
         $alice = User::factory()->create(['name' => 'Alice']);
         User::factory()->create(['name' => 'Bob']);
@@ -49,7 +52,8 @@ class CategoricalStatsRepositoryTest extends TestCase
         $this->assertEquals([2, 0], $result['stats']);
     }
 
-    public function test_specific_mode_only_includes_requested_categories(): void
+    #[Test]
+    public function it_specific_mode_only_includes_requested_categories(): void
     {
         $alice = User::factory()->create(['name' => 'Alice']);
         $bob = User::factory()->create(['name' => 'Bob']);
@@ -67,7 +71,8 @@ class CategoricalStatsRepositoryTest extends TestCase
         $this->assertEquals([2], $result['stats']);
     }
 
-    public function test_it_can_sum_results_by_category(): void
+    #[Test]
+    public function it_can_sum_results_by_category(): void
     {
         $alice = User::factory()->create(['name' => 'Alice']);
         PaymentFactory::new()->withUser($alice)->create([
@@ -84,7 +89,8 @@ class CategoricalStatsRepositoryTest extends TestCase
         $this->assertSame(19.75, $stats->resultsToArray($stats->results())[$alice->id]);
     }
 
-    public function test_it_can_group_and_order_by_a_category_expression(): void
+    #[Test]
+    public function it_can_group_and_order_by_a_category_expression(): void
     {
         PaymentFactory::new()->count(2)->create([
             'amount' => 5,
@@ -109,7 +115,8 @@ class CategoricalStatsRepositoryTest extends TestCase
         ], $stats->resultsToArray($stats->results()));
     }
 
-    public function test_it_can_customize_the_grouped_category_field_alias(): void
+    #[Test]
+    public function it_can_customize_the_grouped_category_field_alias(): void
     {
         $alice = User::factory()->create(['name' => 'Alice']);
         PaymentFactory::new()->withUser($alice)->count(2)->create(['paid_at' => '2024-07-03']);

@@ -2,14 +2,15 @@
 
 namespace Javaabu\Stats\Tests\Unit\Generators;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Javaabu\Stats\Generators\CountStatGenerator;
 use Javaabu\Stats\Tests\TestCase;
 use Javaabu\Stats\Tests\TestSupport\Models\Payment;
+use PHPUnit\Framework\Attributes\Test;
 
 class CountStatsGeneratorTest extends TestCase
 {
-    public function test_it_can_generate_count_stats_for_an_existing_model(): void
+    #[Test]
+    public function it_can_generate_count_stats_for_an_existing_model(): void
     {
         $generator = new CountStatGenerator('PaymentsCount', Payment::class);
 

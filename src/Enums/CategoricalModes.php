@@ -4,13 +4,15 @@ namespace Javaabu\Stats\Enums;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
-use Javaabu\Helpers\Enums\IsEnum;
-use Javaabu\Helpers\Enums\NativeEnumsTrait;
 use Javaabu\Stats\Contracts\CategoricalStatsRepository;
+use Javaabu\Stats\Enums\Concerns\HasLabels;
 
-enum CategoricalModes: string implements IsEnum
+/**
+ * Which categories a categorical stat lists
+ */
+enum CategoricalModes: string
 {
-    use NativeEnumsTrait;
+    use HasLabels;
 
     case NON_EMPTY = 'non_empty';
     case ALL = 'all';
@@ -36,6 +38,15 @@ enum CategoricalModes: string implements IsEnum
         }
 
         return $stats->resolveCategoryNames($this, $categorical_values);
+    }
+
+    public function getLabel(): string
+    {
+        return match ($this) {
+            self::NON_EMPTY => __('Categories with data'),
+            self::ALL => __('All categories'),
+            self::SPECIFIC => __('Specific categories'),
+        };
     }
 
     public function getDescription(): string

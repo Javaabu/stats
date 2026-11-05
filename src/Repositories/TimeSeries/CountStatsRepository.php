@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Count Stats Repository base class
  */
@@ -14,7 +15,7 @@ abstract class CountStatsRepository extends AggregateStatsRepository
      */
     public function getAggregateSql(): string
     {
-        return 'count(*) as '.$this->getAggregateFieldName();
+        return 'count(*) as ' . $this->getAggregateFieldName();
     }
 
     protected function generateName(): string

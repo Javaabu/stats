@@ -2,77 +2,102 @@
 
 namespace Javaabu\Stats\Tests;
 
-use Illuminate\Foundation\Testing\RefreshDatabaseState;
-use Illuminate\Support\Facades\Artisan;
+use Javaabu\Filters\FiltersServiceProvider;
 use Javaabu\Forms\FormsServiceProvider;
 use Javaabu\GeneratorHelpers\Testing\InteractsWithTestFiles;
 use Javaabu\GeneratorHelpers\Testing\InteractsWithTestStubs;
-use Javaabu\Helpers\HelpersServiceProvider;
-use Javaabu\Settings\SettingsServiceProvider;
-use Javaabu\Settings\Testing\FakesSettings;
-use Javaabu\Stats\Tests\TestSupport\MySQLRefreshDatabaseState;
-use Maatwebsite\Excel\ExcelServiceProvider;
-use Orchestra\Testbench\TestCase as BaseTestCase;
+use Javaabu\Manifest\ManifestServiceProvider;
+use Javaabu\Permissions\PermissionsServiceProvider;
+use Javaabu\Stats\CategoricalStats;
+use Javaabu\Stats\Facades\Stats;
 use Javaabu\Stats\StatsServiceProvider;
+use Javaabu\Stats\Tests\TestSupport\Models\User;
 use Javaabu\Stats\Tests\TestSupport\Providers\TestServiceProvider;
+use Javaabu\Stats\TimeSeriesStats;
+use Javaabu\Stencil\StencilServiceProvider;
+use Orchestra\Testbench\TestCase as BaseTestCase;
 use Spatie\Activitylog\ActivitylogServiceProvider;
+use Spatie\Permission\PermissionServiceProvider;
 
+/**
+ * Runs on SQLite in memory, or on the database in DB_CONNECTION (mysql, mariadb, pgsql)
+ */
 abstract class TestCase extends BaseTestCase
 {
-    use FakesSettings;
-    use InteractsWithTestStubs;
     use InteractsWithTestFiles;
+    use InteractsWithTestStubs;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
-        if (isset($_ENV['DB_CONNECTION']) || isset($_ENV['DB_DATABASE'])) {
-            if (! $this->shouldUseMysql()) {
-
-                if (MySQLRefreshDatabaseState::$driver_switched) {
-                    RefreshDatabaseState::$migrated = false;
-                }
-
-                MySQLRefreshDatabaseState::$driver_switched = false;
-
-                $_ENV['DB_CONNECTION'] = 'sqlite';
-                $_ENV['DB_DATABASE'] = ':memory:';
-            }
-        }
-
         parent::setUp();
 
-        $this->loadTestStubsFrom( __DIR__ . '/TestSupport/stubs');
+        $this->loadTestStubsFrom(__DIR__ . '/TestSupport/stubs');
+    }
 
-        $this->app['config']->set('app.key', 'base64:yWa/ByhLC/GUvfToOuaPD7zDwB64qkc/QkaQOrT5IpE=');
+    protected function tearDown(): void
+    {
+        TimeSeriesStats::register([], false);
+        CategoricalStats::register([], false);
+        Stats::clearWarmables();
 
-        $this->app['config']->set('session.serialization', 'php');
+        parent::tearDown();
+    }
 
-        if (empty(glob($this->app->databasePath('migrations/*_create_activity_log_table.php')))) {
-            Artisan::call('vendor:publish', [
-                '--provider' => 'Spatie\\Activitylog\\ActivitylogServiceProvider',
-                '--tag' => 'activitylog-migrations',
-            ]);
+    protected function defineEnvironment($app): void
+    {
+        $app['config']->set('app.key', 'base64:yWa/ByhLC/GUvfToOuaPD7zDwB64qkc/QkaQOrT5IpE=');
+        $app['config']->set('session.serialization', 'php');
+        $app['config']->set('stats.layout', 'test::layouts.admin');
+        $app['config']->set('stats.default_stats', false);
+        $app['config']->set('auth.providers.users.model', User::class);
+        $app['config']->set('cache.default', 'array');
 
-            Artisan::call('migrate');
+        $connection = env('DB_CONNECTION', 'sqlite');
+
+        if ($connection !== 'sqlite') {
+            $app['config']->set('database.default', $connection);
+            $app['config']->set("database.connections.{$connection}.database", env('DB_DATABASE', 'stats_test'));
+            $app['config']->set("database.connections.{$connection}.username", env('DB_USERNAME', 'root'));
+            $app['config']->set("database.connections.{$connection}.password", env('DB_PASSWORD', ''));
+            $app['config']->set("database.connections.{$connection}.host", env('DB_HOST', '127.0.0.1'));
+            $app['config']->set("database.connections.{$connection}.port", env('DB_PORT', $connection === 'pgsql' ? 5432 : 3306));
+        }
+    }
+
+    protected function getPackageProviders($app): array
+    {
+        $providers = [
+            PermissionServiceProvider::class,
+            PermissionsServiceProvider::class,
+            ManifestServiceProvider::class,
+            FormsServiceProvider::class,
+            StencilServiceProvider::class,
+            FiltersServiceProvider::class,
+        ];
+
+        if (class_exists(ActivitylogServiceProvider::class)) {
+            $providers[] = ActivitylogServiceProvider::class;
         }
 
+        return [
+            ...$providers,
+            StatsServiceProvider::class,
+            TestServiceProvider::class,
+        ];
     }
 
-    public function shouldUseMysql(): bool
+    /**
+     * @param  array<string, mixed>  $args
+     */
+    protected function addQueryArg(array $args, string $url): string
     {
-        return property_exists($this, 'use_mysql') ? $this->use_mysql : false;
+        return $url . (str_contains($url, '?') ? '&' : '?') . http_build_query($args);
     }
 
-    protected function getPackageProviders($app)
+    protected function getPackageAliases($app): array
     {
         return [
-            SettingsServiceProvider::class,
-            HelpersServiceProvider::class,
-            ActivitylogServiceProvider::class,
-            ExcelServiceProvider::class,
-            FormsServiceProvider::class,
-            StatsServiceProvider::class,
-            TestServiceProvider::class
+            'Stats' => Stats::class,
         ];
     }
 }

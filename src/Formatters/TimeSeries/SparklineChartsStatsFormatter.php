@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Sparkline stats formatter
  */

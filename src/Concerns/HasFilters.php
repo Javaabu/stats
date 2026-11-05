@@ -63,7 +63,7 @@ trait HasFilters
             if ($diff->count()) {
                 throw InvalidFiltersException::filtersNotAllowed($diff, $allowed_filter_names);
             }
-         } else {
+        } else {
             foreach ($filter_names as $filter) {
                 if (! $allowed_filter_names->contains($filter)) {
                     return false;

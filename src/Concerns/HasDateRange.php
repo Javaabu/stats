@@ -14,7 +14,9 @@ use Javaabu\Stats\Support\ExactDateRange;
 trait HasDateRange
 {
     protected Carbon $date_from;
+
     protected Carbon $date_to;
+
     protected DateRange $date_range;
 
     public function getDateFrom(): Carbon

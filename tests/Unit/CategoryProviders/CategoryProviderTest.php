@@ -15,12 +15,14 @@ use Javaabu\Stats\Tests\TestSupport\Enums\PaymentStatus;
 use Javaabu\Stats\Tests\TestSupport\Models\CategoricalSearchUser;
 use Javaabu\Stats\Tests\TestSupport\Models\CategoryProviderUser;
 use Javaabu\Stats\Tests\TestSupport\Models\User;
+use PHPUnit\Framework\Attributes\Test;
 
 class CategoryProviderTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_it_can_create_a_provider_from_an_array(): void
+    #[Test]
+    public function it_can_create_a_provider_from_an_array(): void
     {
         $provider = CategoryProviderFactory::make([
             10 => 'North',
@@ -38,7 +40,8 @@ class CategoryProviderTest extends TestCase
         ], $provider->searchCategoricalStatsItems('nor')->getCollection()->all());
     }
 
-    public function test_it_can_create_a_provider_from_a_collection(): void
+    #[Test]
+    public function it_can_create_a_provider_from_a_collection(): void
     {
         $provider = CategoryProviderFactory::make(collect([
             ['id' => 'a', 'label' => 'Alpha'],
@@ -51,7 +54,8 @@ class CategoryProviderTest extends TestCase
         ], $provider->getCategoricalStatsItems()->all());
     }
 
-    public function test_it_can_create_a_provider_from_an_enum(): void
+    #[Test]
+    public function it_can_create_a_provider_from_an_enum(): void
     {
         $provider = CategoryProviderFactory::make(PaymentStatus::class);
 
@@ -63,7 +67,8 @@ class CategoryProviderTest extends TestCase
         $this->assertSame('Payment Status ID', $provider->getCategoricalStatsCategoryIdTitle());
     }
 
-    public function test_it_can_create_a_searchable_provider_from_an_eloquent_model(): void
+    #[Test]
+    public function it_can_create_a_searchable_provider_from_an_eloquent_model(): void
     {
         User::factory()->create(['name' => 'Alice']);
         User::factory()->create(['name' => 'Bob']);
@@ -75,7 +80,8 @@ class CategoryProviderTest extends TestCase
         $this->assertSame('User ID', $provider->getCategoricalStatsCategoryIdTitle());
     }
 
-    public function test_the_categorical_stats_search_scope_takes_precedence(): void
+    #[Test]
+    public function it_the_categorical_stats_search_scope_takes_precedence(): void
     {
         User::factory()->create(['name' => 'Alice', 'email' => 'special@example.com']);
         User::factory()->create(['name' => 'Special Name', 'email' => 'other@example.com']);
@@ -85,7 +91,8 @@ class CategoryProviderTest extends TestCase
         $this->assertEquals(['Alice'], $provider->searchCategoricalStatsItems('special')->getCollection()->pluck('label')->all());
     }
 
-    public function test_the_categorical_stats_label_field_takes_precedence_over_admin_link_name(): void
+    #[Test]
+    public function it_the_categorical_stats_label_field_takes_precedence_over_admin_link_name(): void
     {
         User::factory()->create(['name' => 'Alice', 'email' => 'alice@example.com']);
 
@@ -107,7 +114,8 @@ class CategoryProviderTest extends TestCase
         );
     }
 
-    public function test_an_eloquent_model_can_use_the_prefixed_provider_trait(): void
+    #[Test]
+    public function it_an_eloquent_model_can_use_the_prefixed_provider_trait(): void
     {
         User::factory()->create(['name' => 'Alice', 'email' => 'special@example.com']);
         User::factory()->create(['name' => 'Special Name', 'email' => 'other@example.com']);
@@ -120,7 +128,8 @@ class CategoryProviderTest extends TestCase
         $this->assertSame('Account Number', $provider->getCategoricalStatsCategoryIdTitle());
     }
 
-    public function test_it_paginates_array_providers(): void
+    #[Test]
+    public function it_paginates_array_providers(): void
     {
         $provider = CategoryProviderFactory::make([
             10 => 'North',
@@ -131,7 +140,8 @@ class CategoryProviderTest extends TestCase
         $this->assertCategoryProviderPage($provider, 20);
     }
 
-    public function test_it_paginates_collection_providers(): void
+    #[Test]
+    public function it_paginates_collection_providers(): void
     {
         $provider = CategoryProviderFactory::make(collect([
             ['id' => 'a', 'label' => 'Alpha'],
@@ -142,14 +152,16 @@ class CategoryProviderTest extends TestCase
         $this->assertCategoryProviderPage($provider, 'b');
     }
 
-    public function test_it_paginates_enum_providers(): void
+    #[Test]
+    public function it_paginates_enum_providers(): void
     {
         $provider = CategoryProviderFactory::make(PaymentStatus::class);
 
         $this->assertCategoryProviderPage($provider, 'paid', 2);
     }
 
-    public function test_it_paginates_eloquent_providers(): void
+    #[Test]
+    public function it_paginates_eloquent_providers(): void
     {
         User::factory()->create(['name' => 'Alice']);
         $bob = User::factory()->create(['name' => 'Bob']);
@@ -159,7 +171,8 @@ class CategoryProviderTest extends TestCase
         $this->assertCategoryProviderPage($provider, $bob->id);
     }
 
-    public function test_it_can_sort_array_and_collection_providers_by_field_and_direction(): void
+    #[Test]
+    public function it_can_sort_array_and_collection_providers_by_field_and_direction(): void
     {
         $array_provider = new ArrayCategoryProvider([
             10 => 'North',
@@ -188,7 +201,8 @@ class CategoryProviderTest extends TestCase
         );
     }
 
-    public function test_it_can_sort_in_memory_providers_using_a_callback(): void
+    #[Test]
+    public function it_can_sort_in_memory_providers_using_a_callback(): void
     {
         $provider = new ArrayCategoryProvider([
             10 => 'North',
@@ -206,7 +220,8 @@ class CategoryProviderTest extends TestCase
         );
     }
 
-    public function test_it_can_sort_enum_providers(): void
+    #[Test]
+    public function it_can_sort_enum_providers(): void
     {
         $provider = new EnumCategoryProvider(PaymentStatus::class);
 
@@ -219,7 +234,8 @@ class CategoryProviderTest extends TestCase
         );
     }
 
-    public function test_it_can_sort_eloquent_providers_by_field_and_direction(): void
+    #[Test]
+    public function it_can_sort_eloquent_providers_by_field_and_direction(): void
     {
         User::factory()->create(['name' => 'Alice']);
         User::factory()->create(['name' => 'Charlie']);
@@ -236,7 +252,8 @@ class CategoryProviderTest extends TestCase
         );
     }
 
-    public function test_it_can_sort_an_eloquent_provider_using_model_methods(): void
+    #[Test]
+    public function it_can_sort_an_eloquent_provider_using_model_methods(): void
     {
         User::factory()->create(['name' => 'Alice']);
         User::factory()->create(['name' => 'Charlie']);
@@ -265,7 +282,8 @@ class CategoryProviderTest extends TestCase
         );
     }
 
-    public function test_the_categorical_stats_sort_scope_takes_precedence_over_model_sort_methods(): void
+    #[Test]
+    public function it_the_categorical_stats_sort_scope_takes_precedence_over_model_sort_methods(): void
     {
         User::factory()->create(['name' => 'Alice']);
         User::factory()->create(['name' => 'Charlie']);
@@ -299,7 +317,8 @@ class CategoryProviderTest extends TestCase
         );
     }
 
-    public function test_it_preserves_sorting_defined_on_an_eloquent_query(): void
+    #[Test]
+    public function it_preserves_sorting_defined_on_an_eloquent_query(): void
     {
         User::factory()->create(['name' => 'Alice']);
         User::factory()->create(['name' => 'Charlie']);
@@ -317,7 +336,8 @@ class CategoryProviderTest extends TestCase
         );
     }
 
-    public function test_it_can_sort_eloquent_providers_using_a_query_callback(): void
+    #[Test]
+    public function it_can_sort_eloquent_providers_using_a_query_callback(): void
     {
         User::factory()->create(['name' => 'Alice']);
         User::factory()->create(['name' => 'Charlie']);

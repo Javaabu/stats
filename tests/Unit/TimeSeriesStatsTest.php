@@ -11,52 +11,62 @@ use Javaabu\Stats\Tests\TestSupport\Models\User;
 use Javaabu\Stats\Tests\TestSupport\Stats\TimeSeries\UserLogoutsRepository;
 use Javaabu\Stats\Tests\TestSupport\Stats\TimeSeries\UserLogoutsWithPermission;
 use Javaabu\Stats\TimeSeriesStats;
+use PHPUnit\Framework\Attributes\RequiresMethod;
+use PHPUnit\Framework\Attributes\Test;
+use Spatie\Activitylog\Models\Activity;
 
+/** Needs spatie/laravel-activitylog, which is optional */
+#[RequiresMethod(Activity::class, 'causer')]
 class TimeSeriesStatsTest extends TestCase
 {
-    public function test_it_can_register_a_time_series_stat_formatter(): void
+    #[Test]
+    public function it_can_register_a_time_series_stat_formatter(): void
     {
         TimeSeriesStats::registerFormatters([
-            'default' => DefaultStatsFormatter::class
+            'default' => DefaultStatsFormatter::class,
         ]);
 
         $this->assertEquals('default', TimeSeriesStats::getNameForFormatter(DefaultStatsFormatter::class));
         $this->assertEquals(DefaultStatsFormatter::class, TimeSeriesStats::getClassNameForFormat('default'));
     }
 
-    public function test_it_can_get_the_formatters_map(): void
+    #[Test]
+    public function it_can_get_the_formatters_map(): void
     {
         TimeSeriesStats::registerFormatters([
-            'default' => DefaultStatsFormatter::class
+            'default' => DefaultStatsFormatter::class,
         ], false);
 
         $this->assertEquals([
-            'default' => DefaultStatsFormatter::class
+            'default' => DefaultStatsFormatter::class,
         ], TimeSeriesStats::formattersMap());
     }
 
-    public function test_it_can_get_the_class_name_for_a_formatter(): void
+    #[Test]
+    public function it_can_get_the_class_name_for_a_formatter(): void
     {
         TimeSeriesStats::registerFormatters([
-            'default' => DefaultStatsFormatter::class
+            'default' => DefaultStatsFormatter::class,
         ]);
 
         $this->assertEquals(DefaultStatsFormatter::class, TimeSeriesStats::getClassNameForFormat('default'));
     }
 
-    public function test_it_can_get_the_name_for_a_formatter(): void
+    #[Test]
+    public function it_can_get_the_name_for_a_formatter(): void
     {
         TimeSeriesStats::registerFormatters([
-            'default' => DefaultStatsFormatter::class
+            'default' => DefaultStatsFormatter::class,
         ]);
 
         $this->assertEquals('default', TimeSeriesStats::getNameForFormatter(DefaultStatsFormatter::class));
     }
 
-    public function test_it_can_create_from_a_formatter(): void
+    #[Test]
+    public function it_can_create_from_a_formatter(): void
     {
         TimeSeriesStats::registerFormatters([
-            'default' => DefaultStatsFormatter::class
+            'default' => DefaultStatsFormatter::class,
         ]);
 
         $formatter = TimeSeriesStats::createFromFormat('default');
@@ -65,49 +75,54 @@ class TimeSeriesStatsTest extends TestCase
         $this->assertEquals('default', $formatter->getName());
     }
 
-    public function test_it_can_register_a_time_series_stat(): void
+    #[Test]
+    public function it_can_register_a_time_series_stat(): void
     {
         TimeSeriesStats::register([
-            'user_logouts' => UserLogoutsRepository::class
+            'user_logouts' => UserLogoutsRepository::class,
         ]);
 
         $this->assertEquals('user_logouts', TimeSeriesStats::getMetricForStat(UserLogoutsRepository::class));
         $this->assertEquals(UserLogoutsRepository::class, TimeSeriesStats::getClassNameForMetric('user_logouts'));
     }
 
-    public function test_it_can_get_the_stats_map(): void
+    #[Test]
+    public function it_can_get_the_stats_map(): void
     {
         TimeSeriesStats::register([
-            'user_logouts' => UserLogoutsRepository::class
+            'user_logouts' => UserLogoutsRepository::class,
         ], false);
 
         $this->assertEquals([
-            'user_logouts' => UserLogoutsRepository::class
+            'user_logouts' => UserLogoutsRepository::class,
         ], TimeSeriesStats::statsMap());
     }
 
-    public function test_it_can_get_the_class_name_for_a_metric(): void
+    #[Test]
+    public function it_can_get_the_class_name_for_a_metric(): void
     {
         TimeSeriesStats::register([
-            'user_logouts' => UserLogoutsRepository::class
+            'user_logouts' => UserLogoutsRepository::class,
         ]);
 
         $this->assertEquals(UserLogoutsRepository::class, TimeSeriesStats::getClassNameForMetric('user_logouts'));
     }
 
-    public function test_it_can_get_the_metric_name_for_a_stat(): void
+    #[Test]
+    public function it_can_get_the_metric_name_for_a_stat(): void
     {
         TimeSeriesStats::register([
-            'user_logouts' => UserLogoutsRepository::class
+            'user_logouts' => UserLogoutsRepository::class,
         ]);
 
         $this->assertEquals('user_logouts', TimeSeriesStats::getMetricForStat(UserLogoutsRepository::class));
     }
 
-    public function test_it_can_create_from_a_metric(): void
+    #[Test]
+    public function it_can_create_from_a_metric(): void
     {
         TimeSeriesStats::register([
-            'user_logouts' => UserLogoutsRepository::class
+            'user_logouts' => UserLogoutsRepository::class,
         ]);
 
         $stat = TimeSeriesStats::createFromMetric('user_logouts', PresetDateRanges::LAST_7_DAYS);
@@ -116,10 +131,11 @@ class TimeSeriesStatsTest extends TestCase
         $this->assertEquals(PresetDateRanges::LAST_7_DAYS, $stat->getDateRange());
     }
 
-    public function test_it_can_get_metrics_that_allow_all_the_given_filters(): void
+    #[Test]
+    public function it_can_get_metrics_that_allow_all_the_given_filters(): void
     {
         TimeSeriesStats::register([
-            'user_logouts' => UserLogoutsRepository::class
+            'user_logouts' => UserLogoutsRepository::class,
         ]);
 
         $this->assertEquals(['user_logouts'], TimeSeriesStats::metricsThatAllowFilters(['user'], null, StatListReturnType::METRIC));
@@ -127,10 +143,11 @@ class TimeSeriesStatsTest extends TestCase
         $this->assertEmpty(TimeSeriesStats::metricsThatAllowFilters(['user', 'admin'], null, StatListReturnType::METRIC));
     }
 
-    public function test_it_can_get_metric_classes_that_allow_all_the_given_filters(): void
+    #[Test]
+    public function it_can_get_metric_classes_that_allow_all_the_given_filters(): void
     {
         TimeSeriesStats::register([
-            'user_logouts' => UserLogoutsRepository::class
+            'user_logouts' => UserLogoutsRepository::class,
         ]);
 
         $this->assertEquals(['user_logouts' => UserLogoutsRepository::class], TimeSeriesStats::metricsThatAllowFilters(['user'], null, StatListReturnType::METRIC_AND_CLASS));
@@ -138,10 +155,11 @@ class TimeSeriesStatsTest extends TestCase
         $this->assertEmpty(TimeSeriesStats::metricsThatAllowFilters(['user', 'admin'], null, StatListReturnType::METRIC_AND_CLASS));
     }
 
-    public function test_it_can_get_metric_names_that_allow_all_the_given_filters(): void
+    #[Test]
+    public function it_can_get_metric_names_that_allow_all_the_given_filters(): void
     {
         TimeSeriesStats::register([
-            'user_logouts' => UserLogoutsRepository::class
+            'user_logouts' => UserLogoutsRepository::class,
         ]);
 
         $this->assertEquals(['user_logouts' => 'User Logouts'], TimeSeriesStats::getMetricNames(['user']));
@@ -149,36 +167,39 @@ class TimeSeriesStatsTest extends TestCase
         $this->assertEmpty(TimeSeriesStats::getMetricNames(['user', 'admin']));
     }
 
-    public function test_it_can_get_the_metric_name_from_metric(): void
+    #[Test]
+    public function it_can_get_the_metric_name_from_metric(): void
     {
         TimeSeriesStats::register([
-            'user_logouts' => UserLogoutsRepository::class
+            'user_logouts' => UserLogoutsRepository::class,
         ]);
 
         $this->assertEquals('User Logouts', TimeSeriesStats::getMetricName('user_logouts'));
     }
 
-    public function test_it_can_check_if_a_guest_can_view_any_stat(): void
+    #[Test]
+    public function it_can_check_if_a_guest_can_view_any_stat(): void
     {
         TimeSeriesStats::register([
-            'user_logouts' => UserLogoutsRepository::class
+            'user_logouts' => UserLogoutsRepository::class,
         ], false);
 
         $this->assertTrue(TimeSeriesStats::canViewAny());
 
         TimeSeriesStats::register([
-            'user_logouts_with_permission' => UserLogoutsWithPermission::class
+            'user_logouts_with_permission' => UserLogoutsWithPermission::class,
         ], false);
 
         $this->assertFalse(TimeSeriesStats::canViewAny());
     }
 
-    public function test_it_can_check_if_a_user_can_view_any_stat(): void
+    #[Test]
+    public function it_can_check_if_a_user_can_view_any_stat(): void
     {
         $user = User::factory()->make();
 
         TimeSeriesStats::register([
-            'user_logouts_with_permission' => UserLogoutsWithPermission::class
+            'user_logouts_with_permission' => UserLogoutsWithPermission::class,
         ], false);
 
         $this->assertFalse(TimeSeriesStats::canViewAny($user));

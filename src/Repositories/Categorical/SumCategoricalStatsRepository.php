@@ -8,6 +8,6 @@ abstract class SumCategoricalStatsRepository extends AbstractCategoricalStatsRep
 
     public function getAggregateSql(): string
     {
-        return 'sum('.$this->getFieldToSum().') as '.$this->getAggregateFieldName();
+        return 'sum(' . $this->getFieldToSum() . ') as ' . $this->getAggregateFieldName();
     }
 }

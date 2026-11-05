@@ -3,8 +3,9 @@
 namespace Javaabu\Stats\Exceptions;
 
 use Illuminate\Support\Collection;
+use InvalidArgumentException;
 
-class InvalidFiltersException extends \InvalidArgumentException
+class InvalidFiltersException extends InvalidArgumentException
 {
     public Collection $unknown_filters;
 

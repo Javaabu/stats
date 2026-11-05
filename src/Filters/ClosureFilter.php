@@ -2,14 +2,15 @@
 
 namespace Javaabu\Stats\Filters;
 
+use Closure;
 use Illuminate\Database\Eloquent\Builder;
 use Javaabu\Stats\Contracts\InteractsWithFilters;
 
 class ClosureFilter extends AbstractFilter
 {
-    protected \Closure $callback;
+    protected Closure $callback;
 
-    public function __construct(string $name, \Closure $callback)
+    public function __construct(string $name, Closure $callback)
     {
         $this->callback = $callback;
 

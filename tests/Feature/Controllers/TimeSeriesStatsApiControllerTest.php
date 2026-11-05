@@ -2,22 +2,25 @@
 
 namespace Javaabu\Stats\Tests\Feature\Controllers;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Gate;
 use Javaabu\Stats\Tests\TestCase;
 use Javaabu\Stats\Tests\TestSupport\Factories\ActivityFactory;
 use Javaabu\Stats\Tests\TestSupport\Models\User;
-use Javaabu\Stats\Tests\TestSupport\MySQLRefreshDatabase;
 use Javaabu\Stats\Tests\TestSupport\Stats\TimeSeries\TestUserLoginsRepository;
 use Javaabu\Stats\TimeSeriesStats;
+use PHPUnit\Framework\Attributes\RequiresMethod;
+use PHPUnit\Framework\Attributes\Test;
 use Spatie\Activitylog\Models\Activity;
 
+/** Needs spatie/laravel-activitylog, which is optional */
+#[RequiresMethod(Activity::class, 'causer')]
 class TimeSeriesStatsApiControllerTest extends TestCase
 {
-    use MySQLRefreshDatabase;
+    use RefreshDatabase;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
-        $this->setupMySql();
 
         parent::setUp();
 
@@ -26,12 +29,13 @@ class TimeSeriesStatsApiControllerTest extends TestCase
         Activity::query()->delete();
     }
 
-    public function test_it_can_generate_time_series_stats_with_filters(): void
+    #[Test]
+    public function it_can_generate_time_series_stats_with_filters(): void
     {
         $this->travelTo('2024-07-04');
 
         TimeSeriesStats::register([
-            'user_logins' => TestUserLoginsRepository::class
+            'user_logins' => TestUserLoginsRepository::class,
         ], false);
 
         Gate::define('view_stats', function (User $user) {
@@ -60,7 +64,7 @@ class TimeSeriesStatsApiControllerTest extends TestCase
 
         $this->actingAs($user);
 
-        $this->get(add_query_arg(
+        $this->get($this->addQueryArg(
             [
                 'metric' => 'user_logins',
                 'format' => 'chartjs',
@@ -68,7 +72,7 @@ class TimeSeriesStatsApiControllerTest extends TestCase
                 'mode' => 'day',
                 'filters' => [
                     'user' => $user->id,
-                ]
+                ],
             ],
             '/stats/time-series'
         ))
@@ -90,7 +94,7 @@ class TimeSeriesStatsApiControllerTest extends TestCase
             ->assertJsonFragment([
                 'filters' => [
                     'user' => (string) $user->id,
-                ]
+                ],
             ])
             ->assertJsonFragment([
                 'result' => [
@@ -114,17 +118,18 @@ class TimeSeriesStatsApiControllerTest extends TestCase
                         2,
                     ],
 
-                    'compare' => null
-                ]
+                    'compare' => null,
+                ],
             ]);
     }
 
-    public function test_it_can_generate_time_series_stats_from_api_with_preset_date_range(): void
+    #[Test]
+    public function it_can_generate_time_series_stats_from_api_with_preset_date_range(): void
     {
         $this->travelTo('2024-07-04');
 
         TimeSeriesStats::register([
-            'user_logins' => TestUserLoginsRepository::class
+            'user_logins' => TestUserLoginsRepository::class,
         ], false);
 
         Gate::define('view_stats', function (User $user) {
@@ -153,19 +158,19 @@ class TimeSeriesStatsApiControllerTest extends TestCase
 
         $this->actingAs($user);
 
-        $this->get(add_query_arg(
-                [
-                    'metric' => 'user_logins',
-                    'format' => 'chartjs',
-                    'date_range' => 'last_7_days',
-                    'date_from' => '',
-                    'date_to' => '',
-                    'mode' => 'day',
-                    'compare' => true,
-                    'compare_date_from' => '',
-                    'compare_date_to' => '',
-                ],
-                '/stats/time-series'
+        $this->get($this->addQueryArg(
+            [
+                'metric' => 'user_logins',
+                'format' => 'chartjs',
+                'date_range' => 'last_7_days',
+                'date_from' => '',
+                'date_to' => '',
+                'mode' => 'day',
+                'compare' => true,
+                'compare_date_from' => '',
+                'compare_date_to' => '',
+            ],
+            '/stats/time-series'
         ))
             ->assertSuccessful()
             ->assertJsonFragment([
@@ -185,7 +190,7 @@ class TimeSeriesStatsApiControllerTest extends TestCase
                 'format' => 'chartjs',
             ])
             ->assertJsonFragment([
-                'filters' => []
+                'filters' => [],
             ])
             ->assertJsonFragment([
                 'result' => [
@@ -217,17 +222,18 @@ class TimeSeriesStatsApiControllerTest extends TestCase
                         0,
                         0,
                         0,
-                    ]
-                ]
+                    ],
+                ],
             ]);
     }
 
-    public function test_it_can_generate_time_series_stats_from_api_with_custom_date_range(): void
+    #[Test]
+    public function it_can_generate_time_series_stats_from_api_with_custom_date_range(): void
     {
         $this->travelTo('2024-07-04');
 
         TimeSeriesStats::register([
-            'user_logins' => TestUserLoginsRepository::class
+            'user_logins' => TestUserLoginsRepository::class,
         ], false);
 
         Gate::define('view_stats', function (User $user) {
@@ -256,14 +262,14 @@ class TimeSeriesStatsApiControllerTest extends TestCase
 
         $this->actingAs($user);
 
-        $this->get(add_query_arg(
+        $this->get($this->addQueryArg(
             [
                 'metric' => 'user_logins',
                 'format' => 'chartjs',
                 'date_from' => '2024-07-02',
                 'date_to' => '2024-07-07',
                 'mode' => 'day',
-                'compare' => true
+                'compare' => true,
             ],
             '/stats/time-series'
         ))
@@ -276,14 +282,14 @@ class TimeSeriesStatsApiControllerTest extends TestCase
                 'aggregate_field_label' => 'Logins',
                 'date_range' => 'custom',
                 'date_from' => '2024-07-02 00:00:00',
-                'date_to' => '2024-07-07 00:00:00',
+                'date_to' => '2024-07-07 23:59:59',
                 'compare_date_range' => 'previous',
-                'compare_date_from' => '2024-06-26 23:59:59',
+                'compare_date_from' => '2024-06-26 00:00:00',
                 'compare_date_to' => '2024-07-01 23:59:59',
                 'format' => 'chartjs',
             ])
             ->assertJsonFragment([
-                'filters' => []
+                'filters' => [],
             ])
             ->assertJsonFragment([
                 'result' => [
@@ -312,17 +318,18 @@ class TimeSeriesStatsApiControllerTest extends TestCase
                         0,
                         0,
                         0,
-                    ]
-                ]
+                    ],
+                ],
             ]);
     }
 
-    public function test_it_can_generate_time_series_stats_from_api_with_preset_previous_date_range(): void
+    #[Test]
+    public function it_can_generate_time_series_stats_from_api_with_preset_previous_date_range(): void
     {
         $this->travelTo('2024-07-04');
 
         TimeSeriesStats::register([
-            'user_logins' => TestUserLoginsRepository::class
+            'user_logins' => TestUserLoginsRepository::class,
         ], false);
 
         Gate::define('view_stats', function (User $user) {
@@ -360,13 +367,13 @@ class TimeSeriesStatsApiControllerTest extends TestCase
 
         $this->actingAs($user);
 
-        $this->get(add_query_arg(
+        $this->get($this->addQueryArg(
             [
                 'metric' => 'user_logins',
                 'format' => 'chartjs',
                 'date_range' => 'last_7_days',
                 'mode' => 'day',
-                'compare_date_range' => 'last_week'
+                'compare_date_range' => 'last_week',
             ],
             '/stats/time-series'
         ))
@@ -386,7 +393,7 @@ class TimeSeriesStatsApiControllerTest extends TestCase
                 'format' => 'chartjs',
             ])
             ->assertJsonFragment([
-                'filters' => []
+                'filters' => [],
             ])
             ->assertJsonFragment([
                 'result' => [
@@ -418,17 +425,18 @@ class TimeSeriesStatsApiControllerTest extends TestCase
                         0,
                         0,
                         0,
-                    ]
-                ]
+                    ],
+                ],
             ]);
     }
 
-    public function test_it_can_generate_time_series_stats_from_api_with_custom_previous_date_range(): void
+    #[Test]
+    public function it_can_generate_time_series_stats_from_api_with_custom_previous_date_range(): void
     {
         $this->travelTo('2024-07-04');
 
         TimeSeriesStats::register([
-            'user_logins' => TestUserLoginsRepository::class
+            'user_logins' => TestUserLoginsRepository::class,
         ], false);
 
         Gate::define('view_stats', function (User $user) {
@@ -466,14 +474,14 @@ class TimeSeriesStatsApiControllerTest extends TestCase
 
         $this->actingAs($user);
 
-        $this->get(add_query_arg(
+        $this->get($this->addQueryArg(
             [
                 'metric' => 'user_logins',
                 'format' => 'chartjs',
                 'date_range' => 'last_7_days',
                 'mode' => 'day',
                 'compare_date_from' => '2024-06-23',
-                'compare_date_to' => '2024-06-26'
+                'compare_date_to' => '2024-06-26',
             ],
             '/stats/time-series'
         ))
@@ -489,11 +497,11 @@ class TimeSeriesStatsApiControllerTest extends TestCase
                 'date_to' => '2024-07-04 23:59:59',
                 'compare_date_range' => 'custom',
                 'compare_date_from' => '2024-06-23 00:00:00',
-                'compare_date_to' => '2024-06-26 00:00:00',
+                'compare_date_to' => '2024-06-26 23:59:59',
                 'format' => 'chartjs',
             ])
             ->assertJsonFragment([
-                'filters' => []
+                'filters' => [],
             ])
             ->assertJsonFragment([
                 'result' => [
@@ -525,8 +533,8 @@ class TimeSeriesStatsApiControllerTest extends TestCase
                         0,
                         0,
                         0,
-                    ]
-                ]
+                    ],
+                ],
             ]);
     }
 }

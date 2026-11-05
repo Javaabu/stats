@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Sum Stats Repository base class
  */
@@ -9,16 +10,14 @@ abstract class SumStatsRepository extends AggregateStatsRepository
 {
     /**
      * Get the main table for the repository
-     *
-     * @return string
      */
     public function getAggregateSql(): string
     {
-        return 'sum('.$this->getFieldToSum().') as '.$this->getAggregateFieldName();
+        return 'sum(' . $this->getFieldToSum() . ') as ' . $this->getAggregateFieldName();
     }
 
     /**
      * Get the field to sum for the repository
      */
-    public abstract function getFieldToSum(): string;
+    abstract public function getFieldToSum(): string;
 }

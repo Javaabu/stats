@@ -1,0 +1,11 @@
+{
+  "resources/css/charts.css": {
+    "file": "assets/charts-B-a9Wmv-.css",
+    "name": "charts",
+    "names": [
+      "charts.css"
+    ],
+    "src": "resources/css/charts.css",
+    "isEntry": true
+  }
+}

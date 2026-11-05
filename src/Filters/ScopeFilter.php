@@ -12,9 +12,9 @@ class ScopeFilter extends AbstractFilter
     {
         if (! $internal_name) {
             $internal_name = Str::of($name)
-                                ->snake(' ')
-                                ->camel()
-                                ->toString();
+                ->snake(' ')
+                ->camel()
+                ->toString();
         }
 
         parent::__construct($name, $internal_name);

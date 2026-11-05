@@ -2,18 +2,20 @@
 
 namespace Javaabu\Stats\Tests\Feature\Repositories;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Javaabu\Stats\Enums\PresetDateRanges;
 use Javaabu\Stats\Enums\TimeSeriesModes;
 use Javaabu\Stats\Tests\TestCase;
 use Javaabu\Stats\Tests\TestSupport\Models\Payment;
-use Javaabu\Stats\Tests\TestSupport\MySQLRefreshDatabase;
 use Javaabu\Stats\Tests\TestSupport\Stats\TimeSeries\PaymentsCount;
+use PHPUnit\Framework\Attributes\Test;
 
 class CountStatsRepositoryTest extends TestCase
 {
-    use MySQLRefreshDatabase;
+    use RefreshDatabase;
 
-    public function test_it_can_get_can_get_the_hourly_count(): void
+    #[Test]
+    public function it_can_get_can_get_the_hourly_count(): void
     {
         $this->travelTo('2024-07-22 8:06 PM');
 
@@ -45,11 +47,12 @@ class CountStatsRepositoryTest extends TestCase
             [
                 'count' => 2,
                 'hour' => '2024-07-22 20:00',
-            ]
+            ],
         ], $data);
     }
 
-    public function test_it_can_get_can_get_the_daily_count(): void
+    #[Test]
+    public function it_can_get_can_get_the_daily_count(): void
     {
         $this->travelTo('2024-07-04');
 
@@ -83,11 +86,12 @@ class CountStatsRepositoryTest extends TestCase
             [
                 'count' => 2,
                 'day' => '2024-07-04',
-            ]
+            ],
         ], $data);
     }
 
-    public function test_it_can_get_can_get_the_weekly_count(): void
+    #[Test]
+    public function it_can_get_can_get_the_weekly_count(): void
     {
         $this->travelTo('2024-07-22 8:06 PM');
 
@@ -114,16 +118,17 @@ class CountStatsRepositoryTest extends TestCase
         $this->assertEquals([
             [
                 'count' => 2,
-                'week' => '202401',
+                'week' => '2023-12-31',
             ],
             [
                 'count' => 5,
-                'week' => '202430',
-            ]
+                'week' => '2024-07-21',
+            ],
         ], $data);
     }
 
-    public function test_it_can_get_can_get_the_monthly_count(): void
+    #[Test]
+    public function it_can_get_can_get_the_monthly_count(): void
     {
         $this->travelTo('2024-07-22 8:06 PM');
 
@@ -150,16 +155,17 @@ class CountStatsRepositoryTest extends TestCase
         $this->assertEquals([
             [
                 'count' => 2,
-                'month' => '2024, 01',
+                'month' => '2024-01',
             ],
             [
                 'count' => 5,
-                'month' => '2024, 07',
-            ]
+                'month' => '2024-07',
+            ],
         ], $data);
     }
 
-    public function test_it_can_get_can_get_the_yearly_count(): void
+    #[Test]
+    public function it_can_get_can_get_the_yearly_count(): void
     {
         $this->travelTo('2024-07-22 8:06 PM');
 
@@ -191,11 +197,12 @@ class CountStatsRepositoryTest extends TestCase
             [
                 'count' => 5,
                 'year' => '2024',
-            ]
+            ],
         ], $data);
     }
 
-    public function test_it_can_get_the_total_count(): void
+    #[Test]
+    public function it_can_get_the_total_count(): void
     {
         $this->travelTo('2024-07-22 8:06 PM');
 
@@ -206,5 +213,4 @@ class CountStatsRepositoryTest extends TestCase
 
         $this->assertEquals(0, $data);
     }
-
 }

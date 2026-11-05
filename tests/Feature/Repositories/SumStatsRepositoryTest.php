@@ -2,18 +2,20 @@
 
 namespace Javaabu\Stats\Tests\Feature\Repositories;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Javaabu\Stats\Enums\PresetDateRanges;
 use Javaabu\Stats\Enums\TimeSeriesModes;
 use Javaabu\Stats\Tests\TestCase;
 use Javaabu\Stats\Tests\TestSupport\Models\Payment;
-use Javaabu\Stats\Tests\TestSupport\MySQLRefreshDatabase;
 use Javaabu\Stats\Tests\TestSupport\Stats\TimeSeries\PaymentsSum;
+use PHPUnit\Framework\Attributes\Test;
 
 class SumStatsRepositoryTest extends TestCase
 {
-    use MySQLRefreshDatabase;
+    use RefreshDatabase;
 
-    public function test_it_can_get_can_get_the_hourly_sum(): void
+    #[Test]
+    public function it_can_get_can_get_the_hourly_sum(): void
     {
         $this->travelTo('2024-07-22 8:06 PM');
 
@@ -47,11 +49,12 @@ class SumStatsRepositoryTest extends TestCase
             [
                 'total' => 10,
                 'hour' => '2024-07-22 20:00',
-            ]
+            ],
         ], $data);
     }
 
-    public function test_it_can_get_can_get_the_daily_sum(): void
+    #[Test]
+    public function it_can_get_can_get_the_daily_sum(): void
     {
         $this->travelTo('2024-07-04');
 
@@ -87,11 +90,12 @@ class SumStatsRepositoryTest extends TestCase
             [
                 'total' => 10,
                 'day' => '2024-07-04',
-            ]
+            ],
         ], $data);
     }
 
-    public function test_it_can_get_can_get_the_weekly_sum(): void
+    #[Test]
+    public function it_can_get_can_get_the_weekly_sum(): void
     {
         $this->travelTo('2024-07-22 8:06 PM');
 
@@ -120,16 +124,17 @@ class SumStatsRepositoryTest extends TestCase
         $this->assertEquals([
             [
                 'total' => 10,
-                'week' => '202401',
+                'week' => '2023-12-31',
             ],
             [
                 'total' => 50,
-                'week' => '202430',
-            ]
+                'week' => '2024-07-21',
+            ],
         ], $data);
     }
 
-    public function test_it_can_get_can_get_the_monthly_sum(): void
+    #[Test]
+    public function it_can_get_can_get_the_monthly_sum(): void
     {
         $this->travelTo('2024-07-22 8:06 PM');
 
@@ -158,16 +163,17 @@ class SumStatsRepositoryTest extends TestCase
         $this->assertEquals([
             [
                 'total' => 10,
-                'month' => '2024, 01',
+                'month' => '2024-01',
             ],
             [
                 'total' => 50,
-                'month' => '2024, 07',
-            ]
+                'month' => '2024-07',
+            ],
         ], $data);
     }
 
-    public function test_it_can_get_can_get_the_yearly_sum(): void
+    #[Test]
+    public function it_can_get_can_get_the_yearly_sum(): void
     {
         $this->travelTo('2024-07-22 8:06 PM');
 
@@ -201,8 +207,7 @@ class SumStatsRepositoryTest extends TestCase
             [
                 'total' => 50,
                 'year' => '2024',
-            ]
+            ],
         ], $data);
     }
-
 }

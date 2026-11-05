@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Chartjs stats formatter
  */
@@ -49,7 +50,7 @@ class ChartjsStatsFormatter extends AbstractTimeSeriesStatsFormatter
                 $compare_date_str = $mode->formatDate($compare_next_date, false);
                 $comparison = $compare ? $compare->get($compare_date_str) : null;
                 $compare_data[] = $comparison ? $comparison + 0 : 0;
-                $label .= '#'.$mode->formatDate($compare_next_date);
+                $label .= '#' . $mode->formatDate($compare_next_date);
                 $compare_next_date = $mode->increment($compare_next_date);
             }
 

@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
-use Javaabu\GeneratorHelpers\StringCaser;
 use Javaabu\Stats\CategoricalStats;
 use Javaabu\Stats\Concerns\HasDateRange;
 use Javaabu\Stats\Concerns\HasFilters;
@@ -47,7 +47,11 @@ abstract class AbstractCategoricalStatsRepository implements CategoricalStatsRep
 
     public function canView(?Authorizable $user = null): bool
     {
-        return $user && $user->can('view_stats');
+        if (! $user) {
+            return false;
+        }
+
+        return Gate::forUser($user)->allows('view', $this);
     }
 
     public function metric(): string
@@ -57,7 +61,7 @@ abstract class AbstractCategoricalStatsRepository implements CategoricalStatsRep
 
     protected function generateName(): string
     {
-        $class_name = StringCaser::title(class_basename($this));
+        $class_name = Str::headline(class_basename($this));
 
         if (Str::endsWith($class_name, 'Repository')) {
             $class_name = trim(Str::beforeLast($class_name, 'Repository'));
@@ -73,7 +77,7 @@ abstract class AbstractCategoricalStatsRepository implements CategoricalStatsRep
 
     public function getAggregateFieldLabel(): string
     {
-        return __(StringCaser::title($this->getAggregateFieldName()));
+        return __(Str::headline($this->getAggregateFieldName()));
     }
 
     public function getCategoryFieldAlias(): string
@@ -83,7 +87,7 @@ abstract class AbstractCategoricalStatsRepository implements CategoricalStatsRep
 
     public function getCategoryNameFieldAlias(): string
     {
-        return $this->getCategoryFieldAlias().'_name';
+        return $this->getCategoryFieldAlias() . '_name';
     }
 
     public function getCategoryTitle(): string
@@ -108,7 +112,7 @@ abstract class AbstractCategoricalStatsRepository implements CategoricalStatsRep
 
         return $query
             ->select(DB::raw(
-                $this->getCategoryField().' as '.$category_field_alias.', '.$this->getAggregateSql()
+                $this->getCategoryField() . ' as ' . $category_field_alias . ', ' . $this->getAggregateSql()
             ))
             ->groupBy(DB::raw($this->getCategoryField()))
             ->orderBy(DB::raw($this->getCategoryField()));

@@ -5,10 +5,12 @@ namespace Javaabu\Stats\Tests\Unit\Generators;
 use Javaabu\Stats\Generators\SumStatGenerator;
 use Javaabu\Stats\Tests\TestCase;
 use Javaabu\Stats\Tests\TestSupport\Models\Payment;
+use PHPUnit\Framework\Attributes\Test;
 
 class SumStatsGeneratorTest extends TestCase
 {
-    public function test_it_can_generate_sum_stats_for_an_existing_model(): void
+    #[Test]
+    public function it_can_generate_sum_stats_for_an_existing_model(): void
     {
         $generator = new SumStatGenerator('PaymentsSum', Payment::class);
 

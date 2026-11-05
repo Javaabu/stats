@@ -4,10 +4,11 @@ namespace Javaabu\Stats\Tests\Feature\Commands;
 
 use Javaabu\Stats\Tests\TestCase;
 use Javaabu\Stats\Tests\TestSupport\Models\Payment;
+use PHPUnit\Framework\Attributes\Test;
 
 class GenerateTimeSeriesStatCommandTest extends TestCase
 {
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -34,7 +35,8 @@ class GenerateTimeSeriesStatCommandTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_it_can_generate_a_new_sum_stat_file(): void
+    #[Test]
+    public function it_can_generate_a_new_sum_stat_file(): void
     {
         $expected_path = $this->app->path('Stats/TimeSeries/PaymentsSum.php');
         $expected_content = $this->getTestStubContents('Stats/TimeSeries/PaymentsSum.php');
@@ -48,7 +50,8 @@ class GenerateTimeSeriesStatCommandTest extends TestCase
         $this->assertEquals($expected_content, $actual_content);
     }
 
-    public function test_it_can_generate_a_new_count_stat_file(): void
+    #[Test]
+    public function it_can_generate_a_new_count_stat_file(): void
     {
         $expected_path = $this->app->path('Stats/TimeSeries/PaymentsCount.php');
         $expected_content = $this->getTestStubContents('Stats/TimeSeries/PaymentsCount.php');
@@ -62,7 +65,8 @@ class GenerateTimeSeriesStatCommandTest extends TestCase
         $this->assertEquals($expected_content, $actual_content);
     }
 
-    public function test_it_registers_stats_maps(): void
+    #[Test]
+    public function it_registers_stats_maps(): void
     {
         $expected_path = $this->app->path('Stats/TimeSeries/PaymentsCount.php');
         $expected_content = $this->getTestStubContents('Stats/TimeSeries/PaymentsCount.php');

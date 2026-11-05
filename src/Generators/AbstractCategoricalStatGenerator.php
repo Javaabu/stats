@@ -2,6 +2,7 @@
 
 namespace Javaabu\Stats\Generators;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
 abstract class AbstractCategoricalStatGenerator extends AbstractStatGenerator
@@ -98,16 +99,16 @@ abstract class AbstractCategoricalStatGenerator extends AbstractStatGenerator
 
     public function getFullClassName(): string
     {
-        return '\\App\\Stats\\Categorical\\'.$this->getName();
+        return '\\App\\Stats\\Categorical\\' . $this->getName();
     }
 
     protected function qualifyField(string $field): string
     {
-        return str_contains($field, '.') ? $field : $this->getTable().'.'.$field;
+        return str_contains($field, '.') ? $field : $this->getTable() . '.' . $field;
     }
 
     /**
-     * @param  class-string<\Illuminate\Database\Eloquent\Model>  $category_model_class
+     * @param  class-string<Model>  $category_model_class
      */
     protected function resolveCategoryFieldAlias(string $category_model_class): string
     {

@@ -203,12 +203,14 @@ class CategoricalStats
 
     public static function defaultMode(): CategoricalModes
     {
-        return config('stats.default_categorical_mode');
+        $mode = config('stats.default_categorical_mode', CategoricalModes::NON_EMPTY);
+
+        return $mode instanceof CategoricalModes ? $mode : CategoricalModes::from($mode);
     }
 
     public static function defaultDateRange(): PresetDateRanges
     {
-        return config('stats.default_date_range');
+        return TimeSeriesStats::defaultDateRange();
     }
 
     public static function categoricalItemsPerPage(): int
@@ -217,7 +219,9 @@ class CategoricalStats
     }
 
     /**
-     * Register the categorical API routes.
+     * Register the categorical JSON API routes
+     *
+     * @deprecated Use Route::statsApi()
      *
      * @param  list<string>  $middleware
      */
@@ -227,17 +231,19 @@ class CategoricalStats
         string $categories_name = 'stats.categorical.categories',
         array $middleware = ['stats.view-categorical']
     ): void {
-        Route::get($url, [CategoricalStatsApiController::class, 'index'])
+        Route::get($url, [config('stats.controllers.categorical_api', CategoricalStatsApiController::class), 'index'])
             ->name($name)
             ->middleware($middleware);
 
-        Route::get($url.'/categories', [CategoryProviderApiController::class, 'index'])
+        Route::get($url . '/categories', [config('stats.controllers.categories', CategoryProviderApiController::class), 'index'])
             ->name($categories_name)
             ->middleware($middleware);
     }
 
     /**
-     * Register the categorical admin routes.
+     * Register the categorical page and export routes
+     *
+     * @deprecated Use Route::stats()
      *
      * @param  list<string>  $middleware
      */
@@ -247,11 +253,13 @@ class CategoricalStats
         string $export_name = 'stats.categorical.export',
         array $middleware = ['stats.view-categorical']
     ): void {
-        Route::get($url, [CategoricalStatsController::class, 'index'])
+        $controller = config('stats.controllers.categorical', CategoricalStatsController::class);
+
+        Route::get($url, [$controller, 'index'])
             ->name($index_name)
             ->middleware($middleware);
 
-        Route::post($url, [CategoricalStatsController::class, 'export'])
+        Route::post($url, [$controller, 'export'])
             ->name($export_name)
             ->middleware($middleware);
     }

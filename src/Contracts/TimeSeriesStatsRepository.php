@@ -7,9 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Javaabu\Stats\Enums\TimeSeriesModes;
 
-interface TimeSeriesStatsRepository extends
-    InteractsWithFilters,
-    InteractsWithDateRange
+interface TimeSeriesStatsRepository extends InteractsWithDateRange, InteractsWithFilters
 {
     /**
      * Get which time series mode is being queried with

@@ -16,10 +16,12 @@ use Javaabu\Stats\Http\Controllers\Api\TimeSeriesStatsApiController;
 use Javaabu\Stats\Http\Controllers\TimeSeriesStatsController;
 use Javaabu\Stats\Repositories\TimeSeries\UserLoginsRepository;
 use Javaabu\Stats\Repositories\TimeSeries\UserSignupsRepository;
+use Spatie\Activitylog\Models\Activity;
 
 class TimeSeriesStats
 {
     protected static array $stats_map = [];
+
     protected static array $formatters_map = [];
 
     protected static bool $exclude_default_stats = false;
@@ -33,35 +35,41 @@ class TimeSeriesStats
     }
 
     /**
-     * Exclude predefined stats
+     * Don't register the built-in stats, whatever `stats.default_stats` says
      */
-    public static function excludeDefaultStats()
+    public static function excludeDefaultStats(): void
     {
         self::$exclude_default_stats = true;
     }
 
     /**
-     * Register default stats
+     * Register the built-in stats: `user_signups` for the users of the auth
+     * provider's model, and `user_logins` too when spatie/laravel-activitylog
+     * is installed. Called at boot when `stats.default_stats` is on.
      */
-    public static function registerDefaultStats()
+    public static function registerDefaultStats(): void
     {
-        if (class_exists(\App\Models\User::class)) {
-            self::register([
-                'user_signups' => UserSignupsRepository::class,
-            ]);
+        $user_model = UserSignupsRepository::defaultUserModel();
 
-            if (class_exists(\Spatie\Activitylog\Models\Activity::class)) {
-                self::register([
-                    'user_logins' => UserLoginsRepository::class,
-                ]);
-            }
+        if (! $user_model || ! class_exists($user_model)) {
+            return;
+        }
+
+        self::register([
+            'user_signups' => UserSignupsRepository::class,
+        ]);
+
+        if (class_exists(Activity::class)) {
+            self::register([
+                'user_logins' => UserLoginsRepository::class,
+            ]);
         }
     }
 
     /**
      * Register a formatter or a number of formatters
      *
-     * @param array<string, class-string<TimeSeriesStatsFormatter>> $formatters
+     * @param  array<string, class-string<TimeSeriesStatsFormatter>>  $formatters
      */
     public static function registerFormatters(array $formatters, bool $merge = true)
     {
@@ -71,7 +79,7 @@ class TimeSeriesStats
     /**
      * Get the formatters map
      *
-     * @return  array<string, class-string<TimeSeriesStatsFormatter>>
+     * @return array<string, class-string<TimeSeriesStatsFormatter>>
      */
     public static function formattersMap(): array
     {
@@ -99,7 +107,7 @@ class TimeSeriesStats
     /**
      * Get the name for the formatter
      *
-     * @param class-string<TimeSeriesStatsFormatter> $formatter
+     * @param  class-string<TimeSeriesStatsFormatter>  $formatter
      */
     public static function getNameForFormatter(string $formatter): string
     {
@@ -118,13 +126,14 @@ class TimeSeriesStats
     public static function createFromFormat(string $format): TimeSeriesStatsFormatter
     {
         $class = static::getClassNameForFormat($format);
-        return new $class();
+
+        return new $class;
     }
 
     /**
      * Register a stat or a number of stats
      *
-     * @param array<string, class-string<TimeSeriesStatsRepository>> $stats
+     * @param  array<string, class-string<TimeSeriesStatsRepository>>  $stats
      */
     public static function register(array $stats, bool $merge = true)
     {
@@ -134,7 +143,7 @@ class TimeSeriesStats
     /**
      * Get the stats map
      *
-     * @return  array<string, class-string<TimeSeriesStatsRepository>>
+     * @return array<string, class-string<TimeSeriesStatsRepository>>
      */
     public static function statsMap(): array
     {
@@ -154,7 +163,7 @@ class TimeSeriesStats
     /**
      * Get the metric name for the stat
      *
-     * @param class-string<TimeSeriesStatsRepository> $stat
+     * @param  class-string<TimeSeriesStatsRepository>  $stat
      */
     public static function getMetricForStat(string $stat): string
     {
@@ -173,6 +182,7 @@ class TimeSeriesStats
     public static function createFromMetric(string $metric, DateRange $date_range = PresetDateRanges::THIS_YEAR, array $filters = []): TimeSeriesStatsRepository
     {
         $class = static::getClassNameForMetric($metric);
+
         return new $class($date_range, $filters);
     }
 
@@ -274,7 +284,9 @@ class TimeSeriesStats
      */
     public static function defaultMode(): TimeSeriesModes
     {
-        return config('stats.default_time_series_mode');
+        $mode = config('stats.default_time_series_mode', TimeSeriesModes::DAY);
+
+        return $mode instanceof TimeSeriesModes ? $mode : TimeSeriesModes::from($mode);
     }
 
     /**
@@ -282,38 +294,48 @@ class TimeSeriesStats
      */
     public static function defaultDateRange(): PresetDateRanges
     {
-        return config('stats.default_date_range');
+        $range = config('stats.default_date_range', PresetDateRanges::LAST_7_DAYS);
+
+        return $range instanceof PresetDateRanges ? $range : PresetDateRanges::from($range);
     }
 
     /**
-     * Register the api routes
+     * Register the JSON API route
+     *
+     * @deprecated Use Route::statsApi(), which also registers the categorical routes
+     *
+     * @param  list<string>  $middleware
      */
     public static function registerApiRoute(
         string $url = '/stats/time-series',
         string $name = 'stats.time-series.index',
         array $middleware = ['stats.view-time-series']
-    ): \Illuminate\Routing\Route
-    {
-        return Route::get($url, [TimeSeriesStatsApiController::class, 'index'])
-                    ->name($name)
-                    ->middleware($middleware);
+    ): \Illuminate\Routing\Route {
+        return Route::get($url, [config('stats.controllers.time_series_api', TimeSeriesStatsApiController::class), 'index'])
+            ->name($name)
+            ->middleware($middleware);
     }
 
     /**
-     * Register the admin routes
+     * Register the stats page and export routes
+     *
+     * @deprecated Use Route::stats(), which also registers the categorical pages
+     *
+     * @param  list<string>  $middleware
      */
     public static function registerRoutes(
         string $url = '/stats/time-series',
         string $index_name = 'stats.time-series.index',
         string $export_name = 'stats.time-series.export',
-        array  $middleware = ['stats.view-time-series']
-    )
-    {
-        Route::get($url, [TimeSeriesStatsController::class, 'index'])
+        array $middleware = ['stats.view-time-series']
+    ): void {
+        $controller = config('stats.controllers.time_series', TimeSeriesStatsController::class);
+
+        Route::get($url, [$controller, 'index'])
             ->name($index_name)
             ->middleware($middleware);
 
-        Route::post($url, [TimeSeriesStatsController::class, 'export'])
+        Route::post($url, [$controller, 'export'])
             ->name($export_name)
             ->middleware($middleware);
     }

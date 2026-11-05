@@ -6,12 +6,13 @@ use Carbon\Carbon;
 use Carbon\Month;
 use Carbon\WeekDay;
 use DateTimeInterface;
-use Illuminate\Testing\Exceptions\InvalidArgumentException;
+use InvalidArgumentException;
 use Javaabu\Stats\Contracts\DateRange;
 
 class ExactDateRange implements DateRange
 {
     protected Carbon $date_from;
+
     protected Carbon $date_to;
 
     public function __construct(
@@ -44,15 +45,15 @@ class ExactDateRange implements DateRange
         return 'custom';
     }
 
+    /**
+     * The period of the same length that ends the second before this one starts
+     */
     public function getPreviousDateRange(): DateRange
     {
-        $date_from = $this->date_from;
-        $date_to = $this->date_to;
+        $length = (int) floor($this->date_from->diffInSeconds($this->date_to, true));
 
-        $interval = $date_from->diff($date_to);
-
-        $prev_date_from = $date_from->copy()->sub($interval)->subSecond();
-        $prev_date_to = $prev_date_from->copy()->add($interval);
+        $prev_date_to = $this->date_from->copy()->startOfSecond()->subSecond();
+        $prev_date_from = $prev_date_to->copy()->subSeconds($length);
 
         return new ExactDateRange($prev_date_from, $prev_date_to);
     }

@@ -8,7 +8,7 @@ abstract class CountCategoricalStatsRepository extends AbstractCategoricalStatsR
 {
     public function getAggregateSql(): string
     {
-        return 'count(*) as '.$this->getAggregateFieldName();
+        return 'count(*) as ' . $this->getAggregateFieldName();
     }
 
     protected function generateName(): string

@@ -3,6 +3,7 @@
 namespace Javaabu\Stats\Tests\TestSupport\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Javaabu\Stats\Tests\TestSupport\Enums\PaymentStatus;
 use Javaabu\Stats\Tests\TestSupport\Models\Payment;
 use Javaabu\Stats\Tests\TestSupport\Models\User;
 
@@ -16,6 +17,11 @@ class PaymentFactory extends Factory
             'amount' => fake()->randomFloat(2, 0, 20000),
             'paid_at' => fake()->optional()->dateTime(now()->toDateTimeString()),
         ];
+    }
+
+    public function status(PaymentStatus $status): PaymentFactory
+    {
+        return $this->state(fn () => ['status' => $status->value]);
     }
 
     public function withUser(User|int|null $user = null): PaymentFactory

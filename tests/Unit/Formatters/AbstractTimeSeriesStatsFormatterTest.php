@@ -5,25 +5,28 @@ namespace Javaabu\Stats\Tests\Unit\Formatters;
 use Javaabu\Stats\Formatters\TimeSeries\DefaultStatsFormatter;
 use Javaabu\Stats\Tests\TestCase;
 use Javaabu\Stats\TimeSeriesStats;
+use PHPUnit\Framework\Attributes\Test;
 
 class AbstractTimeSeriesStatsFormatterTest extends TestCase
 {
-    public function test_it_can_get_the_registered_format_name(): void
+    #[Test]
+    public function it_can_get_the_registered_format_name(): void
     {
         TimeSeriesStats::registerFormatters([
-            'default' => DefaultStatsFormatter::class
+            'default' => DefaultStatsFormatter::class,
         ]);
 
-        $formatter = new DefaultStatsFormatter();
+        $formatter = new DefaultStatsFormatter;
 
         $this->assertEquals('default', $formatter->getName());
     }
 
-    public function test_it_returns_full_class_name_for_unregistered_formatters(): void
+    #[Test]
+    public function it_returns_full_class_name_for_unregistered_formatters(): void
     {
         TimeSeriesStats::registerFormatters([], false);
 
-        $formatter = new DefaultStatsFormatter();
+        $formatter = new DefaultStatsFormatter;
 
         $this->assertEquals(DefaultStatsFormatter::class, $formatter->getName());
     }

@@ -8,10 +8,12 @@ use Javaabu\Stats\Enums\StatListReturnType;
 use Javaabu\Stats\Formatters\Categorical\DefaultCategoricalStatsFormatter;
 use Javaabu\Stats\Tests\TestCase;
 use Javaabu\Stats\Tests\TestSupport\Stats\Categorical\PaymentsByUser;
+use PHPUnit\Framework\Attributes\Test;
 
 class CategoricalStatsTest extends TestCase
 {
-    public function test_it_can_register_and_create_categorical_stats(): void
+    #[Test]
+    public function it_can_register_and_create_categorical_stats(): void
     {
         CategoricalStats::register([
             'payments_by_user' => PaymentsByUser::class,
@@ -24,7 +26,8 @@ class CategoricalStatsTest extends TestCase
         $this->assertEquals(PresetDateRanges::LAST_7_DAYS, $stats->getDateRange());
     }
 
-    public function test_it_only_lists_metrics_that_support_the_current_filters(): void
+    #[Test]
+    public function it_only_lists_metrics_that_support_the_current_filters(): void
     {
         CategoricalStats::register([
             'payments_by_user' => PaymentsByUser::class,
@@ -37,7 +40,8 @@ class CategoricalStatsTest extends TestCase
         $this->assertEmpty(CategoricalStats::allowedMetrics(['unknown']));
     }
 
-    public function test_it_can_register_and_create_a_formatter(): void
+    #[Test]
+    public function it_can_register_and_create_a_formatter(): void
     {
         CategoricalStats::registerFormatters([
             'default' => DefaultCategoricalStatsFormatter::class,

@@ -77,7 +77,7 @@ trait IsCategoricalStatsProvider
             } elseif ($this->hasNamedScope('search')) {
                 $query->search($search);
             } else {
-                $query->where($this->getCategoricalStatsSearchField(), 'like', '%'.$search.'%');
+                $query->whereLike($this->getCategoricalStatsSearchField(), '%' . $search . '%');
             }
         }
 

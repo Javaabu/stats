@@ -1,4 +1,5 @@
 <?php
+
 namespace Javaabu\Stats\Tests\TestSupport\Stats\TimeSeries;
 
 use Illuminate\Contracts\Auth\Access\Authorizable;

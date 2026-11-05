@@ -4,6 +4,9 @@ namespace Javaabu\Stats\Http\Middleware;
 
 use Closure;
 use Illuminate\Contracts\Auth\Access\Authorizable;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Javaabu\Stats\TimeSeriesStats;
 
@@ -12,9 +15,8 @@ class AbortIfCannotViewAnyTimeSeriesStats
     /**
      * Handle an incoming request.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \Closure $next
-     * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse|null
+     * @param  Request  $request
+     * @return Response|RedirectResponse|null
      */
     public function handle($request, Closure $next, ...$guards)
     {

@@ -4,10 +4,12 @@ namespace Javaabu\Stats\Tests\Unit\Support;
 
 use Javaabu\Stats\Support\ExactDateRange;
 use Javaabu\Stats\Tests\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class ExactDateRangeTest extends TestCase
 {
-    public function test_it_can_generate_correct_previous_date_range(): void
+    #[Test]
+    public function it_can_generate_correct_previous_date_range(): void
     {
         $date_range = new ExactDateRange('2024-07-08 10:07 PM', '2024-07-08 11:07 PM');
         $previous_date_range = $date_range->getPreviousDateRange();

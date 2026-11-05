@@ -23,6 +23,6 @@ class CategoryProviderUser extends User implements CategoryProvider
 
     public function scopeCategoricalStatsSearch($query, $search)
     {
-        return $query->where('email', 'like', '%'.$search.'%');
+        return $query->whereLike('email', '%' . $search . '%');
     }
 }

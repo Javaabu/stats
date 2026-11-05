@@ -23,7 +23,7 @@ class GenerateTimeSeriesStatCommand extends Command
     {
         return [
             ['name', InputArgument::REQUIRED, 'The name for the stat class.'],
-            ['model', InputArgument::REQUIRED, 'The model class for which you want to generate the stats for. Can be the model class or morph name.']
+            ['model', InputArgument::REQUIRED, 'The model class for which you want to generate the stats for. Can be the model class or morph name.'],
         ];
     }
 
@@ -72,7 +72,6 @@ class GenerateTimeSeriesStatCommand extends Command
 
         return new $class($name, $model_class);
     }
-
 
     /**
      * @return class-string<AbstractStatGenerator>

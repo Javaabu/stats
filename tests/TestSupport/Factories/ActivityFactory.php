@@ -34,7 +34,7 @@ class ActivityFactory extends Factory
 
                     return $random_user;
                 }),
-                'causer_type' => 'user'
+                'causer_type' => 'user',
             ];
         });
     }

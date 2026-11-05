@@ -3,15 +3,17 @@
 namespace Javaabu\Stats\Enums;
 
 use Carbon\Carbon;
-use Javaabu\Helpers\Enums\IsEnum;
-use Javaabu\Helpers\Enums\NativeEnumsTrait;
 use Javaabu\Stats\Contracts\DateRange;
+use Javaabu\Stats\Enums\Concerns\HasLabels;
 use Javaabu\Stats\Support\ExactDateRange;
 use Javaabu\Stats\TimeSeriesStats;
 
-enum PresetDateRanges: string implements IsEnum, DateRange
+/**
+ * Date ranges relative to now, which also give the range before them for comparisons
+ */
+enum PresetDateRanges: string implements DateRange
 {
-    use NativeEnumsTrait;
+    use HasLabels;
 
     case TODAY = 'today';
     case YESTERDAY = 'yesterday';
@@ -69,6 +71,26 @@ enum PresetDateRanges: string implements IsEnum, DateRange
     public function getName(): string
     {
         return $this->value;
+    }
+
+    public function getLabel(): string
+    {
+        return match ($this) {
+            self::TODAY => __('Today'),
+            self::YESTERDAY => __('Yesterday'),
+            self::THIS_WEEK => __('This week'),
+            self::LAST_WEEK => __('Last week'),
+            self::THIS_MONTH => __('This month'),
+            self::LAST_MONTH => __('Last month'),
+            self::THIS_YEAR => __('This year'),
+            self::LAST_YEAR => __('Last year'),
+            self::LAST_7_DAYS => __('Last 7 days'),
+            self::LAST_14_DAYS => __('Last 14 days'),
+            self::LAST_30_DAYS => __('Last 30 days'),
+            self::LAST_5_YEARS => __('Last 5 years'),
+            self::LAST_10_YEARS => __('Last 10 years'),
+            self::LIFETIME => __('Lifetime'),
+        };
     }
 
     protected function generatePreviousFromDate(): Carbon

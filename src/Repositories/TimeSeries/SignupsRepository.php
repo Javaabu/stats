@@ -45,10 +45,10 @@ abstract class SignupsRepository extends CountStatsRepository
         return (new $user_class)->getMorphClass();
     }
 
-
     /**
      * Get the model class
+     *
      * @return class-string<Model>
      */
-    public abstract function userModelClass(): string;
+    abstract public function userModelClass(): string;
 }

@@ -6,16 +6,16 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Javaabu\Stats\Enums\PresetDateRanges;
 use Javaabu\Stats\Enums\TimeSeriesModes;
 use Javaabu\Stats\Tests\TestCase;
-use Javaabu\Stats\Tests\TestSupport\Factories\ActivityFactory;
 use Javaabu\Stats\Tests\TestSupport\Models\User;
-use Javaabu\Stats\Tests\TestSupport\Stats\TimeSeries\TestUserLoginsRepository;
 use Javaabu\Stats\Tests\TestSupport\Stats\TimeSeries\TestUserSignupsRepository;
+use PHPUnit\Framework\Attributes\Test;
 
 class UserSignupsRepositoryTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_it_can_generate_user_signup_stats(): void
+    #[Test]
+    public function it_can_generate_user_signup_stats(): void
     {
         $this->travelTo('2024-07-04');
 
@@ -49,7 +49,7 @@ class UserSignupsRepositoryTest extends TestCase
             [
                 'signups' => 2,
                 'day' => '2024-07-04',
-            ]
+            ],
         ], $data);
     }
 }
