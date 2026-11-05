@@ -8,7 +8,7 @@ describe("TimeSeriesStatsPage", () => {
   it("renders the stencil form, the chart and the CSV download", () => {
     const { container } = render(<TimeSeriesStatsPage {...(timeSeries as unknown as StatsPageProps)} />)
 
-    expect(screen.getByRole("heading", { name: "Time Series Stats" })).toBeInTheDocument()
+    expect(screen.getByRole("heading", { name: timeSeries.strings.title })).toBeInTheDocument()
     expect(container.querySelector('[data-stats-page="time-series"]')).not.toBeNull()
     expect(container.querySelector('input[name="metric"], select[name="metric"]')).not.toBeNull()
 
@@ -16,7 +16,7 @@ describe("TimeSeriesStatsPage", () => {
     expect(download).toHaveAttribute("method", "post")
     expect(download.querySelector('input[name="_token"]')).not.toBeNull()
     expect(download.querySelector('input[name="metric"]')).toHaveValue("payments_count")
-    expect(screen.getByRole("button", { name: "Download CSV" })).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: timeSeries.strings.export })).toBeInTheDocument()
   })
 
   it("explains invalid input instead of drawing a chart", () => {
@@ -29,7 +29,7 @@ describe("TimeSeriesStatsPage", () => {
 
     render(<TimeSeriesStatsPage {...props} />)
 
-    expect(screen.getByText("Fix the errors in the form to see the stat.")).toBeInTheDocument()
+    expect(screen.getByText(timeSeries.strings.invalid)).toBeInTheDocument()
   })
 
   it("asks for a stat when there is no chart yet", () => {
@@ -37,7 +37,7 @@ describe("TimeSeriesStatsPage", () => {
 
     render(<TimeSeriesStatsPage {...props} />)
 
-    expect(screen.getByText("Choose a stat and a date range, then select Generate.")).toBeInTheDocument()
+    expect(screen.getByText(timeSeries.strings.empty)).toBeInTheDocument()
   })
 })
 
@@ -46,6 +46,6 @@ describe("CategoricalStatsPage", () => {
     const { container } = render(<CategoricalStatsPage {...(categorical as unknown as StatsPageProps)} />)
 
     expect(container.querySelector('[data-stats-page="categorical"]')).not.toBeNull()
-    expect(screen.getByRole("heading", { name: "Categorical Stats" })).toBeInTheDocument()
+    expect(screen.getByRole("heading", { name: categorical.strings.title })).toBeInTheDocument()
   })
 })

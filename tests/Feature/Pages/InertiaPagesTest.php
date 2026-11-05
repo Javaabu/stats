@@ -64,7 +64,7 @@ class InertiaPagesTest extends TestCase
                 ->where('chart.comparison.previousKey', 'previous')
                 ->where('export.url', url('stats/time-series'))
                 ->has('export.token')
-                ->where('strings.title', 'Time Series Stats')
+                ->where('strings.title', 'ވަގުތާއެކު ތަފާސް ހިސާބު')
                 ->etc());
 
         $this->writeFixture($response, 'time-series-props.json');

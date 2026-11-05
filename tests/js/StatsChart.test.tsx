@@ -12,7 +12,7 @@ describe("StatsChart", () => {
 
     const { container } = render(<StatsChart chart={chart} />)
 
-    expect(screen.getByText("Payments")).toBeInTheDocument()
+    expect(screen.getByText(chart.title)).toBeInTheDocument()
     expect(container.querySelector('[data-slot="period-totals"]')).not.toBeNull()
     expect(screen.getByRole("button", { name: /table/i })).toBeInTheDocument()
   })
