@@ -322,7 +322,7 @@ A date range is a `PresetDateRanges` case or an `ExactDateRange`. Both implement
 
 ```php
 $range = PresetDateRanges::from('last_30_days');
-$range->getDateFrom();              // Carbon
+$range->getDateFrom();              // CarbonInterface
 $range->getDateTo();
 $range->getLabel();                 // "Last 30 days", translated
 $range->getPreviousDateRange();     // the 30 days before, as an ExactDateRange
@@ -333,6 +333,8 @@ $range->getPreviousDateRange();     // the same length, ending the second before
 ```
 
 An `ExactDateRange` takes anything Carbon parses. A date without a time starts at midnight, so give the end date a time (or `Carbon::parse(...)->endOfDay()`) to include the whole day. Its end can't be before its start.
+
+The dates are made with Laravel's `Date` factory, so they are `CarbonImmutable` in an app that calls `Date::use(CarbonImmutable::class)` (as Laravel's starter kits do) and `Carbon` otherwise. Type-hint `CarbonInterface`, and use the return value of methods like `startOfDay()` or `addDay()` (`$date = $date->addDay()`) instead of relying on them changing the date in place, so your code works with both.
 
 ## The stat's dates
 

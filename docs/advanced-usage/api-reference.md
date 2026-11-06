@@ -108,6 +108,8 @@ See [Charts](../basic-usage/charts.md) for what each does.
 | `interval(TimeSeriesModes)` | `applyFilters(Builder)`, `filteredQuery()` |
 | `applyDateFilters(Builder)`, `filteredQueryWithoutDateFilters()` | |
 
+Dates are `CarbonInterface`: `getDateFrom()`, `getDateTo()`, `getMinDate()` and `getMaxDate()` return the app's date class (`Carbon`, or `CarbonImmutable` after `Date::use(CarbonImmutable::class)`), and `setDateFrom()` and `setDateTo()` take a string or any `DateTimeInterface`.
+
 `TimeSeriesStatsRepository` adds `query()`, `hour()`, `day()`, `week()`, `month()`, `year()`, `results(TimeSeriesModes)`, `total()`, `format(string $format, TimeSeriesModes $mode = TimeSeriesModes::DAY)`, `getCurrentMode()`, `getAggregateFieldName()`, `getAggregateFieldLabel()`, `getName()`, `canView(?Authorizable)` and `metric()`.
 
 `CategoricalStatsRepository` adds `query()`, `categoryProvider()`, `getCategoryProvider()`, `getCategoryField()`, `getCategoryFieldAlias()`, `getCategoryNameFieldAlias()`, `getCategoryTitle()`, `getCategoryIdTitle()`, `getAggregateFieldName()`, `getAggregateFieldLabel()`, `getName()`, `canView()`, `metric()`, `results()`, `resultsToArray(Collection)`, `resolveCategoryNames(CategoricalModes $mode, array $categorical_values = [])` and `format(string $format, ?CategoricalStatsRepository $compare = null, CategoricalModes $mode = CategoricalModes::NON_EMPTY, array $categorical_values = [])`.
@@ -157,7 +159,7 @@ The traits `Concerns\HasDateRange` and `Concerns\HasFilters` implement the two c
 
 | Enum | Cases | Methods |
 | --- | --- | --- |
-| `Enums\TimeSeriesModes` | `HOUR`, `DAY`, `WEEK`, `MONTH`, `YEAR` | `getLabel()`, `getSql(string $date_field, string $driver = 'mysql')`, `interval(Carbon, Carbon)`, `startOfStep(Carbon)`, `increment(Carbon)`, `formatDate(Carbon, bool $for_display = true)`, `displayDate(Carbon, ?string $locale = null)`, `toIsoDate(Carbon)`, `getDateFormat()`, `getInternalDateFormat()`, `chartInterval()` |
+| `Enums\TimeSeriesModes` | `HOUR`, `DAY`, `WEEK`, `MONTH`, `YEAR` | `getLabel()`, `getSql(string $date_field, string $driver = 'mysql')`, `interval(CarbonInterface, CarbonInterface)`, `startOfStep(CarbonInterface)`, `increment(CarbonInterface)`, `formatDate(CarbonInterface, bool $for_display = true)`, `displayDate(CarbonInterface, ?string $locale = null)`, `toIsoDate(CarbonInterface)`, `getDateFormat()`, `getInternalDateFormat()`, `chartInterval()` |
 | `Enums\CategoricalModes` | `NON_EMPTY`, `ALL`, `SPECIFIC` | `getLabel()`, `getDescription()`, `resolveCategoryNames(...)` |
 | `Enums\PresetDateRanges` | `TODAY`, `YESTERDAY`, `THIS_WEEK`, `LAST_WEEK`, `THIS_MONTH`, `LAST_MONTH`, `THIS_YEAR`, `LAST_YEAR`, `LAST_7_DAYS`, `LAST_14_DAYS`, `LAST_30_DAYS`, `LAST_5_YEARS`, `LAST_10_YEARS`, `LIFETIME` | `getDateFrom()`, `getDateTo()`, `getName()`, `getLabel()`, `getPreviousDateRange()` |
 | `Enums\StatListReturnType` | `METRIC`, `METRIC_AND_NAME`, `METRIC_AND_CLASS` | |
@@ -170,7 +172,7 @@ The traits `Concerns\HasDateRange` and `Concerns\HasFilters` implement the two c
 | --- | --- |
 | `Contracts\DateRange` | `getDateFrom()`, `getDateTo()`, `getName()`, `getPreviousDateRange()` |
 | `Support\ExactDateRange` | `new ExactDateRange($date_from, $date_to)`. Its name is `custom` |
-| `Support\TimeSeriesSteps` | `for(TimeSeriesStatsRepository $stats, TimeSeriesModes $mode)`: every step with `date`, `key`, `value`. `rangeLabel(DateRange $range, ?Carbon $from = null, ?Carbon $to = null)` |
+| `Support\TimeSeriesSteps` | `for(TimeSeriesStatsRepository $stats, TimeSeriesModes $mode)`: every step with `date`, `key`, `value`. `rangeLabel(DateRange $range, ?CarbonInterface $from = null, ?CarbonInterface $to = null)` |
 | `Support\Numbers` | `format(int\|float\|null $value, string $format = 'number', ?string $locale = null)`, `tick()`, `compact()`, `currency()`, `currencySymbol()` |
 | `Support\ExportFileName` | `make(string $title, $stats, $compare = null, string $prefix = '')` |
 

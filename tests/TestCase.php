@@ -2,6 +2,8 @@
 
 namespace Javaabu\Stats\Tests;
 
+use Carbon\CarbonImmutable;
+use Illuminate\Support\Facades\Date;
 use Javaabu\Filters\FiltersServiceProvider;
 use Javaabu\Forms\FormsServiceProvider;
 use Javaabu\GeneratorHelpers\Testing\InteractsWithTestFiles;
@@ -20,15 +22,27 @@ use Spatie\Activitylog\ActivitylogServiceProvider;
 use Spatie\Permission\PermissionServiceProvider;
 
 /**
- * Runs on SQLite in memory, or on the database in DB_CONNECTION (mysql, mariadb, pgsql)
+ * Runs on SQLite in memory, or on the database in DB_CONNECTION (mysql, mariadb, pgsql).
+ * STATS_IMMUTABLE_DATES=1 runs every test with Date::use(CarbonImmutable::class).
  */
 abstract class TestCase extends BaseTestCase
 {
     use InteractsWithTestFiles;
     use InteractsWithTestStubs;
 
+    /**
+     * Use CarbonImmutable for now(), today() and model dates, as Laravel's starter kits do
+     * (Date::use(CarbonImmutable::class)). STATS_IMMUTABLE_DATES=1 turns it on for every test.
+     */
+    protected bool $immutable_dates = false;
+
     protected function setUp(): void
     {
+        // Before the app boots, so the service providers see the app's date class
+        if ($this->immutable_dates || filter_var(getenv('STATS_IMMUTABLE_DATES'), FILTER_VALIDATE_BOOL)) {
+            Date::use(CarbonImmutable::class);
+        }
+
         parent::setUp();
 
         $this->loadTestStubsFrom(__DIR__ . '/TestSupport/stubs');
@@ -41,6 +55,8 @@ abstract class TestCase extends BaseTestCase
         Stats::clearWarmables();
 
         parent::tearDown();
+
+        Date::useDefault();
     }
 
     protected function defineEnvironment($app): void

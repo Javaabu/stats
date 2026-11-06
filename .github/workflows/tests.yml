@@ -203,6 +203,31 @@ jobs:
             -   name: Execute tests
                 run: vendor/bin/phpunit
 
+    immutable-dates:
+        runs-on: ubuntu-latest
+
+        name: Tests with CarbonImmutable
+
+        steps:
+            -   name: Checkout code
+                uses: actions/checkout@v5
+
+            -   name: Setup PHP
+                uses: shivammathur/setup-php@v2
+                with:
+                    php-version: 8.4
+                    extensions: curl, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, iconv
+                    coverage: none
+
+            -   name: Install dependencies
+                run: composer update --prefer-dist --no-interaction --no-progress
+
+            # Laravel's starter kits call Date::use(CarbonImmutable::class) (#14)
+            -   name: Execute tests with Date::use(CarbonImmutable::class)
+                run: vendor/bin/phpunit
+                env:
+                    STATS_IMMUTABLE_DATES: 1
+
     tests:
         runs-on: ubuntu-latest
 

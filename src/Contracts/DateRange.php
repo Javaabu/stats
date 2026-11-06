@@ -2,19 +2,19 @@
 
 namespace Javaabu\Stats\Contracts;
 
-use Carbon\Carbon;
+use Carbon\CarbonInterface;
 
 interface DateRange
 {
     /**
      * Get the date from
      */
-    public function getDateFrom(): Carbon;
+    public function getDateFrom(): CarbonInterface;
 
     /**
      * Get the date to
      */
-    public function getDateTo(): Carbon;
+    public function getDateTo(): CarbonInterface;
 
     /**
      * Get the name for the type of date range

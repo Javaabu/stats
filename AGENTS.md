@@ -27,6 +27,7 @@
 - Date SQL must work on MySQL, MariaDB, PostgreSQL and SQLite. Add a driver in `TimeSeriesModes::getSql()` and run the suite on each database.
 - Keep the chart array shape and `resources/js/types.ts` in step, and keep the Blade SVG and the React charts showing the same thing. When the page props change, regenerate the fixtures: `UPDATE_FIXTURES=1 vendor/bin/phpunit --filter InertiaPagesTest`.
 - Anything a chart depends on goes into its `cacheKey()`.
+- Dates must work as `Carbon` and as `CarbonImmutable` (`Date::use(CarbonImmutable::class)`): type-hint `CarbonInterface` (or `DateTimeInterface` for input), make dates with `now()`, `today()` or `Date::parse()` rather than `Carbon::`, and always use the return value of `addDay()`, `startOfDay()` and the like. `STATS_IMMUTABLE_DATES=1 vendor/bin/phpunit` runs the suite with immutable dates (CI does).
 - Nothing may assume the `web` guard or `App\Models\User`. Stats authorize through the gate (`canView()` → `StatsPolicy`).
 - Inertia and spatie/laravel-activitylog are optional: feature-detect them, keep them in `suggest`, and mark tests that need them with `#[RequiresMethod]`.
 - Every user-facing string goes through `__()` with an English key, and gets a line in `lang/en.json` and `lang/dv.json` (`TranslationsTest` checks). Use Thaana in tests of user-facing behaviour. List uncertain translations in `docs/advanced-usage/dhivehi-and-rtl.md`. Views, CSS and React use logical properties only (`RtlTest` checks).
@@ -41,6 +42,7 @@ composer install
 composer lint       # vendor/bin/pint --test
 composer format     # vendor/bin/pint
 composer test       # vendor/bin/phpunit (SQLite)
+STATS_IMMUTABLE_DATES=1 vendor/bin/phpunit   # with Date::use(CarbonImmutable::class)
 DB_CONNECTION=pgsql DB_DATABASE=stats_test DB_USERNAME=postgres vendor/bin/phpunit
 pnpm install && pnpm check    # lint, format, typecheck and Vitest (needs vendor/ for stencil)
 pnpm build                     # dist/ for apps without Vite

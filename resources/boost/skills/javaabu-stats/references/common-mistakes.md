@@ -10,6 +10,7 @@
 - **Naming a form filter after a stats parameter** (`mode`, `metric`, `date_from`, …): it throws. Pick another name and set `->column()` on the javaabu/filters filter.
 - **Assuming the `web` guard.** Pass `guard` to `Route::stats()` for admin portals; type users as `Authorizable`/`Model`, not `App\Models\User`.
 - **Checking `view_stats` yourself.** Use `$stat->canView($user)` or the gate (`can('view', $stat)`), so an app's policy override applies.
+- **Type-hinting `Carbon`.** A stat's dates are `CarbonImmutable` in apps that call `Date::use(CarbonImmutable::class)` (Laravel's starter kits do). Type-hint `CarbonInterface` in your own `DateRange` classes and stat overrides, and write `$date = $date->addDay()`, never a bare `$date->addDay();`.
 - **Left/right CSS in published views.** Use logical utilities (`ms-`, `pe-`, `start-`); the charts mirror in Dhivehi.
 
 ## Upgrading from v1
@@ -19,4 +20,5 @@
 - Week keys are now the week's start date (`2024-07-14`), month keys `2024-07`; code reading the raw `default` format must change.
 - Exports are CSV without maatwebsite/excel: `(new TimeSeriesStatsExport($mode, $stats))->download('file.csv')`; tests assert the download instead of `Excel::fake()`.
 - A plain `date_to` covers the whole day.
+- Date methods type-hint `CarbonInterface` instead of `Carbon`; overrides of `setDateFrom()`, `setDateTo()`, `getMaxDate()` and `getMinDate()` must widen their parameters.
 - See `docs/upgrading.md` for the full list.

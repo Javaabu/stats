@@ -2,7 +2,8 @@
 
 namespace Javaabu\Stats\Enums;
 
-use Carbon\Carbon;
+use Carbon\CarbonInterface;
+use Illuminate\Support\Facades\Date;
 use Javaabu\Stats\Contracts\DateRange;
 use Javaabu\Stats\Enums\Concerns\HasLabels;
 use Javaabu\Stats\Support\ExactDateRange;
@@ -30,11 +31,11 @@ enum PresetDateRanges: string implements DateRange
     case LAST_10_YEARS = 'last_10_years';
     case LIFETIME = 'lifetime';
 
-    public function getDateFrom(): Carbon
+    public function getDateFrom(): CarbonInterface
     {
         return match ($this) {
-            self::TODAY => Carbon::today(),
-            self::YESTERDAY => Carbon::yesterday(),
+            self::TODAY => Date::today(),
+            self::YESTERDAY => Date::yesterday(),
             self::THIS_WEEK => now()->locale(TimeSeriesStats::dateLocale())->startOfWeek(),
             self::LAST_WEEK => now()->locale(TimeSeriesStats::dateLocale())->subWeek()->startOfWeek(),
             self::THIS_MONTH => now()->startOfMonth(),
@@ -50,11 +51,11 @@ enum PresetDateRanges: string implements DateRange
         };
     }
 
-    public function getDateTo(): Carbon
+    public function getDateTo(): CarbonInterface
     {
         return match ($this) {
-            self::TODAY => Carbon::today()->endOfDay(),
-            self::YESTERDAY => Carbon::yesterday()->endOfDay(),
+            self::TODAY => Date::today()->endOfDay(),
+            self::YESTERDAY => Date::yesterday()->endOfDay(),
             self::THIS_WEEK => now()->locale(TimeSeriesStats::dateLocale())->endOfWeek(),
             self::LAST_WEEK => now()->locale(TimeSeriesStats::dateLocale())->subWeek()->endOfWeek(),
             self::THIS_MONTH => now()->endOfMonth(),
@@ -93,7 +94,7 @@ enum PresetDateRanges: string implements DateRange
         };
     }
 
-    protected function generatePreviousFromDate(): Carbon
+    protected function generatePreviousFromDate(): CarbonInterface
     {
         $from_date = $this->getDateFrom();
 
@@ -115,7 +116,7 @@ enum PresetDateRanges: string implements DateRange
         };
     }
 
-    protected function generatePreviousToDate(Carbon $from_date): Carbon
+    protected function generatePreviousToDate(CarbonInterface $from_date): CarbonInterface
     {
         $from_date = $from_date->copy();
 

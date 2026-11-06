@@ -2,7 +2,7 @@
 
 namespace Javaabu\Stats\Enums;
 
-use Carbon\Carbon;
+use Carbon\CarbonInterface;
 use Illuminate\Support\Str;
 use Javaabu\Stats\Enums\Concerns\HasLabels;
 use Javaabu\Stats\Exceptions\StatsException;
@@ -50,7 +50,7 @@ enum TimeSeriesModes: string
     /**
      * The number of steps between the two dates, not counting the first
      */
-    public function interval(Carbon $date_from, Carbon $date_to): int
+    public function interval(CarbonInterface $date_from, CarbonInterface $date_to): int
     {
         $diff_method = $this->diffMethodName();
 
@@ -136,7 +136,7 @@ enum TimeSeriesModes: string
     /**
      * The start of the step the date is in
      */
-    public function startOfStep(Carbon $date): Carbon
+    public function startOfStep(CarbonInterface $date): CarbonInterface
     {
         $date = $date->copy();
 
@@ -149,7 +149,7 @@ enum TimeSeriesModes: string
         };
     }
 
-    public function increment(Carbon $date): Carbon
+    public function increment(CarbonInterface $date): CarbonInterface
     {
         $date = $date->copy()->locale(TimeSeriesStats::dateLocale());
 
@@ -161,7 +161,7 @@ enum TimeSeriesModes: string
     /**
      * Format a date for display, or as the key the database groups by
      */
-    public function formatDate(Carbon $date, bool $for_display = true): string
+    public function formatDate(CarbonInterface $date, bool $for_display = true): string
     {
         $date = $date->copy()->locale(TimeSeriesStats::dateLocale());
 
@@ -180,7 +180,7 @@ enum TimeSeriesModes: string
      * A step's label in the app's locale (Dhivehi month names in `dv`), for
      * charts. Weeks read "Week 29, 2024", numbered by `stats.date_locale`.
      */
-    public function displayDate(Carbon $date, ?string $locale = null): string
+    public function displayDate(CarbonInterface $date, ?string $locale = null): string
     {
         $locale ??= app()->getLocale();
 
@@ -196,7 +196,7 @@ enum TimeSeriesModes: string
     /**
      * The step as an ISO 8601 date, for charts with a time axis
      */
-    public function toIsoDate(Carbon $date): string
+    public function toIsoDate(CarbonInterface $date): string
     {
         $date = $this->startOfStep($date);
 

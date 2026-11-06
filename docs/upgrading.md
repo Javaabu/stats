@@ -115,6 +115,20 @@ The requests also accept:
 - `date_range=custom` with `date_from` and `date_to`;
 - `compare_to=previous` or `compare_to=custom` with `compare_date_from` and `compare_date_to`. `compare=1` and `compare_date_range` still work.
 
+## Immutable dates
+
+v1 type-hinted the mutable `Carbon\Carbon`, so an app that called `Date::use(CarbonImmutable::class)` (the default in Laravel's starter kits) got a `TypeError` from every stat. v2 type-hints `Carbon\CarbonInterface` and makes its dates with Laravel's `Date` factory, so they are whichever class the app uses.
+
+| v1 | v2 |
+| --- | --- |
+| `DateRange::getDateFrom(): Carbon`, `getDateTo(): Carbon` | `: CarbonInterface` |
+| `InteractsWithDateRange::getDateFrom()`, `getDateTo()` | `: CarbonInterface` |
+| `setDateFrom(string\|Carbon)`, `setDateTo(string\|Carbon)` | `setDateFrom(string\|DateTimeInterface)`, `setDateTo(string\|DateTimeInterface)` |
+| `getMaxDate(?Carbon $fallback): ?Carbon`, `getMinDate(...)` | `getMaxDate(?CarbonInterface $fallback): ?CarbonInterface`, `getMinDate(...)` |
+| `TimeSeriesModes::interval()`, `startOfStep()`, `increment()`, `formatDate()` took `Carbon` | `CarbonInterface` |
+
+Classes that implement `DateRange` or override these methods can keep returning `Carbon` (a narrower return type is allowed), but overrides of `setDateFrom()`, `setDateTo()`, `getMaxDate()` and `getMinDate()` must widen their parameters to match. Code that reads a stat's dates should type-hint `CarbonInterface` and use the result of `addDay()`, `startOfDay()` and the like rather than rely on them changing the date in place.
+
 ## Enums
 
 | v1 | v2 |
@@ -156,3 +170,4 @@ Export file names keep their shape: `{App Name} {Stat name} {20240701-20240707} 
 5. Sync permissions.
 6. Check code that reads `week` or `month` keys from `results()` or the `default` format.
 7. Replace `Excel::fake()` in tests of exports.
+8. Change `Carbon` type hints on your own `DateRange` classes and overridden date methods to `CarbonInterface` where PHP requires it.

@@ -2,8 +2,9 @@
 
 namespace Javaabu\Stats\Http\Requests\Concerns;
 
-use Carbon\Carbon;
+use Carbon\CarbonInterface;
 use Illuminate\Contracts\Auth\Access\Authorizable;
+use Illuminate\Support\Facades\Date;
 use Javaabu\Stats\Contracts\DateRange;
 use Javaabu\Stats\Contracts\HasFields;
 use Javaabu\Stats\Contracts\InteractsWithFilters;
@@ -106,10 +107,10 @@ trait ResolvesStats
     /**
      * A date from the input. A date without a time covers the whole day.
      */
-    protected function dateInput(string $key, bool $end_of_day = false): Carbon
+    protected function dateInput(string $key, bool $end_of_day = false): CarbonInterface
     {
         $value = (string) $this->input($key);
-        $date = Carbon::parse($value);
+        $date = Date::parse($value);
 
         if (! preg_match('/^\d{4}-\d{2}-\d{2}$/', trim($value))) {
             return $date;

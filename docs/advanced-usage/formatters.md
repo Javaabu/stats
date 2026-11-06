@@ -172,7 +172,7 @@ class ApexChartsFormatter extends AbstractTimeSeriesStatsFormatter
 }
 ```
 
-`TimeSeriesSteps::for($stat, $mode)` walks the range one step at a time and gives each step's `date` (Carbon), `key` (as in results) and `value` (`0` without data).
+`TimeSeriesSteps::for($stat, $mode)` walks the range one step at a time and gives each step's `date` (a `CarbonInterface`), `key` (as in results) and `value` (`0` without data).
 
 Register it in a service provider's `boot()`:
 

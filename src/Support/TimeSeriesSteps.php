@@ -2,7 +2,7 @@
 
 namespace Javaabu\Stats\Support;
 
-use Carbon\Carbon;
+use Carbon\CarbonInterface;
 use Javaabu\Stats\Contracts\DateRange;
 use Javaabu\Stats\Contracts\TimeSeriesStatsRepository;
 use Javaabu\Stats\Enums\PresetDateRanges;
@@ -15,7 +15,7 @@ use Javaabu\Stats\Enums\TimeSeriesModes;
 class TimeSeriesSteps
 {
     /**
-     * @return list<array{date: Carbon, key: string, value: int|float}>
+     * @return list<array{date: CarbonInterface, key: string, value: int|float}>
      */
     public static function for(TimeSeriesStatsRepository $stats, TimeSeriesModes $mode): array
     {
@@ -43,7 +43,7 @@ class TimeSeriesSteps
     /**
      * A short name for a date range: the preset's label, or its dates
      */
-    public static function rangeLabel(DateRange $range, ?Carbon $from = null, ?Carbon $to = null): string
+    public static function rangeLabel(DateRange $range, ?CarbonInterface $from = null, ?CarbonInterface $to = null): string
     {
         if ($range instanceof PresetDateRanges && $range !== PresetDateRanges::LIFETIME) {
             return $range->getLabel();

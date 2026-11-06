@@ -2,25 +2,26 @@
 
 namespace Javaabu\Stats\Support;
 
-use Carbon\Carbon;
+use Carbon\CarbonInterface;
 use Carbon\Month;
 use Carbon\WeekDay;
 use DateTimeInterface;
+use Illuminate\Support\Facades\Date;
 use InvalidArgumentException;
 use Javaabu\Stats\Contracts\DateRange;
 
 class ExactDateRange implements DateRange
 {
-    protected Carbon $date_from;
+    protected CarbonInterface $date_from;
 
-    protected Carbon $date_to;
+    protected CarbonInterface $date_to;
 
     public function __construct(
         DateTimeInterface|WeekDay|Month|string|int|float $date_from,
         DateTimeInterface|WeekDay|Month|string|int|float $date_to
     ) {
-        $date_from = Carbon::parse($date_from);
-        $date_to = Carbon::parse($date_to);
+        $date_from = Date::parse($date_from);
+        $date_to = Date::parse($date_to);
 
         if ($date_to < $date_from) {
             throw new InvalidArgumentException('date_to cannot be less than date_from');
@@ -30,12 +31,12 @@ class ExactDateRange implements DateRange
         $this->date_to = $date_to;
     }
 
-    public function getDateFrom(): Carbon
+    public function getDateFrom(): CarbonInterface
     {
         return $this->date_from;
     }
 
-    public function getDateTo(): Carbon
+    public function getDateTo(): CarbonInterface
     {
         return $this->date_to;
     }
