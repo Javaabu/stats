@@ -134,7 +134,7 @@ export default function Dashboard({ trend, tile }: { trend: StatsChartData; tile
 }
 ```
 
-`@javaabu/stats` comes from the Composer package through javaabu/manifest's Vite plugin; the app installs `@javaabu/onu` and `recharts`.
+`@javaabu/stats` comes from the Composer package through javaabu/manifest's Vite plugin; the app installs `@javaabu/onu` and `recharts` (`php artisan manifest:check` lists them in apps with `@inertiajs/react`; Blade apps need none of them).
 
 ## 4. Cache dashboards
 

@@ -87,6 +87,8 @@ class StatsServiceProvider extends ServiceProvider
                 ->pages()
                 ->dist('../dist')
                 ->style('charts', 'css/charts.css')
+                // The chart styles import nothing; only the React pages and
+                // @javaabu/stats imports use these, so Blade apps aren't asked for them
                 ->npm([
                     '@javaabu/forms' => 'github:Javaabu/react-forms#next-gen',
                     '@javaabu/onu' => '^0.2.1',
@@ -95,7 +97,7 @@ class StatsServiceProvider extends ServiceProvider
                     'react' => '^19.0',
                     'react-dom' => '^19.0',
                     '@inertiajs/react' => '^2.0 || ^3.0',
-                ]);
+                ], for: 'pages');
         });
     }
 

@@ -29,4 +29,4 @@ The React charts and the Inertia pages are built by your app's Vite, through man
 | `react`, `react-dom` | ^19.0 |
 | `@inertiajs/react` | ^2.0 or ^3.0, for the Inertia pages |
 
-`php artisan manifest:check` compares these with your `package.json` and prints the install command for anything missing. Onu also needs Tailwind CSS 4 and its providers; see [Onu's installation](https://github.com/Javaabu/onu/blob/main/docs/installation-and-setup.md).
+`php artisan manifest:check` compares these with your `package.json` and prints the install command for anything missing. The package declares them for its pages only, so the check asks for them only when your `package.json` has an Inertia adapter (`@inertiajs/react`), or when you pass `--scope=pages`; a Blade app is never asked to install React packages for stats. Onu also needs Tailwind CSS 4 and its providers; see [Onu's installation](https://github.com/Javaabu/onu/blob/main/docs/installation-and-setup.md).

@@ -201,7 +201,7 @@ npm install @javaabu/onu recharts
 php artisan manifest:check
 ```
 
-`manifest:check` lists anything still missing (such as `@javaabu/forms`) with the install command.
+`manifest:check` lists anything still missing (such as `@javaabu/forms`) with the install command. It checks what the pages need once `@inertiajs/react` is in your `package.json`; before that, run `php artisan manifest:check --scope=pages`.
 
 The pages and Onu are styled with Tailwind CSS 4. Import Onu's stylesheet and add the package's components to your Tailwind sources:
 

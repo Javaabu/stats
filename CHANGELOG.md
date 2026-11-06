@@ -28,6 +28,7 @@ See [Upgrading from v1](docs/upgrading.md) for the breaking changes.
 - A plain `date_to` covers the whole day.
 - Built-in stats use `config('stats.user_model')` or the default guard's user model.
 - Category search is case-insensitive on every database.
+- The npm packages for the React pages and charts are declared for javaabu/manifest's pages scope, so `manifest:check` doesn't ask Blade apps for them.
 - Dates are `CarbonInterface` and made with Laravel's `Date` factory, so stats work in apps that call `Date::use(CarbonImmutable::class)`; CI runs the suite with immutable dates.
 
 ### Removed
