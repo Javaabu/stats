@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Javaabu\Stats\Tests\TestCase;
 use Javaabu\Stats\Tests\TestSupport\Models\Payment;
 use Javaabu\Stats\Tests\TestSupport\Models\User;
+use PHPUnit\Framework\Attributes\Test;
 
 class GenerateCategoricalStatCommandTest extends TestCase
 {
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -31,7 +32,8 @@ class GenerateCategoricalStatCommandTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_it_can_generate_a_count_categorical_stat(): void
+    #[Test]
+    public function it_can_generate_a_count_categorical_stat(): void
     {
         $expected_path = $this->app->path('Stats/Categorical/PaymentsByUser.php');
         $expected_content = $this->getTestStubContents('Stats/Categorical/PaymentsByUser.php');
@@ -54,7 +56,8 @@ class GenerateCategoricalStatCommandTest extends TestCase
         }
     }
 
-    public function test_it_can_generate_a_sum_categorical_stat(): void
+    #[Test]
+    public function it_can_generate_a_sum_categorical_stat(): void
     {
         $expected_path = $this->app->path('Stats/Categorical/PaymentAmountsByUser.php');
         $expected_content = $this->getTestStubContents('Stats/Categorical/PaymentAmountsByUser.php');
@@ -71,7 +74,8 @@ class GenerateCategoricalStatCommandTest extends TestCase
         $this->assertEquals($expected_content, $this->getGeneratedFileContents($expected_path));
     }
 
-    public function test_it_registers_the_generated_categorical_stat(): void
+    #[Test]
+    public function it_registers_the_generated_categorical_stat(): void
     {
         $this->artisan('stats:categorical', [
             'name' => 'PaymentsByUser',
@@ -88,7 +92,8 @@ class GenerateCategoricalStatCommandTest extends TestCase
         $this->assertEquals($expected_content, $actual_content);
     }
 
-    public function test_it_shows_manual_registration_instructions_when_the_stat_cannot_be_registered(): void
+    #[Test]
+    public function it_shows_manual_registration_instructions_when_the_stat_cannot_be_registered(): void
     {
         $this->copyFile(
             $this->getTestStubPath('Providers/AppServiceProvider.php'),
@@ -112,7 +117,8 @@ class GenerateCategoricalStatCommandTest extends TestCase
             ->assertSuccessful();
     }
 
-    public function test_it_rejects_an_invalid_categorical_stat_type(): void
+    #[Test]
+    public function it_rejects_an_invalid_categorical_stat_type(): void
     {
         $this->artisan('stats:categorical', [
             'name' => 'PaymentsByUser',

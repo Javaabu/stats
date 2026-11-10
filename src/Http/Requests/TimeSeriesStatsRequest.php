@@ -4,147 +4,130 @@ namespace Javaabu\Stats\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-use Javaabu\Stats\Enums\PresetDateRanges;
+use Javaabu\Stats\Contracts\TimeSeriesStatsRepository;
 use Javaabu\Stats\Enums\TimeSeriesModes;
+use Javaabu\Stats\Http\Requests\Concerns\ResolvesStats;
 use Javaabu\Stats\TimeSeriesStats;
 
+/**
+ * A time series stat for a metric, mode and date range, optionally compared
+ * with another period. See {@see ResolvesStats} for the date parameters.
+ */
 class TimeSeriesStatsRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
+    use ResolvesStats;
+
+    public function authorize(): bool
     {
         return true;
     }
 
     /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
+     * @return array<string, mixed>
      */
-    public function rules()
+    public function rules(): array
     {
-        $user = request()->user();
-        $filters = $this->input('filters', []);
+        $metrics = TimeSeriesStats::allowedMetrics($this->fixedFilters(), $this->statsUser());
 
-        $rules = [
-            'mode' => [
-                'required',
-                'string',
-                Rule::enum(TimeSeriesModes::class),
-            ],
-
-            'metric' => [
-                'required',
-                'string',
-                Rule::in(TimeSeriesStats::allowedMetrics($filters, $user)),
-            ],
-
-            'date_range' => [
-                'string',
-                Rule::enum(PresetDateRanges::class),
-            ],
-
-            'date_from' => [
-                'nullable',
-                'string',
-                'date',
-                'required_without:date_range',
-            ],
-
-            'date_to' => [
-                'nullable',
-                'string',
-                'date',
-                'required_without:date_range',
-            ],
-
-            'compare_date_range' => [
-                'string',
-                Rule::enum(PresetDateRanges::class),
-            ],
-
-            'compare_date_from' => [
-                'nullable',
-                'string',
-                'date',
-                'required_with:compare_date_to'
-            ],
-
-            'compare_date_to' => [
-                'nullable',
-                'string',
-                'date',
-                'required_with:compare_date_from',
-            ],
-
-            'compare' => [
-                'nullable',
-                'boolean',
-            ],
-
-            'format' => [
-                'string',
-                Rule::in(TimeSeriesStats::allowedFormats()),
-            ],
-
-            'filters' => 'array',
+        return [
+            'metric' => ['required', 'string', Rule::in($metrics)],
+            'with' => ['nullable', 'array'],
+            'with.*' => ['string', Rule::in($metrics)],
+            'mode' => ['required', 'string', Rule::enum(TimeSeriesModes::class)],
+            'format' => ['nullable', 'string', Rule::in(TimeSeriesStats::allowedFormats())],
+            ...$this->dateRangeRules(),
         ];
-
-        return $rules;
     }
 
-    public function bodyParameters()
+    public function metric(): string
+    {
+        return (string) $this->input('metric');
+    }
+
+    /**
+     * Other metrics to plot with the main one
+     *
+     * @return list<string>
+     */
+    public function otherMetrics(): array
+    {
+        return array_values(array_diff(array_unique((array) $this->input('with', [])), [$this->metric()]));
+    }
+
+    public function mode(): TimeSeriesModes
+    {
+        return TimeSeriesModes::tryFrom((string) $this->input('mode')) ?? TimeSeriesStats::defaultMode();
+    }
+
+    /**
+     * The stat for the date range, with its filters
+     */
+    public function stats(?string $metric = null): TimeSeriesStatsRepository
+    {
+        return $this->makeStat($metric ?? $this->metric(), $this->dateRange());
+    }
+
+    /**
+     * The stat for the comparison period, if there is one
+     */
+    public function compareStats(?string $metric = null): ?TimeSeriesStatsRepository
+    {
+        $range = $this->compareDateRange();
+
+        return $range ? $this->makeStat($metric ?? $this->metric(), $range) : null;
+    }
+
+    protected function makeStat(string $metric, $range): TimeSeriesStatsRepository
+    {
+        $filters = $this->filtersFor(TimeSeriesStats::createFromMetric($metric, filters: $this->fixedFilters()));
+
+        return TimeSeriesStats::createFromMetric($metric, $range, $filters);
+    }
+
+    /**
+     * @return array<string, array<string, mixed>>
+     */
+    public function bodyParameters(): array
     {
         return [
+            'metric' => [
+                'description' => 'Which metric to use for the stat. The available metrics depend on the user\'s permissions and the filters used.',
+                'example' => TimeSeriesStats::allowedMetrics([], $this->statsUser())[0] ?? '',
+            ],
             'mode' => [
-                'description' => 'Which date frequency to group the data by, like `hour`, `day`, etc.',
+                'description' => 'How to group the data: `hour`, `day`, `week`, `month` or `year`.',
                 'example' => TimeSeriesModes::MONTH->value,
             ],
-
-            'metric' => [
-                'description' => 'Which metric to use for the stat. The available metrics will depend on the user permissions and the filters used.',
-                'example' => TimeSeriesStats::allowedMetrics([], request()->user())[0] ?? '',
-            ],
-
             'date_range' => [
-                'description' => 'Preset date range to filter results by.',
-                'example' => PresetDateRanges::THIS_YEAR->value,
+                'description' => 'Preset date range to filter results by, or `custom` to use date_from and date_to.',
+                'example' => 'this_year',
             ],
-
             'date_from' => [
-                'description' => 'Custom starting date when not using a preset date range.',
+                'description' => 'Start of a custom date range.',
             ],
-
             'date_to' => [
-                'description' => 'Custom ending date when not using a preset date range.',
+                'description' => 'End of a custom date range. A date without a time includes the whole day.',
             ],
-
             'compare' => [
-                'description' => 'Whether to compare the stat with the comparison date range.',
+                'description' => 'Compare with the previous period.',
                 'example' => true,
             ],
-
+            'compare_to' => [
+                'description' => '`previous` for the previous period, or `custom` for compare_date_from and compare_date_to.',
+            ],
             'compare_date_range' => [
-                'description' => 'Preset date range to compare results with. If not set, the previous date range will be compared.',
-                'example' => 'No-example'
+                'description' => 'Preset date range to compare with.',
+                'example' => 'No-example',
             ],
-
             'compare_date_from' => [
-                'description' => 'Custom starting compare date when not using a preset compare date range.',
+                'description' => 'Start of a custom comparison period.',
             ],
-
             'compare_date_to' => [
-                'description' => 'Custom ending compare date when not using a preset compare date range.',
+                'description' => 'End of a custom comparison period.',
             ],
-
             'format' => [
                 'description' => 'Which format to return the results in.',
             ],
-
             'filters' => [
                 'description' => 'Filters to apply to the stat.',
             ],

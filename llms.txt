@@ -1,0 +1,49 @@
+# javaabu/stats
+
+> Time series and categorical stats for Laravel. A stat is a class (CountStatsRepository, SumStatsRepository, CountCategoricalStatsRepository, SumCategoricalStatsRepository) registered under a metric name with TimeSeriesStats::register() or CategoricalStats::register(). Chart builders (TimeSeriesChart, CategoryChart, PieChart, Sparkline, StatTile) turn metrics into charts, drawn as SVG with Onu's tokens in Blade (<x-stats::chart>) and with Onu's chart components in React (<StatsChart> from @javaabu/stats, shipped through javaabu/manifest). Charts can plot several stats or periods and compare with the previous period, and are cached with warming and invalidation. Route::stats() gives stats pages (stencil forms, javaabu/filters filters, CSV export) in Blade or Inertia React; Route::statsApi() gives a JSON API. Dates are grouped on MySQL, MariaDB, PostgreSQL and SQLite. Viewing needs view_stats (javaabu/permissions, StatsPolicy).
+
+Paths are relative to this file. In a project, that's vendor/javaabu/stats/.
+
+## Rules
+
+- Define stats as classes extending the package's repositories; never write your own `GROUP BY DATE(...)`/`YEARWEEK()` queries or fill empty days yourself. Generate them with `php artisan stats:time-series Name Model [--type=sum]` or `php artisan stats:categorical Name Model CategoryModel category_id`.
+- Register every stat under a snake_case metric (`TimeSeriesStats::register(['payments_count' => PaymentsCount::class])` in a service provider, or `config('stats.time_series_stats')`), and refer to it by that metric in charts and requests.
+- Show stats with the chart builders: `TimeSeriesChart::make('payments_count')->range(PresetDateRanges::LAST_30_DAYS)->mode(TimeSeriesModes::DAY)->compare()`. Render them with `<x-stats::chart :chart="$chart" />` in Blade, or pass them as Inertia props to `<StatsChart chart={chart} />`. Don't fetch the JSON API to draw charts in JavaScript, and don't add Chart.js.
+- Several stats on one plot: `->stats([...])`; one stat over several periods: `->periods([...])`; against the previous period: `->compare()`.
+- KPI tiles: `StatTile::make('metric')->compare()->sparkline()` in `<x-stats::stat-tiles>` / `<x-stats::stat-tile :tile>`, or `<StatsTile tile={…} />`.
+- Charts are cached (10 minutes for periods that include today, a day for past ones). Register dashboard charts with `Stats::warm(fn () => [...])` and schedule `WarmStatsCache` or `php artisan stats:warm`; invalidate with `Stats::forget('metric')` or the `InvalidatesStats` model trait. Use `->withoutCache()` in tests that change data after building a chart.
+- Filters: `StatsFilter::exact()`, `scope()` and `closure()` read `filters[...]`; `StatsFilter::from(SelectFilter::make('status')->options(...))` (javaabu/filters) adds a field to the stats form and reads its own query parameter. Don't name a filter after a stats parameter (`metric`, `mode`, `date_from`, …).
+- Register routes yourself: `Route::stats(['prefix' => 'admin/stats', 'name' => 'admin.stats', 'guard' => 'web_admin'])` and `Route::statsApi([...])`. Never assume the `web` guard or `App\Models\User`.
+- Dates are `CarbonInterface` (`CarbonImmutable` in apps that call `Date::use(CarbonImmutable::class)`): type-hint `CarbonInterface` in your own date ranges and stat overrides, and use the return value of `addDay()`, `startOfDay()` and the like.
+- Authorize through `$stat->canView($user)` / the gate (`view_stats`, `StatsPolicy`); override the policy with `config('stats.policy')` or `Gate::policy()`. Run `php artisan permissions:sync`.
+- For one model's stats, extend `TimeSeriesStatsController` or `CategoricalStatsController` and return fixed filters from `filters(Request $request)`.
+- User-facing strings go through `__()`; stat names come from `getName()`. Use logical CSS (`ms-`, `pe-`) in published views; charts mirror in Dhivehi.
+
+## Docs
+
+- [Introduction](docs/intro.md): what the package does
+- [Requirements](docs/requirements.md): PHP, Laravel, databases, the Javaabu packages and the optional ones
+- [Installation & Setup](docs/installation-and-setup.md): installing, routes, permissions, styles, Blade and Inertia
+- [Upgrading from v1](docs/upgrading.md): what changed and what to do
+- [AI assistants](docs/ai-assistants.md): Laravel Boost and these docs
+- [Time series stats](docs/basic-usage/time-series-stats.md): count, sum and aggregate stats, registering, built-in stats, using a stat in PHP
+- [Categorical stats](docs/basic-usage/categorical-stats.md): stats per category, registering, using them in PHP
+- [Category providers](docs/basic-usage/category-providers.md): models, enums, arrays and custom providers, labels, search and order
+- [Filters](docs/basic-usage/filters.md): exact, scope, closure and javaabu/filters filters, fixed filters and form fields
+- [Charts](docs/basic-usage/charts.md): every chart builder and option, Blade and React, several stats and periods, comparisons, number formats
+- [Dashboards](docs/basic-usage/dashboards.md): stat tiles, sparklines and a full dashboard in Blade and Inertia React
+- [Stats pages](docs/basic-usage/stats-pages.md): Route::stats(), the forms and their parameters, CSV export, pages for one model
+- [Caching and warming](docs/advanced-usage/caching-and-warming.md): keys, TTLs, warming, invalidation
+- [Configuration](docs/advanced-usage/configuration.md): every config option
+- [Permissions and policies](docs/advanced-usage/permissions-and-policies.md): view_stats, StatsPolicy, canView()
+- [Overriding controllers and views](docs/advanced-usage/overriding-controllers-and-views.md): controllers, Blade views, React pages, translations
+- [JSON API](docs/advanced-usage/json-api.md): Route::statsApi(), parameters and responses
+- [Formatters](docs/advanced-usage/formatters.md): default, chartjs, sparkline, flot, combined and your own
+- [Databases](docs/advanced-usage/databases.md): supported databases, week starts, step keys
+- [Artisan commands](docs/advanced-usage/artisan-commands.md): stats:time-series, stats:categorical, stats:warm
+- [Dhivehi and RTL](docs/advanced-usage/dhivehi-and-rtl.md): translations, dates and numbers, right to left, translations to review
+- [API reference](docs/advanced-usage/api-reference.md): public classes and methods
+- [Changelog](docs/changelog.md)
+- [Questions and security](docs/questions-and-security.md)
+- [About us](docs/about-us.md)
+- [Contributing to the docs](docs/contributing-to-docs.md)

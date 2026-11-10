@@ -9,12 +9,18 @@ use Javaabu\Stats\Formatters\TimeSeries\DefaultStatsFormatter;
 use Javaabu\Stats\Tests\TestCase;
 use Javaabu\Stats\Tests\TestSupport\Factories\ActivityFactory;
 use Javaabu\Stats\Tests\TestSupport\Stats\TimeSeries\UserLogoutsRepository;
+use PHPUnit\Framework\Attributes\RequiresMethod;
+use PHPUnit\Framework\Attributes\Test;
+use Spatie\Activitylog\Models\Activity;
 
+/** Needs spatie/laravel-activitylog, which is optional */
+#[RequiresMethod(Activity::class, 'causer')]
 class DefaultStatsFormatterTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_it_can_format_with_the_default_formatter(): void
+    #[Test]
+    public function it_can_format_with_the_default_formatter(): void
     {
         $this->travelTo('2024-07-04');
 
@@ -36,11 +42,10 @@ class DefaultStatsFormatterTest extends TestCase
                 'created_at' => '2024-07-04',
             ]);
 
-
         // create the stat
         $stat = new UserLogoutsRepository(PresetDateRanges::LAST_7_DAYS);
 
-        $formatter = new DefaultStatsFormatter();
+        $formatter = new DefaultStatsFormatter;
 
         $data = $formatter->format(TimeSeriesModes::DAY, $stat);
 

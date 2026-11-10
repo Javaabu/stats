@@ -1,34 +1,40 @@
 <?php
-/**
- * Aggregate stats repository base class
- */
 
 namespace Javaabu\Stats\Repositories\TimeSeries;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Javaabu\Stats\Enums\TimeSeriesModes;
-use Javaabu\Stats\TimeSeriesStats;
 
+/**
+ * A time series stat that aggregates one table with SQL (count, sum, …),
+ * grouped by hour, day, week, month or year
+ */
 abstract class AggregateStatsRepository extends AbstractTimeSeriesStatsRepository
 {
     /**
-     * Get the main table for the repository
+     * The main table of the stat
      */
-    public abstract function getTable(): string;
+    abstract public function getTable(): string;
 
     /**
-     * Get the aggregate sql expression for the repository
+     * The aggregate SQL, aliased as the aggregate field name: `count(*) as count`
      */
-    public abstract function getAggregateSql(): string;
+    abstract public function getAggregateSql(): string;
 
+    /**
+     * The SQL that groups the date column into steps of the mode, for the
+     * database the stat's query runs on
+     */
     public function getDateSqlForTimeMode(TimeSeriesModes $mode): string
     {
-        return $mode->getSql($this->getDateField());
+        $driver = $this->query()->getConnection()->getDriverName();
+
+        return $mode->getSql($this->getDateField(), $driver);
     }
 
     /**
-     * Get the date field name for the repository
+     * The date column, without the table
      */
     public function getDateFieldName(): string
     {
@@ -36,100 +42,62 @@ abstract class AggregateStatsRepository extends AbstractTimeSeriesStatsRepositor
     }
 
     /**
-     * Get the date field for the repository
+     * The date column, qualified with the table
      */
     public function getDateField(): string
     {
-        return $this->getTable().'.'.$this->getDateFieldName();
+        return $this->getTable() . '.' . $this->getDateFieldName();
     }
 
     /**
-     * Get the hourly query
-     *
-     * @return Builder
+     * The filtered query grouped into steps of the mode, with the step's key
+     * in a column named after the mode
      */
+    public function groupedQuery(TimeSeriesModes $mode): Builder
+    {
+        $this->setCurrentMode($mode);
+
+        $alias = $mode->value;
+
+        return $this->filteredQuery()
+            ->select(DB::raw($this->getAggregateSql() . ', ' . $this->getDateSqlForTimeMode($mode) . ' as ' . $alias))
+            ->groupBy($alias)
+            ->orderBy($alias);
+    }
+
     public function hour(): Builder
     {
-        $this->setCurrentMode(TimeSeriesModes::HOUR);
-
-        return $this->filteredQuery()
-            ->select(DB::raw($this->getAggregateSql().", " . $this->getDateSqlForTimeMode(TimeSeriesModes::HOUR) . " as hour"))
-            ->groupBy('hour')
-            ->orderBy('hour', 'ASC');
+        return $this->groupedQuery(TimeSeriesModes::HOUR);
     }
 
-    /**
-     * Get the day query
-     *
-     * @return Builder
-     */
     public function day(): Builder
     {
-        $this->setCurrentMode(TimeSeriesModes::DAY);
-
-        return $this->filteredQuery()
-            ->select(DB::raw($this->getAggregateSql().", " . $this->getDateSqlForTimeMode(TimeSeriesModes::DAY) . " as day"))
-            ->groupBy('day')
-            ->orderBy('day', 'ASC');
+        return $this->groupedQuery(TimeSeriesModes::DAY);
     }
 
-    /**
-     * Get the week query
-     *
-     * @return Builder
-     */
     public function week(): Builder
     {
-        $this->setCurrentMode(TimeSeriesModes::WEEK);
-
-        return $this->filteredQuery()
-            //->select(DB::raw($this->getAggregateSql().", DATE_FORMAT(".$this->getDateField().", '%X, %V') as week"))
-            ->select(DB::raw($this->getAggregateSql().", " . $this->getDateSqlForTimeMode(TimeSeriesModes::WEEK) . " as week"))
-            ->groupBy('week')
-            ->orderBy('week', 'ASC');
+        return $this->groupedQuery(TimeSeriesModes::WEEK);
     }
 
-    /**
-     * Get the month query
-     *
-     * @return Builder
-     */
     public function month(): Builder
     {
-        $this->setCurrentMode(TimeSeriesModes::MONTH);
-
-        return $this->filteredQuery()
-            ->select(DB::raw($this->getAggregateSql().", " . $this->getDateSqlForTimeMode(TimeSeriesModes::MONTH) . " as month"))
-            ->groupBy('month')
-            ->orderBy('month', 'ASC');
+        return $this->groupedQuery(TimeSeriesModes::MONTH);
     }
 
-    /**
-     * Get the year query
-     *
-     * @return Builder
-     */
     public function year(): Builder
     {
-        $this->setCurrentMode(TimeSeriesModes::YEAR);
-
-        return $this->filteredQuery()
-            ->select(DB::raw($this->getAggregateSql().", " . $this->getDateSqlForTimeMode(TimeSeriesModes::YEAR) . " as year"))
-            ->groupBy('year')
-            ->orderBy('year', 'ASC');
+        return $this->groupedQuery(TimeSeriesModes::YEAR);
     }
 
-    /**
-     * Get the total
-     */
     public function total(): float|int
     {
         $this->setCurrentMode(null);
 
         $total = $this->filteredQuery()
-                    ->select(DB::raw($this->getAggregateSql()))
-                    ->value($this->getAggregateFieldName());
+            ->select(DB::raw($this->getAggregateSql()))
+            ->value($this->getAggregateFieldName());
 
-        return is_null($total) ? 0 : $total;
+        return is_null($total) ? 0 : $total + 0;
     }
 }

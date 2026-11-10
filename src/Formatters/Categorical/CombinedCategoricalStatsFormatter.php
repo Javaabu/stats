@@ -29,7 +29,7 @@ class CombinedCategoricalStatsFormatter extends AbstractCategoricalStatsFormatte
                 $stats->getCategoryFieldAlias() => $id,
                 $stats->getCategoryNameFieldAlias() => $label,
                 $stats->getAggregateFieldName() => $stats_values[$id] ?? 0,
-                'compare_'.$stats->getAggregateFieldName() => $compare ? ($compare_values[$id] ?? 0) : null,
+                'compare_' . $stats->getAggregateFieldName() => $compare ? ($compare_values[$id] ?? 0) : null,
             ];
         }
 

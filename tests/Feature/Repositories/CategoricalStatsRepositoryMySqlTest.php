@@ -2,17 +2,19 @@
 
 namespace Javaabu\Stats\Tests\Feature\Repositories;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Javaabu\Stats\Support\ExactDateRange;
 use Javaabu\Stats\Tests\TestCase;
 use Javaabu\Stats\Tests\TestSupport\Factories\PaymentFactory;
-use Javaabu\Stats\Tests\TestSupport\MySQLRefreshDatabase;
 use Javaabu\Stats\Tests\TestSupport\Stats\Categorical\PaymentsByUser;
+use PHPUnit\Framework\Attributes\Test;
 
 class CategoricalStatsRepositoryMySqlTest extends TestCase
 {
-    use MySQLRefreshDatabase;
+    use RefreshDatabase;
 
-    public function test_it_can_group_and_order_by_a_category_expression(): void
+    #[Test]
+    public function it_can_group_and_order_by_a_category_expression(): void
     {
         PaymentFactory::new()->count(2)->create([
             'amount' => 5,

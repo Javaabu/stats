@@ -3,7 +3,7 @@
 namespace Javaabu\Stats\Support;
 
 use Illuminate\Database\Eloquent\Model;
-use Javaabu\GeneratorHelpers\StringCaser;
+use Illuminate\Support\Str;
 use UnitEnum;
 
 class CategoryProviderTitleResolver
@@ -16,7 +16,7 @@ class CategoryProviderTitleResolver
             ? class_basename($model)
             : (string) $morph_class;
 
-        return __(StringCaser::title($name));
+        return __(Str::headline($name));
     }
 
     /**
@@ -24,7 +24,7 @@ class CategoryProviderTitleResolver
      */
     public static function forEnum(string $enum): string
     {
-        return __(StringCaser::title(class_basename($enum)));
+        return __(Str::headline(class_basename($enum)));
     }
 
     public static function idTitle(string $category_title): string

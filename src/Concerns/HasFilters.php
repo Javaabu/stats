@@ -63,7 +63,7 @@ trait HasFilters
             if ($diff->count()) {
                 throw InvalidFiltersException::filtersNotAllowed($diff, $allowed_filter_names);
             }
-         } else {
+        } else {
             foreach ($filter_names as $filter) {
                 if (! $allowed_filter_names->contains($filter)) {
                     return false;
@@ -89,9 +89,14 @@ trait HasFilters
     {
         collect($this->allowedFilters())
             ->each(function (Filter $filter) use ($query) {
-                if ($value = $this->getFilter($filter->getName())) {
-                    $filter->apply($query, $value, $this);
+                $value = $this->getFilter($filter->getName());
+
+                // 0, '0' and false are values; only missing ones are skipped
+                if ($value === null || $value === '' || $value === []) {
+                    return;
                 }
+
+                $filter->apply($query, $value, $this);
             });
 
         return $query;

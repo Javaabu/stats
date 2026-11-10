@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Builder;
 
 abstract class ActivityLogStatsRepository extends CountStatsRepository
 {
-
     /**
      * Get the main table for the repository
      */
@@ -23,7 +22,7 @@ abstract class ActivityLogStatsRepository extends CountStatsRepository
         $model = config('activitylog.activity_model');
 
         return $model::query()
-                ->whereDescription($this->eventDescription());
+            ->whereDescription($this->eventDescription());
     }
 
     /**
@@ -37,5 +36,5 @@ abstract class ActivityLogStatsRepository extends CountStatsRepository
     /**
      * Get the event to count
      */
-    public abstract function eventDescription(): string;
+    abstract public function eventDescription(): string;
 }

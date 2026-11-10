@@ -10,19 +10,21 @@ use Javaabu\Stats\Tests\TestSupport\Factories\PaymentFactory;
 use Javaabu\Stats\Tests\TestSupport\Models\User;
 use Javaabu\Stats\Tests\TestSupport\Stats\Categorical\PaymentsByUser;
 use Javaabu\Stats\Tests\TestSupport\Stats\Categorical\PaymentsByUserWithPermission;
+use PHPUnit\Framework\Attributes\Test;
 
 class CategoricalStatsApiControllerTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
         CategoricalStats::registerApiRoutes();
     }
 
-    public function test_it_can_generate_categorical_stats(): void
+    #[Test]
+    public function it_can_generate_categorical_stats(): void
     {
         CategoricalStats::register([
             'payments_by_user' => PaymentsByUser::class,
@@ -34,7 +36,7 @@ class CategoricalStatsApiControllerTest extends TestCase
         PaymentFactory::new()->withUser($bob)->count(3)->create(['paid_at' => '2024-07-04']);
 
         $this->actingAs($alice)
-            ->get(add_query_arg([
+            ->get($this->addQueryArg([
                 'metric' => 'payments_by_user',
                 'mode' => 'all',
                 'format' => 'chartjs',
@@ -54,7 +56,8 @@ class CategoricalStatsApiControllerTest extends TestCase
             ->assertJsonPath('result.stats', [2, 3]);
     }
 
-    public function test_it_can_search_the_selected_metrics_category_provider(): void
+    #[Test]
+    public function it_can_search_the_selected_metrics_category_provider(): void
     {
         CategoricalStats::register([
             'payments_by_user' => PaymentsByUser::class,
@@ -73,7 +76,8 @@ class CategoricalStatsApiControllerTest extends TestCase
             ->assertJsonPath('total', 1);
     }
 
-    public function test_category_search_uses_the_configured_page_size(): void
+    #[Test]
+    public function it_category_search_uses_the_configured_page_size(): void
     {
         CategoricalStats::register([
             'payments_by_user' => PaymentsByUser::class,
@@ -94,7 +98,8 @@ class CategoricalStatsApiControllerTest extends TestCase
             ->assertJsonPath('total', 2);
     }
 
-    public function test_category_search_rejects_a_metric_hidden_from_the_current_user(): void
+    #[Test]
+    public function it_category_search_rejects_a_metric_hidden_from_the_current_user(): void
     {
         CategoricalStats::register([
             'payments_by_user' => PaymentsByUser::class,
@@ -109,7 +114,8 @@ class CategoricalStatsApiControllerTest extends TestCase
             ->assertForbidden();
     }
 
-    public function test_it_rejects_metrics_that_do_not_support_current_filters(): void
+    #[Test]
+    public function it_rejects_metrics_that_do_not_support_current_filters(): void
     {
         CategoricalStats::register([
             'payments_by_user' => PaymentsByUser::class,

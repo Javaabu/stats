@@ -121,7 +121,7 @@ class EloquentCategoryProvider implements CategoryProvider
                     ? $query->getModel()->getCategoricalStatsSearchField()
                     : ($this->label_field == 'admin_link_name' ? 'name' : $this->label_field);
 
-                $query->where($search_field, 'like', '%'.$search.'%');
+                $query->whereLike($search_field, '%' . $search . '%');
             }
         }
 

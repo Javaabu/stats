@@ -9,12 +9,18 @@ use Javaabu\Stats\Tests\TestCase;
 use Javaabu\Stats\Tests\TestSupport\Factories\ActivityFactory;
 use Javaabu\Stats\Tests\TestSupport\Models\User;
 use Javaabu\Stats\Tests\TestSupport\Stats\TimeSeries\TestUserLoginsRepository;
+use PHPUnit\Framework\Attributes\RequiresMethod;
+use PHPUnit\Framework\Attributes\Test;
+use Spatie\Activitylog\Models\Activity;
 
+/** Needs spatie/laravel-activitylog, which is optional */
+#[RequiresMethod(Activity::class, 'causer')]
 class UserLoginsRepositoryTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_it_can_generate_user_login_stats(): void
+    #[Test]
+    public function it_can_generate_user_login_stats(): void
     {
         $this->travelTo('2024-07-04');
 
@@ -52,11 +58,12 @@ class UserLoginsRepositoryTest extends TestCase
             [
                 'logins' => 2,
                 'day' => '2024-07-04',
-            ]
+            ],
         ], $data);
     }
 
-    public function test_it_can_filter_logins_by_user(): void
+    #[Test]
+    public function it_can_filter_logins_by_user(): void
     {
         $user_1 = User::factory()->create();
 
@@ -89,7 +96,7 @@ class UserLoginsRepositoryTest extends TestCase
             [
                 'logins' => 5,
                 'day' => '2024-07-07',
-            ]
+            ],
         ], $data);
     }
 }

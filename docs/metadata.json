@@ -1,5 +1,5 @@
 {
     "name": "Stats",
-    "description": "Simplifies stats generation for Laravel",
-    "version": "1"
+    "description": "Time series and categorical stats for Laravel: define a stat once, then chart it in Blade or Inertia React, compare periods, cache dashboards and export CSV",
+    "version": "2"
 }

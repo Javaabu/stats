@@ -45,6 +45,6 @@ class CategoryProviderFactory
             return new EloquentCategoryProvider($provider);
         }
 
-        throw new InvalidArgumentException('Unsupported categorical provider ['.get_debug_type($provider).'].');
+        throw new InvalidArgumentException('Unsupported categorical provider [' . get_debug_type($provider) . '].');
     }
 }

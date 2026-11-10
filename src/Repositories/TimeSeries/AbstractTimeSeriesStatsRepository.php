@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Stats Repository base class
  */
@@ -6,11 +7,11 @@
 namespace Javaabu\Stats\Repositories\TimeSeries;
 
 use Illuminate\Contracts\Auth\Access\Authorizable;
-use Javaabu\GeneratorHelpers\StringCaser;
-use Javaabu\Stats\Concerns\HasFilters;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use Javaabu\Stats\Concerns\HasDateRange;
+use Javaabu\Stats\Concerns\HasFilters;
 use Javaabu\Stats\Contracts\DateRange;
 use Javaabu\Stats\Contracts\TimeSeriesStatsRepository;
 use Javaabu\Stats\Enums\PresetDateRanges;
@@ -48,7 +49,11 @@ abstract class AbstractTimeSeriesStatsRepository implements TimeSeriesStatsRepos
      */
     public function canView(?Authorizable $user = null): bool
     {
-        return $user && $user->can('view_stats');
+        if (! $user) {
+            return false;
+        }
+
+        return Gate::forUser($user)->allows('view', $this);
     }
 
     /**
@@ -57,6 +62,7 @@ abstract class AbstractTimeSeriesStatsRepository implements TimeSeriesStatsRepos
     public function results(TimeSeriesModes $mode): Collection
     {
         $mode_method = $mode->queryMethodName();
+
         return $this->{$mode_method}()->get();
     }
 
@@ -65,7 +71,7 @@ abstract class AbstractTimeSeriesStatsRepository implements TimeSeriesStatsRepos
      */
     public function getAggregateFieldLabel(): string
     {
-        $aggregate_field = StringCaser::title($this->getAggregateFieldName());
+        $aggregate_field = Str::headline($this->getAggregateFieldName());
 
         return __($aggregate_field);
     }
@@ -80,7 +86,7 @@ abstract class AbstractTimeSeriesStatsRepository implements TimeSeriesStatsRepos
 
     protected function generateName(): string
     {
-        $class_name = StringCaser::title(class_basename($this));
+        $class_name = Str::headline(class_basename($this));
 
         if (Str::endsWith($class_name, 'Repository')) {
             $class_name = trim(Str::beforeLast($class_name, 'Repository'));

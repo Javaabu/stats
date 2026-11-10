@@ -2,16 +2,19 @@
 
 namespace Javaabu\Stats\Enums;
 
-use Carbon\Carbon;
-use Javaabu\Helpers\Enums\IsEnum;
-use Javaabu\Helpers\Enums\NativeEnumsTrait;
+use Carbon\CarbonInterface;
+use Illuminate\Support\Facades\Date;
 use Javaabu\Stats\Contracts\DateRange;
+use Javaabu\Stats\Enums\Concerns\HasLabels;
 use Javaabu\Stats\Support\ExactDateRange;
 use Javaabu\Stats\TimeSeriesStats;
 
-enum PresetDateRanges: string implements IsEnum, DateRange
+/**
+ * Date ranges relative to now, which also give the range before them for comparisons
+ */
+enum PresetDateRanges: string implements DateRange
 {
-    use NativeEnumsTrait;
+    use HasLabels;
 
     case TODAY = 'today';
     case YESTERDAY = 'yesterday';
@@ -28,11 +31,11 @@ enum PresetDateRanges: string implements IsEnum, DateRange
     case LAST_10_YEARS = 'last_10_years';
     case LIFETIME = 'lifetime';
 
-    public function getDateFrom(): Carbon
+    public function getDateFrom(): CarbonInterface
     {
         return match ($this) {
-            self::TODAY => Carbon::today(),
-            self::YESTERDAY => Carbon::yesterday(),
+            self::TODAY => Date::today(),
+            self::YESTERDAY => Date::yesterday(),
             self::THIS_WEEK => now()->locale(TimeSeriesStats::dateLocale())->startOfWeek(),
             self::LAST_WEEK => now()->locale(TimeSeriesStats::dateLocale())->subWeek()->startOfWeek(),
             self::THIS_MONTH => now()->startOfMonth(),
@@ -48,11 +51,11 @@ enum PresetDateRanges: string implements IsEnum, DateRange
         };
     }
 
-    public function getDateTo(): Carbon
+    public function getDateTo(): CarbonInterface
     {
         return match ($this) {
-            self::TODAY => Carbon::today()->endOfDay(),
-            self::YESTERDAY => Carbon::yesterday()->endOfDay(),
+            self::TODAY => Date::today()->endOfDay(),
+            self::YESTERDAY => Date::yesterday()->endOfDay(),
             self::THIS_WEEK => now()->locale(TimeSeriesStats::dateLocale())->endOfWeek(),
             self::LAST_WEEK => now()->locale(TimeSeriesStats::dateLocale())->subWeek()->endOfWeek(),
             self::THIS_MONTH => now()->endOfMonth(),
@@ -71,7 +74,27 @@ enum PresetDateRanges: string implements IsEnum, DateRange
         return $this->value;
     }
 
-    protected function generatePreviousFromDate(): Carbon
+    public function getLabel(): string
+    {
+        return match ($this) {
+            self::TODAY => __('Today'),
+            self::YESTERDAY => __('Yesterday'),
+            self::THIS_WEEK => __('This week'),
+            self::LAST_WEEK => __('Last week'),
+            self::THIS_MONTH => __('This month'),
+            self::LAST_MONTH => __('Last month'),
+            self::THIS_YEAR => __('This year'),
+            self::LAST_YEAR => __('Last year'),
+            self::LAST_7_DAYS => __('Last 7 days'),
+            self::LAST_14_DAYS => __('Last 14 days'),
+            self::LAST_30_DAYS => __('Last 30 days'),
+            self::LAST_5_YEARS => __('Last 5 years'),
+            self::LAST_10_YEARS => __('Last 10 years'),
+            self::LIFETIME => __('Lifetime'),
+        };
+    }
+
+    protected function generatePreviousFromDate(): CarbonInterface
     {
         $from_date = $this->getDateFrom();
 
@@ -93,7 +116,7 @@ enum PresetDateRanges: string implements IsEnum, DateRange
         };
     }
 
-    protected function generatePreviousToDate(Carbon $from_date): Carbon
+    protected function generatePreviousToDate(CarbonInterface $from_date): CarbonInterface
     {
         $from_date = $from_date->copy();
 

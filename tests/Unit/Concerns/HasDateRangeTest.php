@@ -7,22 +7,26 @@ use Javaabu\Stats\Enums\PresetDateRanges;
 use Javaabu\Stats\Enums\TimeSeriesModes;
 use Javaabu\Stats\Tests\TestCase;
 use Javaabu\Stats\Tests\TestSupport\Factories\ActivityFactory;
-use Javaabu\Stats\Tests\TestSupport\Models\User;
 use Javaabu\Stats\Tests\TestSupport\Stats\TimeSeries\UserLogoutsRepository;
-use Javaabu\Stats\TimeSeriesStats;
+use PHPUnit\Framework\Attributes\RequiresMethod;
+use PHPUnit\Framework\Attributes\Test;
+use Spatie\Activitylog\Models\Activity;
 
+/** Needs spatie/laravel-activitylog, which is optional */
+#[RequiresMethod(Activity::class, 'causer')]
 class HasDateRangeTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
         $this->travelTo('2024-07-13 12:27 PM');
     }
 
-    public function test_it_can_get_the_date_from_and_date_to(): void
+    #[Test]
+    public function it_can_get_the_date_from_and_date_to(): void
     {
         $stat = new UserLogoutsRepository(PresetDateRanges::LAST_7_DAYS);
 
@@ -30,23 +34,26 @@ class HasDateRangeTest extends TestCase
         $this->assertEquals('2024-07-13 23:59:59', $stat->getDateTo()->toDateTimeString());
     }
 
-    public function test_it_can_get_the_date_range(): void
+    #[Test]
+    public function it_can_get_the_date_range(): void
     {
         $stat = new UserLogoutsRepository(PresetDateRanges::LAST_7_DAYS);
 
         $this->assertEquals(PresetDateRanges::LAST_7_DAYS, $stat->getDateRange());
     }
 
-    public function test_it_can_format_the_date_range(): void
+    #[Test]
+    public function it_can_format_the_date_range(): void
     {
         $stat = new UserLogoutsRepository(PresetDateRanges::LAST_7_DAYS);
 
         $this->assertEquals('2024-07-07 00:00 - 2024-07-13 23:59', $stat->formattedDateRange());
     }
 
-    public function test_it_can_set_date_from(): void
+    #[Test]
+    public function it_can_set_date_from(): void
     {
-        $stat = new UserLogoutsRepository();
+        $stat = new UserLogoutsRepository;
 
         $stat->setDateFrom('2024-07-05 00:00:00');
 
@@ -54,9 +61,10 @@ class HasDateRangeTest extends TestCase
         $this->assertEquals('2024-07-05 00:00:00', $stat->getDateRange()->getDateFrom()->toDateTimeString());
     }
 
-    public function test_it_can_set_date_to(): void
+    #[Test]
+    public function it_can_set_date_to(): void
     {
-        $stat = new UserLogoutsRepository();
+        $stat = new UserLogoutsRepository;
 
         $stat->setDateTo('2024-07-10 00:00:00');
 
@@ -64,14 +72,16 @@ class HasDateRangeTest extends TestCase
         $this->assertEquals('2024-07-10 00:00:00', $stat->getDateRange()->getDateTo()->toDateTimeString());
     }
 
-    public function test_it_can_get_date_field(): void
+    #[Test]
+    public function it_can_get_date_field(): void
     {
-        $stat = new UserLogoutsRepository();
+        $stat = new UserLogoutsRepository;
 
         $this->assertEquals('activity_log.created_at', $stat->getDateField());
     }
 
-    public function test_it_can_get_max_date_and_min_date(): void
+    #[Test]
+    public function it_can_get_max_date_and_min_date(): void
     {
         ActivityFactory::new()
             ->logout()
@@ -87,15 +97,16 @@ class HasDateRangeTest extends TestCase
                 'created_at' => '2024-07-08 00:00:00',
             ]);
 
-        $stat = new UserLogoutsRepository();
+        $stat = new UserLogoutsRepository;
 
         $this->assertEquals('2024-07-04 00:00:00', $stat->getMinDate()->toDateTimeString());
         $this->assertEquals('2024-07-08 00:00:00', $stat->getMaxDate()->toDateTimeString());
     }
 
-    public function test_it_can_set_the_date_range(): void
+    #[Test]
+    public function it_can_set_the_date_range(): void
     {
-        $stat = new UserLogoutsRepository();
+        $stat = new UserLogoutsRepository;
 
         $this->assertEquals(PresetDateRanges::THIS_YEAR, $stat->getDateRange());
 
@@ -106,7 +117,8 @@ class HasDateRangeTest extends TestCase
         $this->assertEquals('2024-07-13 23:59:59', $stat->getDateTo()->toDateTimeString());
     }
 
-    public function test_it_can_apply_date_filters(): void
+    #[Test]
+    public function it_can_apply_date_filters(): void
     {
         ActivityFactory::new()
             ->logout()
@@ -129,7 +141,8 @@ class HasDateRangeTest extends TestCase
         $this->assertEquals('2024-07-07 00:00:00', $first_log->created_at->toDateTimeString());
     }
 
-    public function test_it_can_query_without_date_filters(): void
+    #[Test]
+    public function it_can_query_without_date_filters(): void
     {
         ActivityFactory::new()
             ->logout()
@@ -152,7 +165,8 @@ class HasDateRangeTest extends TestCase
         $this->assertEquals('2024-07-04 00:00:00', $first_log->created_at->toDateTimeString());
     }
 
-    public function test_it_can_get_the_interval_for_the_given_mode(): void
+    #[Test]
+    public function it_can_get_the_interval_for_the_given_mode(): void
     {
         $stat = new UserLogoutsRepository(PresetDateRanges::TODAY);
         $this->assertEquals(0, $stat->interval(TimeSeriesModes::DAY));
@@ -178,5 +192,4 @@ class HasDateRangeTest extends TestCase
         $stat = new UserLogoutsRepository(PresetDateRanges::LIFETIME);
         $this->assertEquals(4, $stat->interval(TimeSeriesModes::YEAR));
     }
-
 }

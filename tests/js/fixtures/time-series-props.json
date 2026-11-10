@@ -1,0 +1,447 @@
+{
+    "form": {
+        "stencil": 1,
+        "id": "time-series-stats-form",
+        "action": "http://localhost/stats/time-series",
+        "method": "GET",
+        "operation": "edit",
+        "submit": "ދައްކާ",
+        "columns": {
+            "default": 1,
+            "md": 2,
+            "lg": 4
+        },
+        "state": {
+            "metric": "payments_count",
+            "mode": "day",
+            "date_range": "custom",
+            "compare_to": "previous",
+            "date_from": "2024-07-01",
+            "date_to": "2024-07-04",
+            "compare_date_from": null,
+            "compare_date_to": null,
+            "with": null,
+            "variant": "line",
+            "status": null
+        },
+        "live": null,
+        "components": [
+            {
+                "type": "select",
+                "key": "metric",
+                "name": "metric",
+                "component": "Select2",
+                "props": {
+                    "label": "ތަފާސް ހިސާބު",
+                    "required": true,
+                    "options": [
+                        {
+                            "value": "payments_count",
+                            "label": "Payments"
+                        },
+                        {
+                            "value": "payments_sum",
+                            "label": "Payments Sum"
+                        },
+                        {
+                            "value": "payments_by_status",
+                            "label": "ފައިސާ ދެއްކުން"
+                        }
+                    ],
+                    "clearable": false
+                }
+            },
+            {
+                "type": "select",
+                "key": "mode",
+                "name": "mode",
+                "component": "Select",
+                "props": {
+                    "label": "ބަހާލާނީ",
+                    "required": true,
+                    "options": [
+                        {
+                            "value": "hour",
+                            "label": "ގަޑިއިރު"
+                        },
+                        {
+                            "value": "day",
+                            "label": "ދުވަސް"
+                        },
+                        {
+                            "value": "week",
+                            "label": "ހަފްތާ"
+                        },
+                        {
+                            "value": "month",
+                            "label": "މަސް"
+                        },
+                        {
+                            "value": "year",
+                            "label": "އަހަރު"
+                        }
+                    ]
+                }
+            },
+            {
+                "type": "select",
+                "key": "date_range",
+                "name": "date_range",
+                "component": "Select",
+                "props": {
+                    "label": "ތާރީޚުތައް",
+                    "required": true,
+                    "options": [
+                        {
+                            "value": "today",
+                            "label": "މިއަދު"
+                        },
+                        {
+                            "value": "yesterday",
+                            "label": "އިއްޔެ"
+                        },
+                        {
+                            "value": "this_week",
+                            "label": "މިހަފްތާ"
+                        },
+                        {
+                            "value": "last_week",
+                            "label": "ފާއިތުވި ހަފްތާ"
+                        },
+                        {
+                            "value": "this_month",
+                            "label": "މިމަސް"
+                        },
+                        {
+                            "value": "last_month",
+                            "label": "ފާއިތުވި މަސް"
+                        },
+                        {
+                            "value": "this_year",
+                            "label": "މިއަހަރު"
+                        },
+                        {
+                            "value": "last_year",
+                            "label": "ފާއިތުވި އަހަރު"
+                        },
+                        {
+                            "value": "last_7_days",
+                            "label": "ފާއިތުވި 7 ދުވަސް"
+                        },
+                        {
+                            "value": "last_14_days",
+                            "label": "ފާއިތުވި 14 ދުވަސް"
+                        },
+                        {
+                            "value": "last_30_days",
+                            "label": "ފާއިތުވި 30 ދުވަސް"
+                        },
+                        {
+                            "value": "last_5_years",
+                            "label": "ފާއިތުވި 5 އަހަރު"
+                        },
+                        {
+                            "value": "last_10_years",
+                            "label": "ފާއިތުވި 10 އަހަރު"
+                        },
+                        {
+                            "value": "lifetime",
+                            "label": "ހުރިހާ ދުވަހެއް"
+                        },
+                        {
+                            "value": "custom",
+                            "label": "އެހެން ތާރީޚުތަކެއް"
+                        }
+                    ]
+                }
+            },
+            {
+                "type": "select",
+                "key": "compare_to",
+                "name": "compare_to",
+                "component": "Select",
+                "props": {
+                    "label": "އަޅާކިޔާނީ",
+                    "placeholder": "އަޅާ ނުކިޔާ",
+                    "showPlaceholder": true,
+                    "options": [
+                        {
+                            "value": "previous",
+                            "label": "ކުރީގެ މުއްދަތު"
+                        },
+                        {
+                            "value": "custom",
+                            "label": "އެހެން މުއްދަތެއް"
+                        }
+                    ]
+                }
+            },
+            {
+                "type": "group",
+                "key": "group-4",
+                "props": {
+                    "columns": {
+                        "default": 1,
+                        "md": 2
+                    }
+                },
+                "children": [
+                    {
+                        "type": "date",
+                        "key": "date_from",
+                        "name": "date_from",
+                        "component": "Date",
+                        "props": {
+                            "label": "ފެށޭ ތާރީޚު",
+                            "required": true
+                        }
+                    },
+                    {
+                        "type": "date",
+                        "key": "date_to",
+                        "name": "date_to",
+                        "component": "Date",
+                        "props": {
+                            "label": "ނިމޭ ތާރީޚު",
+                            "required": true
+                        }
+                    }
+                ],
+                "conditions": [
+                    {
+                        "effect": "visible",
+                        "field": "date_range",
+                        "selector": "#date_range",
+                        "values": [
+                            "custom"
+                        ],
+                        "checkbox": false
+                    }
+                ],
+                "span": {
+                    "md": 2
+                }
+            },
+            {
+                "type": "group",
+                "key": "group-5",
+                "props": {
+                    "columns": {
+                        "default": 1,
+                        "md": 2
+                    }
+                },
+                "children": [
+                    {
+                        "type": "date",
+                        "key": "compare_date_from",
+                        "name": "compare_date_from",
+                        "component": "Date",
+                        "props": {
+                            "label": "އަޅާކިޔާ މުއްދަތު ފެށޭ ތާރީޚު",
+                            "required": true
+                        }
+                    },
+                    {
+                        "type": "date",
+                        "key": "compare_date_to",
+                        "name": "compare_date_to",
+                        "component": "Date",
+                        "props": {
+                            "label": "އަޅާކިޔާ މުއްދަތު ނިމޭ ތާރީޚު",
+                            "required": true
+                        }
+                    }
+                ],
+                "conditions": [
+                    {
+                        "effect": "visible",
+                        "field": "compare_to",
+                        "selector": "#compare_to",
+                        "values": [
+                            "custom"
+                        ],
+                        "checkbox": false
+                    }
+                ],
+                "span": {
+                    "md": 2
+                }
+            },
+            {
+                "type": "select",
+                "key": "with",
+                "name": "with[]",
+                "component": "Select2",
+                "props": {
+                    "label": "އެކުގައި ދައްކާ",
+                    "help": "މި ޗާޓުގައި ދައްކާނެ އެހެން ތަފާސް ހިސާބުތައް.",
+                    "options": [
+                        {
+                            "value": "payments_count",
+                            "label": "Payments"
+                        },
+                        {
+                            "value": "payments_sum",
+                            "label": "Payments Sum"
+                        },
+                        {
+                            "value": "payments_by_status",
+                            "label": "ފައިސާ ދެއްކުން"
+                        }
+                    ],
+                    "multiple": true
+                },
+                "span": {
+                    "md": 2
+                }
+            },
+            {
+                "type": "select",
+                "key": "variant",
+                "name": "variant",
+                "component": "Select",
+                "props": {
+                    "label": "ޗާޓް",
+                    "options": [
+                        {
+                            "value": "line",
+                            "label": "ލައިން"
+                        },
+                        {
+                            "value": "area",
+                            "label": "އޭރިއާ"
+                        },
+                        {
+                            "value": "bar",
+                            "label": "ބާ"
+                        }
+                    ]
+                }
+            },
+            {
+                "type": "group",
+                "key": "group-8",
+                "children": [
+                    {
+                        "type": "select",
+                        "key": "status",
+                        "name": "status",
+                        "component": "Select",
+                        "props": {
+                            "label": "ހާލަތު",
+                            "placeholder": "ހުރިހާ",
+                            "showPlaceholder": true,
+                            "options": [
+                                {
+                                    "value": "pending",
+                                    "label": "Awaiting Payment"
+                                },
+                                {
+                                    "value": "paid",
+                                    "label": "Paid"
+                                }
+                            ],
+                            "excludeSyncField": true
+                        }
+                    }
+                ],
+                "conditions": [
+                    {
+                        "effect": "visible",
+                        "field": "metric",
+                        "selector": "#metric",
+                        "values": [
+                            "payments_by_status"
+                        ],
+                        "checkbox": false
+                    }
+                ]
+            }
+        ]
+    },
+    "chart": {
+        "type": "time-series",
+        "id": "stats-chart-9f7a7206",
+        "title": "Payments",
+        "description": null,
+        "valueFormat": "number",
+        "height": null,
+        "data": [
+            {
+                "date": "2024-07-01",
+                "payments_count": 0,
+                "previous": 0
+            },
+            {
+                "date": "2024-07-02",
+                "payments_count": 0,
+                "previous": 0
+            },
+            {
+                "date": "2024-07-03",
+                "payments_count": 3,
+                "previous": 1
+            },
+            {
+                "date": "2024-07-04",
+                "payments_count": 2,
+                "previous": 0
+            }
+        ],
+        "labels": [
+            "1 ޖުލައި 24",
+            "2 ޖުލައި 24",
+            "3 ޖުލައި 24",
+            "4 ޖުލައި 24"
+        ],
+        "config": {
+            "payments_count": {
+                "label": "1 ޖުލައި 2024 – 4 ޖުލައި 2024"
+            },
+            "previous": {
+                "label": "27 ޖޫން 2024 – 30 ޖޫން 2024"
+            }
+        },
+        "totals": {
+            "payments_count": 5,
+            "previous": 1
+        },
+        "dateKey": "date",
+        "mode": "day",
+        "interval": "day",
+        "variant": "line",
+        "stacked": false,
+        "brush": false,
+        "comparison": {
+            "previousKey": "previous",
+            "currentLabel": "1 ޖުލައި 2024 – 4 ޖުލައި 2024",
+            "previousLabel": "27 ޖޫން 2024 – 30 ޖޫން 2024",
+            "positiveIsGood": true
+        },
+        "aggregateLabel": "އަދަދު"
+    },
+    "export": {
+        "url": "http://localhost/stats/time-series",
+        "params": {
+            "metric": "payments_count",
+            "mode": "day",
+            "date_range": "custom",
+            "variant": "line",
+            "filters": null,
+            "date_from": "2024-07-01",
+            "date_to": "2024-07-04",
+            "compare_to": "previous"
+        },
+        "token": "NPYJWzMyREosPhGV06lHFYHntOWGJefAyVJ3YrLv"
+    },
+    "strings": {
+        "title": "ވަގުތާއެކު ތަފާސް ހިސާބު",
+        "export": "CSV ޑައުންލޯޑް ކުރައްވާ",
+        "empty": "ތަފާސް ހިސާބަކާއި ތާރީޚުތައް ހޮވާފައި \"ދައްކާ\" އަށް ފިއްތަވާ.",
+        "invalid": "ތަފާސް ހިސާބު ފެނުމަށް ފޯމުގައިވާ ކުށްތައް ރަނގަޅުކުރައްވާ."
+    },
+    "layout": "test::layouts.admin",
+    "layout_section": "content",
+    "errors": []
+}

@@ -1,0 +1,389 @@
+{
+    "form": {
+        "stencil": 1,
+        "id": "categorical-stats-form",
+        "action": "http://localhost/stats/categorical",
+        "method": "GET",
+        "operation": "edit",
+        "submit": "Generate",
+        "columns": {
+            "default": 1,
+            "md": 2,
+            "lg": 4
+        },
+        "state": {
+            "metric": "payments_by_user",
+            "mode": "non_empty",
+            "date_range": "custom",
+            "compare_to": null,
+            "date_from": "2024-07-01",
+            "date_to": "2024-07-04",
+            "compare_date_from": null,
+            "compare_date_to": null,
+            "categorical_values": null,
+            "with": null,
+            "variant": "pie"
+        },
+        "live": null,
+        "components": [
+            {
+                "type": "select",
+                "key": "metric",
+                "name": "metric",
+                "component": "Select2",
+                "props": {
+                    "label": "Stat",
+                    "required": true,
+                    "options": [
+                        {
+                            "value": "payments_by_user",
+                            "label": "Payments By User"
+                        },
+                        {
+                            "value": "payment_amounts_by_user",
+                            "label": "Payment Amounts By User"
+                        }
+                    ],
+                    "clearable": false
+                }
+            },
+            {
+                "type": "select",
+                "key": "mode",
+                "name": "mode",
+                "component": "Select",
+                "props": {
+                    "label": "Categories",
+                    "required": true,
+                    "options": [
+                        {
+                            "value": "non_empty",
+                            "label": "Categories with data"
+                        },
+                        {
+                            "value": "all",
+                            "label": "All categories"
+                        },
+                        {
+                            "value": "specific",
+                            "label": "Specific categories"
+                        }
+                    ]
+                }
+            },
+            {
+                "type": "select",
+                "key": "date_range",
+                "name": "date_range",
+                "component": "Select",
+                "props": {
+                    "label": "Date range",
+                    "required": true,
+                    "options": [
+                        {
+                            "value": "today",
+                            "label": "Today"
+                        },
+                        {
+                            "value": "yesterday",
+                            "label": "Yesterday"
+                        },
+                        {
+                            "value": "this_week",
+                            "label": "This week"
+                        },
+                        {
+                            "value": "last_week",
+                            "label": "Last week"
+                        },
+                        {
+                            "value": "this_month",
+                            "label": "This month"
+                        },
+                        {
+                            "value": "last_month",
+                            "label": "Last month"
+                        },
+                        {
+                            "value": "this_year",
+                            "label": "This year"
+                        },
+                        {
+                            "value": "last_year",
+                            "label": "Last year"
+                        },
+                        {
+                            "value": "last_7_days",
+                            "label": "Last 7 days"
+                        },
+                        {
+                            "value": "last_14_days",
+                            "label": "Last 14 days"
+                        },
+                        {
+                            "value": "last_30_days",
+                            "label": "Last 30 days"
+                        },
+                        {
+                            "value": "last_5_years",
+                            "label": "Last 5 years"
+                        },
+                        {
+                            "value": "last_10_years",
+                            "label": "Last 10 years"
+                        },
+                        {
+                            "value": "lifetime",
+                            "label": "Lifetime"
+                        },
+                        {
+                            "value": "custom",
+                            "label": "Custom range"
+                        }
+                    ]
+                }
+            },
+            {
+                "type": "select",
+                "key": "compare_to",
+                "name": "compare_to",
+                "component": "Select",
+                "props": {
+                    "label": "Compare to",
+                    "placeholder": "No comparison",
+                    "showPlaceholder": true,
+                    "options": [
+                        {
+                            "value": "previous",
+                            "label": "Previous period"
+                        },
+                        {
+                            "value": "custom",
+                            "label": "Custom period"
+                        }
+                    ]
+                }
+            },
+            {
+                "type": "group",
+                "key": "group-4",
+                "props": {
+                    "columns": {
+                        "default": 1,
+                        "md": 2
+                    }
+                },
+                "children": [
+                    {
+                        "type": "date",
+                        "key": "date_from",
+                        "name": "date_from",
+                        "component": "Date",
+                        "props": {
+                            "label": "From",
+                            "required": true
+                        }
+                    },
+                    {
+                        "type": "date",
+                        "key": "date_to",
+                        "name": "date_to",
+                        "component": "Date",
+                        "props": {
+                            "label": "To",
+                            "required": true
+                        }
+                    }
+                ],
+                "conditions": [
+                    {
+                        "effect": "visible",
+                        "field": "date_range",
+                        "selector": "#date_range",
+                        "values": [
+                            "custom"
+                        ],
+                        "checkbox": false
+                    }
+                ],
+                "span": {
+                    "md": 2
+                }
+            },
+            {
+                "type": "group",
+                "key": "group-5",
+                "props": {
+                    "columns": {
+                        "default": 1,
+                        "md": 2
+                    }
+                },
+                "children": [
+                    {
+                        "type": "date",
+                        "key": "compare_date_from",
+                        "name": "compare_date_from",
+                        "component": "Date",
+                        "props": {
+                            "label": "Compare from",
+                            "required": true
+                        }
+                    },
+                    {
+                        "type": "date",
+                        "key": "compare_date_to",
+                        "name": "compare_date_to",
+                        "component": "Date",
+                        "props": {
+                            "label": "Compare to date",
+                            "required": true
+                        }
+                    }
+                ],
+                "conditions": [
+                    {
+                        "effect": "visible",
+                        "field": "compare_to",
+                        "selector": "#compare_to",
+                        "values": [
+                            "custom"
+                        ],
+                        "checkbox": false
+                    }
+                ],
+                "span": {
+                    "md": 2
+                }
+            },
+            {
+                "type": "select",
+                "key": "categorical_values",
+                "name": "categorical_values[]",
+                "component": "Select2",
+                "props": {
+                    "label": "Choose categories",
+                    "required": true,
+                    "multiple": true,
+                    "isAjax": true,
+                    "ajaxUrl": "http://localhost/stats/categorical/categories",
+                    "nameField": "label",
+                    "idField": "id",
+                    "parent": "#metric",
+                    "filterField": "metric"
+                },
+                "conditions": [
+                    {
+                        "effect": "visible",
+                        "field": "mode",
+                        "selector": "#mode",
+                        "values": [
+                            "specific"
+                        ],
+                        "checkbox": false
+                    }
+                ],
+                "span": {
+                    "md": 2
+                }
+            },
+            {
+                "type": "select",
+                "key": "with",
+                "name": "with[]",
+                "component": "Select2",
+                "props": {
+                    "label": "Plot with",
+                    "help": "Other stats to show on the same chart.",
+                    "options": [
+                        {
+                            "value": "payments_by_user",
+                            "label": "Payments By User"
+                        },
+                        {
+                            "value": "payment_amounts_by_user",
+                            "label": "Payment Amounts By User"
+                        }
+                    ],
+                    "multiple": true
+                }
+            },
+            {
+                "type": "select",
+                "key": "variant",
+                "name": "variant",
+                "component": "Select",
+                "props": {
+                    "label": "Chart",
+                    "options": [
+                        {
+                            "value": "bar",
+                            "label": "Bar"
+                        },
+                        {
+                            "value": "horizontal",
+                            "label": "Horizontal bar"
+                        },
+                        {
+                            "value": "line",
+                            "label": "Line"
+                        },
+                        {
+                            "value": "pie",
+                            "label": "Pie"
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "chart": {
+        "type": "pie",
+        "id": "stats-chart-9ba06c22",
+        "title": "Payments By User",
+        "description": null,
+        "valueFormat": "number",
+        "height": null,
+        "data": [
+            {
+                "name": "އަޙްމަދު",
+                "value": 3,
+                "categoryId": 1
+            },
+            {
+                "name": "ޢާއިޝާ",
+                "value": 2,
+                "categoryId": 2
+            }
+        ],
+        "nameKey": "name",
+        "valueKey": "value",
+        "variant": "donut",
+        "centerLabel": null,
+        "nameLabel": "User",
+        "aggregateLabel": "Count",
+        "total": 5
+    },
+    "export": {
+        "url": "http://localhost/stats/categorical",
+        "params": {
+            "metric": "payments_by_user",
+            "mode": "non_empty",
+            "date_range": "custom",
+            "variant": "pie",
+            "filters": null,
+            "date_from": "2024-07-01",
+            "date_to": "2024-07-04"
+        },
+        "token": "VkBhvZXNMoFgbLKZ85pgmsVazhhQwXga8T2v4Vau"
+    },
+    "strings": {
+        "title": "Categorical Stats",
+        "export": "Download CSV",
+        "empty": "Choose a stat and a date range, then select Generate.",
+        "invalid": "Fix the errors in the form to see the stat."
+    },
+    "layout": "test::layouts.admin",
+    "layout_section": "content",
+    "errors": []
+}

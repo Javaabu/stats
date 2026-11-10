@@ -2,7 +2,8 @@
 
 namespace Javaabu\Stats\Contracts;
 
-use Carbon\Carbon;
+use Carbon\CarbonInterface;
+use DateTimeInterface;
 use Illuminate\Database\Eloquent\Builder;
 use Javaabu\Stats\Enums\TimeSeriesModes;
 
@@ -11,18 +12,17 @@ interface InteractsWithDateRange
     /**
      * Get the date from
      */
-    public function getDateFrom(): Carbon;
+    public function getDateFrom(): CarbonInterface;
 
     /**
      * Get the date to
      */
-    public function getDateTo(): Carbon;
+    public function getDateTo(): CarbonInterface;
 
     /**
      * Get the date range
      */
     public function getDateRange(): DateRange;
-
 
     /**
      * Get the formatted date from to
@@ -32,12 +32,12 @@ interface InteractsWithDateRange
     /**
      * Set the date from
      */
-    public function setDateFrom(string|Carbon $date_from);
+    public function setDateFrom(string|DateTimeInterface $date_from);
 
     /**
      * Set the date to
      */
-    public function setDateTo(string|Carbon $date_to);
+    public function setDateTo(string|DateTimeInterface $date_to);
 
     /**
      * Get the date field for the repository
@@ -47,12 +47,12 @@ interface InteractsWithDateRange
     /**
      * Get the max date for the query
      */
-    public function getMaxDate(?Carbon $fallback = null): ?Carbon;
+    public function getMaxDate(?CarbonInterface $fallback = null): ?CarbonInterface;
 
     /**
      * Get the min date for the query
      */
-    public function getMinDate(?Carbon $fallback = null): ?Carbon;
+    public function getMinDate(?CarbonInterface $fallback = null): ?CarbonInterface;
 
     /**
      * Set the date range
@@ -68,7 +68,6 @@ interface InteractsWithDateRange
      * Apply the date filters
      */
     public function applyDateFilters(Builder $query): Builder;
-
 
     /**
      * Get the filtered query without date filters

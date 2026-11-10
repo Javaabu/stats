@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Stats Repository base class
  */
@@ -42,6 +43,7 @@ interface InteractsWithFilters
 
     /**
      * Check if all the filters are allowed
+     *
      * @throws InvalidArgumentException
      */
     public function ensureAllFiltersAllowed(array $filters, bool $throw_on_fail = false): bool;

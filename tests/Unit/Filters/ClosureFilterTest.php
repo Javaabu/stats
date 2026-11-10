@@ -7,12 +7,18 @@ use Javaabu\Stats\Filters\StatsFilter;
 use Javaabu\Stats\Tests\TestCase;
 use Javaabu\Stats\Tests\TestSupport\Models\User;
 use Javaabu\Stats\Tests\TestSupport\Stats\TimeSeries\UserLogoutsRepository;
+use PHPUnit\Framework\Attributes\RequiresMethod;
+use PHPUnit\Framework\Attributes\Test;
+use Spatie\Activitylog\Models\Activity;
 
+/** Needs spatie/laravel-activitylog, which is optional */
+#[RequiresMethod(Activity::class, 'causer')]
 class ClosureFilterTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_it_can_filter_using_closure(): void
+    #[Test]
+    public function it_can_filter_using_closure(): void
     {
         $user_1 = User::factory()->create(['name' => 'John Doe']);
         $user_2 = User::factory()->create(['name' => 'Apple Gate']);
@@ -21,9 +27,8 @@ class ClosureFilterTest extends TestCase
             return $query->where('name', $value);
         });
 
-        $stat = new UserLogoutsRepository();
+        $stat = new UserLogoutsRepository;
         $query = User::query();
-
 
         $this->assertEquals('John Doe', $filter->apply($query, 'John Doe', $stat)->first()->name);
     }

@@ -3,10 +3,10 @@
 namespace Javaabu\Stats\Tests\TestSupport\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Javaabu\Stats\Tests\TestSupport\Factories\PaymentFactory;
 
 class Payment extends Model
@@ -15,12 +15,12 @@ class Payment extends Model
     use SoftDeletes;
 
     protected $casts = [
-        'paid_at' => 'datetime'
+        'paid_at' => 'datetime',
     ];
 
     protected static function newFactory()
     {
-        return new PaymentFactory();
+        return new PaymentFactory;
     }
 
     public function setPaidAtAttribute($value)

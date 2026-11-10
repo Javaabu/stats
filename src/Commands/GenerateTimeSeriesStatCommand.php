@@ -23,7 +23,7 @@ class GenerateTimeSeriesStatCommand extends Command
     {
         return [
             ['name', InputArgument::REQUIRED, 'The name for the stat class.'],
-            ['model', InputArgument::REQUIRED, 'The model class for which you want to generate the stats for. Can be the model class or morph name.']
+            ['model', InputArgument::REQUIRED, 'The model class for which you want to generate the stats for. Can be the model class or morph name.'],
         ];
     }
 
@@ -44,7 +44,13 @@ class GenerateTimeSeriesStatCommand extends Command
         $model_class = (string) $this->argument('model');
         $force = (bool) $this->option('force');
         $path = (string) $this->option('path');
-        $type = (string) $this->option('type');
+        $type = strtolower((string) $this->option('type'));
+
+        if (! in_array($type, ['count', 'sum'], true)) {
+            $this->error("Invalid time series stat type [{$type}]. Expected count or sum.");
+
+            return Command::FAILURE;
+        }
 
         // create generator
         $generator = $this->getGenerator($type, $name, $model_class);
@@ -72,7 +78,6 @@ class GenerateTimeSeriesStatCommand extends Command
 
         return new $class($name, $model_class);
     }
-
 
     /**
      * @return class-string<AbstractStatGenerator>

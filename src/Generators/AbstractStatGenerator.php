@@ -10,9 +10,13 @@ use Javaabu\GeneratorHelpers\StubRenderer;
 abstract class AbstractStatGenerator
 {
     protected string $name;
+
     protected string $model_class;
+
     protected string $table;
+
     protected string $metric;
+
     protected StubRenderer $renderer;
 
     /**
@@ -59,7 +63,7 @@ abstract class AbstractStatGenerator
         ], $template);
     }
 
-    public abstract function getStub(): string;
+    abstract public function getStub(): string;
 
     public function getRenderer(): StubRenderer
     {

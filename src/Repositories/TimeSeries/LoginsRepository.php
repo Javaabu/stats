@@ -32,7 +32,7 @@ abstract class LoginsRepository extends ActivityLogStatsRepository
     public function query(): Builder
     {
         return $this->baseQuery()
-                    ->whereCauserType($this->userMorphClass());
+            ->whereCauserType($this->userMorphClass());
     }
 
     public function eventDescription(): string
@@ -50,10 +50,10 @@ abstract class LoginsRepository extends ActivityLogStatsRepository
         return (new $user_class)->getMorphClass();
     }
 
-
     /**
      * Get the model class
+     *
      * @return class-string<Model>
      */
-    public abstract function userModelClass(): string;
+    abstract public function userModelClass(): string;
 }

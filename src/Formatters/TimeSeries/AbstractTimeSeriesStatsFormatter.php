@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Stats formatters base class
  */

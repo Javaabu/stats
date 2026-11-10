@@ -1,4 +1,5 @@
 <?php
+
 namespace Javaabu\Stats\Tests\TestSupport\Stats\TimeSeries;
 
 use Illuminate\Database\Eloquent\Builder;

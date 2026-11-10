@@ -2,8 +2,10 @@
 
 namespace Javaabu\Stats\Concerns;
 
-use Carbon\Carbon;
+use Carbon\CarbonInterface;
+use DateTimeInterface;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Date;
 use Javaabu\Stats\Contracts\DateRange;
 use Javaabu\Stats\Contracts\InteractsWithDateRange;
 use Javaabu\Stats\Enums\PresetDateRanges;
@@ -13,16 +15,18 @@ use Javaabu\Stats\Support\ExactDateRange;
 /** @var $this InteractsWithDateRange */
 trait HasDateRange
 {
-    protected Carbon $date_from;
-    protected Carbon $date_to;
+    protected CarbonInterface $date_from;
+
+    protected CarbonInterface $date_to;
+
     protected DateRange $date_range;
 
-    public function getDateFrom(): Carbon
+    public function getDateFrom(): CarbonInterface
     {
         return $this->date_from;
     }
 
-    public function getDateTo(): Carbon
+    public function getDateTo(): CarbonInterface
     {
         return $this->date_to;
     }
@@ -37,16 +41,16 @@ trait HasDateRange
         return $this->getDateFrom()->isoFormat($format) . $separator . $this->getDateTo()->isoFormat($format);
     }
 
-    public function setDateFrom(Carbon|string $date_from)
+    public function setDateFrom(DateTimeInterface|string $date_from)
     {
-        $date_from = Carbon::parse($date_from);
+        $date_from = Date::parse($date_from);
 
         $this->setDateRange(new ExactDateRange($date_from, $this->getDateTo()));
     }
 
-    public function setDateTo(Carbon|string $date_to)
+    public function setDateTo(DateTimeInterface|string $date_to)
     {
-        $date_to = Carbon::parse($date_to);
+        $date_to = Date::parse($date_to);
 
         $this->setDateRange(new ExactDateRange($this->getDateFrom(), $date_to));
     }
@@ -56,18 +60,18 @@ trait HasDateRange
         return 'created_at';
     }
 
-    public function getMaxDate(?Carbon $fallback = null): ?Carbon
+    public function getMaxDate(?CarbonInterface $fallback = null): ?CarbonInterface
     {
         $max = $this->query()->max($this->getDateField());
 
-        return $max ? Carbon::parse($max) : $fallback;
+        return $max ? Date::parse($max) : $fallback;
     }
 
-    public function getMinDate(?Carbon $fallback = null): ?Carbon
+    public function getMinDate(?CarbonInterface $fallback = null): ?CarbonInterface
     {
         $min = $this->query()->min($this->getDateField());
 
-        return $min ? Carbon::parse($min) : $fallback;
+        return $min ? Date::parse($min) : $fallback;
     }
 
     public function setDateRange(DateRange $date_range)
